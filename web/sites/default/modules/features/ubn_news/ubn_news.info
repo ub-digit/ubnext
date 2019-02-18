@@ -1,7 +1,7 @@
 name = UBN News
 core = 7.x
 package = UBNext
-version = 7.x-0.9
+version = 7.x-0.10
 dependencies[] = ctools
 dependencies[] = entity
 dependencies[] = features

@@ -37,9 +37,7 @@
 <?php if (!empty($content['news'])): ?>
   <div id="news" class="container panel-separator">
     <div class="row promoted-news">
-      <!--<div class="col-xs-12">-->
         <?php print render($content['news']); ?>
-      <!--</div>-->
     </div>
   </div>
 <?php endif ?>
