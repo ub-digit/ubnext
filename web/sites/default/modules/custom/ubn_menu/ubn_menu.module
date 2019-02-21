@@ -14,6 +14,7 @@ function ubn_menu_ctools_plugin_directory($owner, $plugin_type) {
 function ubn_menu_menu_alter(&$items) {
   foreach(array('databases/search', 'news') as $default_menu_item_to_callback_path) {
     if (isset($items[$default_menu_item_to_callback_path])) {
+      // This does not seems to work all the time, no idea why
       $items[$default_menu_item_to_callback_path]['type'] = MENU_CALLBACK;
     }
     else {
@@ -23,6 +24,17 @@ function ubn_menu_menu_alter(&$items) {
       );
     }
   }
+}
+
+function ubn_menu_query_preferred_menu_links_alter(QueryAlterableInterface $query) {
+  $and = db_and();
+  $query->condition(db_or()
+    ->condition('ml.menu_name', 'navigation', '<>')
+    ->condition(db_and()
+      ->condition('ml.link_title', 'Stories', '<>')
+      ->condition('ml.link_title', 'Databases', '<>')
+    )
+  );
 }
 
 function ubn_menu_menu_link_alter(&$item) {

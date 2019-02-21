@@ -57,7 +57,7 @@ function ubn_menu_ubn_menu_content_type_render($subtype, $conf, $panel_args, $co
   if (!isset($cache['active_menu_name'])) {
     $preferred_item = menu_link_get_preferred();
     // Hmm, really set main-menu if no active??
-    $cache['active_menu_name'] = $preferred_item['menu_name'] ? $preferred_item['menu_name'] : 'main-menu';
+    $cache['active_menu_name'] = is_array($preferred_item) && $preferred_item['menu_name'] ? $preferred_item['menu_name'] : 'main-menu';
   }
   $active_menu_name = $cache['active_menu_name'];
 
