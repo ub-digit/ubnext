@@ -53,7 +53,7 @@
     attach : function(context, settings) {
       /* TODO: rename ubn-pane */
       if ($.fn.matchHeight) {
-        $('.ubn-panel-links', context).matchHeight();
+        $('.ubn-panel-links:not(.news-widget)', context).matchHeight();
       }
     }
   };
