@@ -37,6 +37,7 @@ function ubn_entityform_form_entityform_edit_form_alter(&$form, &$form_state, $f
     $form['field_full_name']['#access'] = FALSE;
   }
   $form['actions']['submit']['#value'] = t("Send");
+  $form['field_ttx_library']['und']['#options']['_none'] = t('- Select a library -');
 
   // need form id to js
   $setting = array(
