@@ -45,7 +45,6 @@ Drupal.behaviors.database = {
         $(".clear-search-btn").show();
       }
 
-      $(".form-autocomplete", context).focus();
       $(".form-autocomplete", context).on("change paste keyup", function() {
           if ($(this).val().length > 0) {
             Drupal.toggleClearFilters(context, true);
