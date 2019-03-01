@@ -417,16 +417,6 @@ function ubn_general_render_map($coords = array()) {
   }
 }
 
-/**
- * Implements hook_cron()
- */
-function ubn_general_cron() {
-  $record_count = _ubn_summon_record_count();
-  if(isset($record_count)) {
-    variable_set('ubn_general_summon_record_count', $record_count);
-  }
-}
-
 function ubn_general_admin_paths() {
   return array(
     'atom/*' => TRUE,
