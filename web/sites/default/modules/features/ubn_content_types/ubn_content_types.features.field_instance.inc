@@ -883,7 +883,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 17,
+      'weight' => 18,
     ),
   );
 
@@ -1080,7 +1080,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 10,
+      'weight' => 11,
     ),
   );
 
@@ -1333,6 +1333,57 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-database-field_hide_direct_link_in_search'.
+  $field_instances['node-database-field_hide_direct_link_in_search'] = array(
+    'bundle' => 'database',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Check this box in order to hide the direct link to the database in the database search result list.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 42,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_hide_direct_link_in_search',
+    'label' => 'Hide direct link in search results',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'ubn_property_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 10,
+    ),
+  );
+
   // Exported field_instance: 'node-database-field_interlibrary_loan'.
   $field_instances['node-database-field_interlibrary_loan'] = array(
     'bundle' => 'database',
@@ -1374,7 +1425,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 33,
+      'weight' => 34,
     ),
   );
 
@@ -1427,7 +1478,7 @@ function ubn_content_types_field_default_field_instances() {
         'size' => 200,
       ),
       'type' => 'text_textfield',
-      'weight' => 34,
+      'weight' => 35,
     ),
   );
 
@@ -1475,7 +1526,7 @@ function ubn_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -1526,7 +1577,7 @@ function ubn_content_types_field_default_field_instances() {
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
@@ -1670,7 +1721,7 @@ function ubn_content_types_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -1719,7 +1770,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -1860,7 +1911,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 31,
+      'weight' => 32,
     ),
   );
 
@@ -1913,7 +1964,7 @@ function ubn_content_types_field_default_field_instances() {
         'size' => 200,
       ),
       'type' => 'text_textfield',
-      'weight' => 32,
+      'weight' => 33,
     ),
   );
 
@@ -2006,7 +2057,7 @@ function ubn_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -2054,7 +2105,7 @@ function ubn_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -3629,6 +3680,7 @@ function ubn_content_types_field_default_field_instances() {
   t('App');
   t('Authors');
   t('Body');
+  t('Check this box in order to hide the direct link to the database in the database search result list.');
   t('Click this if you want to mark this alert as a warning. This will place this item above any published alerts. It will be redish in color. ');
   t('Contact');
   t('Contacts');
@@ -3645,6 +3697,7 @@ function ubn_content_types_field_default_field_instances() {
   t('Files');
   t('GUL / Course pack electronic');
   t('GUL / Course pack electronic description');
+  t('Hide direct link in search results');
   t('Homepage of the Author');
   t('If checked this link will be visible amongst the shortcuts on the database search page. ');
   t('Image');
