@@ -142,7 +142,7 @@ function ubn_library_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_library_pattern';
-  $strongarm->value = '[node:menu-link:parents:join-path]/[node:menu-link:title]';
+  $strongarm->value = '[node:menu-link:parents:join-path]/[node:title_field]';
   $export['pathauto_node_library_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
