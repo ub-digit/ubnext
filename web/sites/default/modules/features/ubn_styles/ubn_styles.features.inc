@@ -66,7 +66,7 @@ function ubn_styles_image_default_styles() {
   $styles['hero_small'] = array(
     'label' => 'Hero small',
     'effects' => array(
-      1 => array(
+      4 => array(
         'name' => 'manualcrop_crop_and_scale',
         'data' => array(
           'width' => 1200,
@@ -104,10 +104,10 @@ function ubn_styles_image_default_styles() {
   $styles['page_content'] = array(
     'label' => 'Page content',
     'effects' => array(
-      8 => array(
+      5 => array(
         'name' => 'manualcrop_crop_and_scale',
         'data' => array(
-          'width' => 1024,
+          'width' => 1200,
           'height' => 576,
           'upscale' => 0,
           'respectminimum' => 1,
