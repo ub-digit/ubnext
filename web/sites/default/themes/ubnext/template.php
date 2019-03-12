@@ -438,9 +438,8 @@ function ubnext_preprocess_html(&$vars) {
 
 function ubnext_language_switch_links_alter(array &$links, $type, $path) {
   global $language;
-
   $links['en']['title'] = t('In ') . $links['en']['title'];
-  $links['sv']['title'] = t('På ') . $links['sv']['title'];
+  $links['sv']['title'] = t('På ') . strtolower($links['sv']['title']);
 
 }
 

@@ -162,7 +162,7 @@ function ubn_content_types_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'terms of use',
-    'weight' => '18',
+    'weight' => '19',
     'children' => array(
       0 => 'field_course_pack_print',
       1 => 'field_course_pack_print_desc',

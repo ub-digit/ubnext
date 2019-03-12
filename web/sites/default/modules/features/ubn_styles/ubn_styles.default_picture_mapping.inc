@@ -30,7 +30,7 @@ function ubn_styles_default_picture_mapping() {
       ),
     ),
   );
-  $export['hero_small'] = $picture_mapping;
+  $export['hero'] = $picture_mapping;
 
   $picture_mapping = new PictureMapping();
   $picture_mapping->disabled = FALSE; /* Edit this to true to make a default picture_mapping disabled initially */

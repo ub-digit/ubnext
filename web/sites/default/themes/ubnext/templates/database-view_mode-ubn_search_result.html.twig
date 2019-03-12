@@ -8,7 +8,11 @@
 
 {% import "macros/database-url.html.twig" as helper %}
 
+
 <div class="database-row">
+  {%
+    set hideDirectLink = database.field_hide_direct_link_in_search.value
+  %}
   {%
     set excerpt = database.value.ubn_search_result_item.excerpt ?
     database.value.ubn_search_result_item.excerpt :
@@ -51,11 +55,13 @@
           {% endif %}
         </div>
       </div>
+      {% if not hideDirectLink %}
       <div class="col-xs-12 col-sm-12">
         <div class="database-item-direct-link">
             <a href="{{ helper.getPreferedUrl(database.field_database_urls) }}">{{ t("Directly to") }} {{title}}</a><i class="fa fa-arrow-right" aria-hidden="true"></i>
         </div>
       </div>
+      {% endif %}
     </div>
   </div>
 </div>
