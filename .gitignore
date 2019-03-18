@@ -13,3 +13,5 @@ todo
 
 web/sites/default/themes/ubnext/package-lock.json
 
+web/sites/default/themes/ubnext/supervisord.log
+web/sites/default/themes/ubnext/supervisord.pid
