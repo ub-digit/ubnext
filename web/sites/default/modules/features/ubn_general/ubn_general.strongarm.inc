@@ -145,7 +145,7 @@ function ubn_general_strongarm() {
     'domain' => '',
     'prefix' => 'sv',
     'weight' => '0',
-    'javascript' => 'Ccg3fZ37KDbhwd6r6mguTuBUJ5zi-p4XZWmSFUkEahg',
+    'javascript' => 'QDvA4ZiyfcW1OPvBg-2vYzihgoOQGfxDf40nWB3Vn8o',
   );
   $export['language_default'] = $strongarm;
 

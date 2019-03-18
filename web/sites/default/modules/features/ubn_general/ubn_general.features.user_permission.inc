@@ -15,6 +15,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'access administration menu',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'admin_menu',
   );
@@ -24,6 +25,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'access administration pages',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'system',
   );
@@ -42,6 +44,7 @@ function ubn_general_user_default_permissions() {
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -51,6 +54,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'access content overview',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -60,6 +64,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'access contextual links',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'contextual',
   );
@@ -397,6 +402,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'administer taxonomy',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'taxonomy',
   );
@@ -503,34 +509,6 @@ function ubn_general_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: 'clear database_urls_field_collection feeds'.
-  $permissions['clear database_urls_field_collection feeds'] = array(
-    'name' => 'clear database_urls_field_collection feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'clear databases feeds'.
-  $permissions['clear databases feeds'] = array(
-    'name' => 'clear databases feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'clear databases_categories feeds'.
-  $permissions['clear databases_categories feeds'] = array(
-    'name' => 'clear databases_categories feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'clear databases_topics feeds'.
-  $permissions['clear databases_topics feeds'] = array(
-    'name' => 'clear databases_topics feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
   // Exported permission: 'clear libraries_opening_hours feeds'.
   $permissions['clear libraries_opening_hours feeds'] = array(
     'name' => 'clear libraries_opening_hours feeds',
@@ -585,7 +563,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'create database content'.
   $permissions['create database content'] = array(
     'name' => 'create database content',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'node',
   );
 
@@ -666,7 +646,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete any database content'.
   $permissions['delete any database content'] = array(
     'name' => 'delete any database content',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'node',
   );
 
@@ -747,7 +729,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete own database content'.
   $permissions['delete own database content'] = array(
     'name' => 'delete own database content',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'node',
   );
 
@@ -807,6 +791,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'delete revisions',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -821,14 +806,18 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete terms in media_types'.
   $permissions['delete terms in media_types'] = array(
     'name' => 'delete terms in media_types',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in publishers'.
   $permissions['delete terms in publishers'] = array(
     'name' => 'delete terms in publishers',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -870,7 +859,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete terms in topics'.
   $permissions['delete terms in topics'] = array(
     'name' => 'delete terms in topics',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -893,6 +884,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'display admin pages in another language',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'admin_language',
   );
@@ -902,6 +894,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'display drupal links',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'admin_menu',
   );
@@ -932,7 +925,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit any database content'.
   $permissions['edit any database content'] = array(
     'name' => 'edit any database content',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'node',
   );
 
@@ -1013,7 +1008,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit own database content'.
   $permissions['edit own database content'] = array(
     'name' => 'edit own database content',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'node',
   );
 
@@ -1078,14 +1075,18 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit terms in media_types'.
   $permissions['edit terms in media_types'] = array(
     'name' => 'edit terms in media_types',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in publishers'.
   $permissions['edit terms in publishers'] = array(
     'name' => 'edit terms in publishers',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1127,7 +1128,9 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit terms in topics'.
   $permissions['edit terms in topics'] = array(
     'name' => 'edit terms in topics',
-    'roles' => array(),
+    'roles' => array(
+      'database editor' => 'database editor',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1175,6 +1178,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'flush caches',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'admin_menu',
   );
@@ -1285,34 +1289,6 @@ function ubn_general_user_default_permissions() {
     'module' => 'geocoder',
   );
 
-  // Exported permission: 'import database_urls_field_collection feeds'.
-  $permissions['import database_urls_field_collection feeds'] = array(
-    'name' => 'import database_urls_field_collection feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'import databases feeds'.
-  $permissions['import databases feeds'] = array(
-    'name' => 'import databases feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'import databases_categories feeds'.
-  $permissions['import databases_categories feeds'] = array(
-    'name' => 'import databases_categories feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'import databases_topics feeds'.
-  $permissions['import databases_topics feeds'] = array(
-    'name' => 'import databases_topics feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
   // Exported permission: 'import libraries_opening_hours feeds'.
   $permissions['import libraries_opening_hours feeds'] = array(
     'name' => 'import libraries_opening_hours feeds',
@@ -1371,6 +1347,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'revert revisions',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -1414,6 +1391,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'translate any entity',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'entity_translation',
   );
@@ -1464,34 +1442,6 @@ function ubn_general_user_default_permissions() {
     'module' => 'i18n_string',
   );
 
-  // Exported permission: 'unlock database_urls_field_collection feeds'.
-  $permissions['unlock database_urls_field_collection feeds'] = array(
-    'name' => 'unlock database_urls_field_collection feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'unlock databases feeds'.
-  $permissions['unlock databases feeds'] = array(
-    'name' => 'unlock databases feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'unlock databases_categories feeds'.
-  $permissions['unlock databases_categories feeds'] = array(
-    'name' => 'unlock databases_categories feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'unlock databases_topics feeds'.
-  $permissions['unlock databases_topics feeds'] = array(
-    'name' => 'unlock databases_topics feeds',
-    'roles' => array(),
-    'module' => 'feeds',
-  );
-
   // Exported permission: 'unlock libraries_opening_hours feeds'.
   $permissions['unlock libraries_opening_hours feeds'] = array(
     'name' => 'unlock libraries_opening_hours feeds',
@@ -1513,6 +1463,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'use all enabled languages',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'admin_language',
   );
@@ -1614,6 +1565,7 @@ function ubn_general_user_default_permissions() {
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
+      'database editor' => 'database editor',
     ),
     'module' => 'filter',
   );
@@ -1623,6 +1575,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'use text format full_html',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'filter',
   );
@@ -1633,6 +1586,7 @@ function ubn_general_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
+      'database editor' => 'database editor',
     ),
     'module' => 'filter',
   );
@@ -1680,6 +1634,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'view own unpublished content',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -1698,6 +1653,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'view revisions',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'node',
   );
@@ -1707,6 +1663,7 @@ function ubn_general_user_default_permissions() {
     'name' => 'view the administration theme',
     'roles' => array(
       'administrator' => 'administrator',
+      'database editor' => 'database editor',
     ),
     'module' => 'system',
   );
