@@ -16,5 +16,11 @@ function ubn_general_user_default_roles() {
     'weight' => 2,
   );
 
+  // Exported role: database editor.
+  $roles['database editor'] = array(
+    'name' => 'database editor',
+    'weight' => 3,
+  );
+
   return $roles;
 }

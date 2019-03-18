@@ -300,6 +300,7 @@ features[user_permission][] = view pane admin links
 features[user_permission][] = view revisions
 features[user_permission][] = view the administration theme
 features[user_role][] = administrator
+features[user_role][] = database editor
 features[variable][] = admin_theme
 features[variable][] = configurable_timezones
 features[variable][] = date_default_timezone
