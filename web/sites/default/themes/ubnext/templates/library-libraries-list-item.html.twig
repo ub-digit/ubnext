@@ -19,8 +19,12 @@
               <div class="col-sm-8 col-xs-8 libraries-list-item-opening-hours-hours"><div class="pull-right-sm">{{ opening_hours.hours }}</div></div>
             </div>
           {% endfor %}
-
         </div>
+        {%if library.field_opening_hours_disclaimer.value %}
+        <div class="col-xs-12 libraries-opening-hours-disclaimer">
+          {{library.field_opening_hours_disclaimer.value | raw}}
+        </div>
+        {% endif %}
        </div>
     </div>
   </section>

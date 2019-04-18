@@ -987,6 +987,15 @@ function ubn_general_update_7217() {
   module_disable($modules);
   drupal_uninstall_modules($modules);
 }
+// Delete obsolete fields from content type Library
+function ubn_general_update_7218() {
+  if ($instance = field_info_instance('node', 'field_title_short', 'library')) {
+    field_delete_instance($instance);
+  }
+  if ($instance = field_info_instance('node', 'field_availability_description', 'library')) {
+    field_delete_instance($instance);
+  }
+}
 
 //TODO: Disable rdf module?
 // Enable entity translation for library
