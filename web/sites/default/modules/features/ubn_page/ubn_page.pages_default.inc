@@ -381,6 +381,58 @@ function ubn_page_default_page_manager_handlers() {
     $display->content['new-2b04e45a-7ba0-4d4d-98d6-f874e234fe61'] = $pane;
     $display->panels['main'][2] = 'new-2b04e45a-7ba0-4d4d-98d6-f874e234fe61';
     $pane = new stdClass();
+    $pane->pid = 'new-e261c8b3-83ea-42f9-b3cc-000da540c531';
+    $pane->panel = 'main';
+    $pane->type = 'slate_render';
+    $pane->subtype = 'slate_render:library_opening_hours_disclaimer ';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'context' => array(
+        0 => 'argument_entity_id:node_1',
+      ),
+      'override_title' => 1,
+      'override_title_text' => '',
+      'override_title_heading' => 'h2',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 3;
+    $pane->locks = array();
+    $pane->uuid = 'e261c8b3-83ea-42f9-b3cc-000da540c531';
+    $display->content['new-e261c8b3-83ea-42f9-b3cc-000da540c531'] = $pane;
+    $display->panels['main'][3] = 'new-e261c8b3-83ea-42f9-b3cc-000da540c531';
+    $pane = new stdClass();
+    $pane->pid = 'new-e1080a7a-1ff4-43f8-bb12-613e036784e5';
+    $pane->panel = 'main';
+    $pane->type = 'slate_render';
+    $pane->subtype = 'slate_render:library_opening_hours_info';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'context' => array(
+        0 => 'argument_entity_id:node_1',
+      ),
+      'override_title' => 1,
+      'override_title_text' => '',
+      'override_title_heading' => 'h2',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 4;
+    $pane->locks = array();
+    $pane->uuid = 'e1080a7a-1ff4-43f8-bb12-613e036784e5';
+    $display->content['new-e1080a7a-1ff4-43f8-bb12-613e036784e5'] = $pane;
+    $display->panels['main'][4] = 'new-e1080a7a-1ff4-43f8-bb12-613e036784e5';
+    $pane = new stdClass();
     $pane->pid = 'new-fc378e18-63ad-4e8e-b4cd-bbc7a8f67fb8';
     $pane->panel = 'main_top';
     $pane->type = 'slate_render';
