@@ -9,6 +9,11 @@
     <div class="row">
       <h2 class="col-xs-12 col-lg-6 col-lg-offset-3 col-md-8 col-sm-offset-2" id="library-opening-hours-header">{{ t("Opening hours for !location", {"!location" : library.title_field.value}) }}</h2>
     </div>  
+    <div class="row">
+      <section class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2">
+        {{library.field_opening_hours_info.value | raw}}
+      </section>
+    </div>
   </header>
   <div class="row">
     <div class="col-xs-12 col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2">
@@ -33,7 +38,7 @@
       {% if hasException %}
         <div class="row">
           <div class="col-xs-12">
-            <div class="ubn-footnote pull-right">
+            <div class="ubn-footnote">
               * {{t("Special hours")}}
             </div>
           </div>
