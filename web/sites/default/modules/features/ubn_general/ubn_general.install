@@ -997,6 +997,14 @@ function ubn_general_update_7218() {
   }
 }
 
+
+function ubn_general_update_7219() {
+  if ($instance = field_info_instance('node', 'field_availability_description', 'library')) {
+    field_delete_instance($instance);
+  }
+}
+
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
