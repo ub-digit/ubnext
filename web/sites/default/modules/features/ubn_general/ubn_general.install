@@ -1004,6 +1004,35 @@ function ubn_general_update_7219() {
   }
 }
 
+function ubn_general_update_7226() {
+
+  // depends on how it is delivered 
+  $str = '/foo,/bar:/1sourcasfde_url_1,/1targetasfd_url_1:/1source_afsurl_2,/1targeafdt_url_2';
+
+  $tempArr = explode(':', $str);
+  $documentArr = array();
+  foreach ($tempArr as $item) {
+    $lineArr = explode(",", $item);
+    $documentArr[$lineArr[0]] = $lineArr[1];
+  }
+  foreach ($documentArr as $key => $value) {
+    $redirect = array(
+      "type"=>"redirect", 
+      "source"=>$key, 
+      "source_options" => [],
+      "redirect"=>$value, 
+      "redirect_options"=> [],
+      "lang"=>"und",
+      "status"=>1,
+      "status_code"=>0,
+      "override"=>false,
+    );
+    $redirect_obj = (object) $redirect;
+    redirect_save($redirect_obj);
+  }
+}
+
+
 
 //TODO: Disable rdf module?
 // Enable entity translation for library
