@@ -1019,7 +1019,7 @@ function ubn_general_update_7230() {
   foreach ($documentArr as $key => $value) {
     $redirect = array(
       "type"=>"redirect", 
-      "source"=>$key, 
+      "source"=>ltrim($key, '/'), 
       "source_options" => [],
       "redirect"=>$value, 
       "redirect_options"=> [],
