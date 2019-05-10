@@ -24,17 +24,18 @@ $plugin = array(
  * Process Markup
  */
 function geocoder_google($address, $options = array()) {
+
   try {
     geophp_load();
 
     $query = array(
       'address' => $address,
       'sensor' => 'false',
+      'key' => 'AIzaSyBqlnQ29_puUjyV9_udT42aiePgcH3pAMc',
     );
 
-    $url = url("http://maps.googleapis.com/maps/api/geocode/json", array('query' => $query));
+    $url = url("https://maps.googleapis.com/maps/api/geocode/json", array('query' => $query));
     $result = drupal_http_request($url);
-
     if (isset($result->error)) {
       $args = array(
         '@code' => $result->code,
