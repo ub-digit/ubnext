@@ -139,6 +139,20 @@
     .shortcuts-menu {
       background: @gray-dark;
       padding: 20px;
+      ul {
+        &.menu {
+           ul {
+            &.menu {
+              display:none;
+              ul {
+                &.menu {
+                  display:none;
+                }
+              }
+            }
+          }
+        }
+      }
       ul { 
         margin-bottom:0;
         li {
