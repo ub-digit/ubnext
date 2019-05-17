@@ -4,10 +4,11 @@
 #}
 
 
-<div class="beta-indicator-wrapper">
-		<div class="beta-indicator center">
-			{{ check_markup(variable_get('beta_info', NULL)['value'], variable_get('beta_info', NULL)['format'], '', TRUE)|raw }}
+{% if variable_get('beta_info', NULL)['value'] %}
+	<div class="beta-indicator-wrapper">
+			<div class="beta-indicator center">
+				{{ check_markup(variable_get('beta_info', NULL)['value'], variable_get('beta_info', NULL)['format'], '', TRUE)|raw }}
+			</div>
 		</div>
 	</div>
-</div>
-
+{% endif %}
