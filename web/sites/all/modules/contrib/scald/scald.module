@@ -2519,8 +2519,9 @@ function theme_scald_render_error($vars) {
 function theme_scald_library_atom($vars) {
   return theme('image', array(
     'path' => $vars['thumbnail_url'],
-    'alt' => $vars['atom']->title,
-    'title' => $vars['atom']->title,
+    /* UBNEXT  We want NO title and empty ALT when image is not relevant for screenreaders */ 
+ /*   'alt' => $vars['atom']->title,
+    'title' => $vars['atom']->title, */
   ));
 }
 
