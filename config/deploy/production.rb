@@ -26,7 +26,7 @@ server 'beta.ub.gu.se', user: 'drupal-deploy', roles: %w{app},
 set :deploy_to, '/var/www/drupal/production'
 
 # Set release tag
-set :branch, 'release-2019.04-002'
+set :branch, 'release-2019.05-004'
 
 
 

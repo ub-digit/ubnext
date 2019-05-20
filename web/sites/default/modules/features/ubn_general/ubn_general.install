@@ -1036,6 +1036,11 @@ function ubn_general_update_7230() {
   }
 }
 
+function ubn_general_update_7231() {
+  foreach(array('ubn_content_types') as $module) {
+    features_revert_module($module);
+  }
+}
 
 
 //TODO: Disable rdf module?
