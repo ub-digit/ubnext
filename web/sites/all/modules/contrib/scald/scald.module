@@ -2520,8 +2520,8 @@ function theme_scald_library_atom($vars) {
   return theme('image', array(
     'path' => $vars['thumbnail_url'],
     /* UBNEXT  We want NO title and empty ALT when image is not relevant for screenreaders */ 
- /*   'alt' => $vars['atom']->title,
-    'title' => $vars['atom']->title, */
+    'alt' => '', //$vars['atom']->title,
+    'title' => '', //$vars['atom']->title, 
   ));
 }
 
