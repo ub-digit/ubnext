@@ -1,7 +1,8 @@
 <?php
 
-
-
+/*
+Bug in scald or entitytranslation. This will force EN to default lang until bug is fixed.
+*/
 function ubn_scald_entity_presave($entity, $types) {
   if ($entity->provider == 'scald_image') {
     if (empty($entity->scald_thumbnail['en']))  {
