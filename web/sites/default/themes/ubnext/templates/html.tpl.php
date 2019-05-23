@@ -80,9 +80,9 @@ global $base_url;
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NR65TR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div id="skip-link" class="sr-only rs_skip">
-    <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
-  </div>
+  
+    <a href="#main-content" class="skip element-focusable"><?php print t('Skip to main content'); ?></a>
+
   <?php print $page_top; ?>
   <?php print $page; ?>
   <?php print $page_bottom; ?>
