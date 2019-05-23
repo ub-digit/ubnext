@@ -152,7 +152,7 @@
 <?php endif; ?>
 
 <?php if (!empty($content['content'])): ?>
-  <div class="main-cms">
+  <div id="main-content" class="main-cms">
     <div class="wrap">
       <?php print render($content['content']); ?>
     </div>
