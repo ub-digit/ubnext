@@ -54,7 +54,7 @@ function scald_flash_scald_add_form_fill(&$atoms, $form, $form_state) {
     $size_infos = getimagesize($file->uri);
     $atom->data['flash_width'] = $size_infos[0];
     $atom->data['flash_height'] = $size_infos[1];
-    $langcode = field_language('scald_atom', $atom, 'scald_width');
+    $langcode = _scald_atom_form_field_language($atom, 'scald_width');
     $atom->scald_width[$langcode][0]['value'] = $size_infos[0];
     $atom->scald_height[$langcode][0]['value'] = $size_infos[1];
   }
