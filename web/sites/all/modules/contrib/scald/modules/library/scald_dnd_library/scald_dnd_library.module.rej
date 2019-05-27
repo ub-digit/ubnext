@@ -1,0 +1,14 @@
+--- modules/library/scald_dnd_library/scald_dnd_library.module
++++ modules/library/scald_dnd_library/scald_dnd_library.module
+@@ -215,6 +215,11 @@ function theme_sdl_library_item($variables) {
+   // Force all links to open in a new window
+   foreach ($links as $action => $link) {
+     $links[$action]['attributes']['target'] = '_blank';
++    // The 'edit' action supports CTools Modal.
++    if ($action == 'edit' || $action == 'delete') {
++      $links[$action]['attributes']['class'] = array('ctools-use-modal', 'ctools-modal-custom-style');
++      $links[$action]['href'] .= '/nojs';
++    }
+   }
+   // The Insert link. Use the "_" prefix to avoid collision with possible
+   // "insert" action.

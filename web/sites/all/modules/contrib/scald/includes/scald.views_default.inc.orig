@@ -147,11 +147,6 @@ function scald_views_default_views() {
   $handler->display->display_options['fields']['representation']['table'] = 'scald_atoms';
   $handler->display->display_options['fields']['representation']['field'] = 'representation';
   $handler->display->display_options['fields']['representation']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['representation']['context'] = 'library';
-  /* Field: Atom: Actions */
-  $handler->display->display_options['fields']['actions']['id'] = 'actions';
-  $handler->display->display_options['fields']['actions']['table'] = 'scald_atoms';
-  $handler->display->display_options['fields']['actions']['field'] = 'actions';
   /* Sort criterion: Atom: Scald ID */
   $handler->display->display_options['sorts']['sid']['id'] = 'sid';
   $handler->display->display_options['sorts']['sid']['table'] = 'scald_atoms';

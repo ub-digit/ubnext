@@ -5,15 +5,16 @@
 (function($) {
 
   var $edit_link_model = $('<a target="_blank">')
-    .html(Drupal.t('Edit'))
     .addClass('ctools-use-modal ctools-modal-custom-style atom-reference-edit');
   var $view_link_model = $('<a target="_blank">')
-    .html(Drupal.t('View'))
     .addClass('atom-reference-view');
 
 Drupal.behaviors.atom_reference = {
   attach: function(context, settings) {
     var this_behavior_attach = this;
+
+    $edit_link_model.html(Drupal.t('Edit'));
+    $view_link_model.html(Drupal.t('View'));
 
     // Record if the edit target link modal frame is updated
     $('.ctools-modal-content form', context).bind('formUpdated', function() {
@@ -48,7 +49,7 @@ Drupal.behaviors.atom_reference = {
       // Build operations (remove reference, edit and view) structure.
       var $operation_wrapper = $('<div class="atom_reference_operations">');
       var $operation_buttons = $('<div id="ctools-button-0" class="buttons ctools-no-js ctools-button">')
-        .append('<div class="ctools-link"><a href="#" class="ctools-twisty ctools-text">' + Drupal.t('Operation') + '</a></div>')
+        .append('<div class="ctools-link"><a href="#" class="ctools-twisty ctools-text"><span class="element-invisible">' + Drupal.t('Operation') + '</span></a></div>')
         .append('<div class="ctools-content"><ul><li class="remove"><li class="edit"><li class="view"></ul></div>')
         .prependTo($operation_wrapper);
 

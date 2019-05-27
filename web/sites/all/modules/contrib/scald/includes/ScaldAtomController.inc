@@ -33,6 +33,7 @@ class ScaldAtomController extends DrupalDefaultEntityController {
       if (file_prepare_directory($directory, FILE_CREATE_DIRECTORY)) {
         return $directory;
       }
+      drupal_set_message(t('The directory "@directory" must be writable by the webserver. Your upload will not be saved. Please contact your server administrator to configure permissions.', array('@directory' => $directory)), 'error', FALSE);
     }
   }
 
@@ -178,6 +179,13 @@ class ScaldAtomController extends DrupalDefaultEntityController {
         ->condition('type', $type)
         ->execute();
       scald_types(TRUE);
+
+      foreach (array('scald_thumbnail', 'scald_authors', 'scald_tags') as $field_name) {
+        $instance = field_info_instance('scald_atom', $field_name, $type);
+        if (!empty($instance)) {
+          field_delete_instance($instance, FALSE);
+        }
+      }
       return TRUE;
     }
 

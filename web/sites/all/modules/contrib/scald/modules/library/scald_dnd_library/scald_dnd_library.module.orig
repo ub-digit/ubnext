@@ -150,7 +150,7 @@ function scald_dnd_library_scald_contexts() {
       ),
     ),
     'sdl_library_item' => array(
-      'title' => t('DND Library item'),
+      'title' => t('Library item'),
       'description' => t('The Library Rep'),
       'render_language' => 'XHTML',
       'parseable'       => FALSE,
@@ -350,7 +350,6 @@ function scald_dnd_library_views_api() {
 function scald_dnd_library_image_default_styles() {
   $presets = array();
   $presets['library'] = array(
-    'label' => 'Scald DND Library',
     'effects' => array(
       array(
         'name' => 'image_scale',
