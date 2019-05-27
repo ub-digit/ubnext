@@ -430,6 +430,19 @@ function scald_atom_defaults($type) {
 }
 
 
+/**
+ * Helper for getting the preferred language code for an atom field, useful
+ * when prefilling atom fields in hook_scald_add_form_fill().
+ */
+function _scald_atom_form_field_language($atom, $field_name) {
+  $entity_langcode = entity_language('scald_atom', $atom);
+  $field_langcode = field_valid_language($entity_langcode);
+  $field = field_info_field($field_name);
+  $available_languages = field_available_languages('scald_atom', $field);
+  $languages = _field_language_suggestion($available_languages, $field_langcode, $field_name);
+  return $languages[0];
+}
+
 /*******************************************************************************
  * SCALD ATOM CRUD
  */
