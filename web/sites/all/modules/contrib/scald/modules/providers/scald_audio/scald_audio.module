@@ -88,14 +88,14 @@ function scald_audio_scald_add_form_fill(&$atoms, $form, $form_state) {
         $atom->title = !empty($ret['tags']['title']) ? $ret['tags']['title'] : $file->filename;
 
         // Prefill the author.
-        $langcode = field_language('scald_atom', $atom, 'scald_authors');
+        $langcode = _scald_atom_form_field_language($atom, 'scald_authors');
         $atom->scald_authors[$langcode][0] = array(
           'tid' => 0,
           'taxonomy_term' => (object)(array('name' => isset($ret['tags']['artist'])?$ret['tags']['artist']:t('Unknown')))
         );
 
         // Prefill tags.
-        $langcode = field_language('scald_atom', $atom, 'scald_tags');
+        $langcode = _scald_atom_form_field_language($atom, 'scald_tags');
         $atom->scald_tags[$langcode][0] = array(
           'tid' => 0,  // Beware, this is not a real tid, it's just an index.
           'taxonomy_term' => (object)(array('name' => isset($ret['tags']['genre'])?$ret['tags']['genre']:t('Unknown')))
@@ -126,7 +126,7 @@ function scald_audio_scald_add_form_fill(&$atoms, $form, $form_state) {
               ->condition('fid', $file->fid)
               ->fields(array('status' => 0))
               ->execute();
-            $langcode = field_language('scald_atom', $atom, 'scald_thumbnail');
+            $langcode = _scald_atom_form_field_language($atom, 'scald_thumbnail');
             $atom->scald_thumbnail[$langcode][0] = (array) $file;
           }
         }
