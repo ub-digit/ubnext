@@ -23,6 +23,7 @@
     attach : function(context, settings) {
       $(window).load(function(){
         // Does not apply to production server
+        return false;
         if(window.location.hostname == 'beta.ub.gu.se'){
           return false;
         }
