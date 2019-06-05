@@ -8,7 +8,7 @@ set :repo_url, 'https://github.com/ub-digit/ubnext.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
-set :branch, 'release-2019.05-004'
+set :branch, 'skip-link-bug'
 
 
 # Default deploy_to directory is /var/www/my_app
