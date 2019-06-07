@@ -17,11 +17,6 @@
           img.toggleClass('active');
         }
       });
-
-      $('.promoted-wrapper').on('click', function(){
-        let url = $(this).find('a').attr("href");
-        window.location.href = url;
-      });
     }
   };
 })(jQuery);
