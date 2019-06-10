@@ -30,6 +30,10 @@
       if (window.location.hash.substr(1) != "refering") {
         $('.database-back-link-wrapper').hide();
       }
+      $('.ubn-facet-header').bind('click', function() {
+        let url = $(this).find('a').attr("href");
+        window.location.href = url;
+      });
     }
   };
 
