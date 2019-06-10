@@ -29,7 +29,7 @@
           </div>
           <div class="site-headers">
             <div class="site-title">
-              <a href="<?php echo $GLOBALS['base_url']; ?>"><?php print variable_get('site_name'); ?></a>
+              <a href="<?php echo $GLOBALS['base_url'] . '/' . $language->language; ?>"><?php print variable_get('site_name'); ?></a>
             </div>
           </div>
         </div>
