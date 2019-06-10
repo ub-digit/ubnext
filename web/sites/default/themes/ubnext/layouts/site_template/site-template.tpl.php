@@ -24,7 +24,7 @@
         <div class="col-md-7 col-xs-12">
           <div class="siteNav-logo <?php echo $language->language; ?>">
             <div class="logo">
-              <a title="<?php echo t("Till universitetsbibliotekets startsida") ?>" href="<?php echo $GLOBALS['base_url'] . '/' . $language->language; ?>"><div class="logo-image"></div></a>
+              <a aria-label="<?php echo t("Till universitetsbibliotekets startsida") ?>" title="<?php echo t("Till universitetsbibliotekets startsida") ?>" href="<?php echo $GLOBALS['base_url'] . '/' . $language->language; ?>"><div class="logo-image"></div></a>
             </div>
           </div>
           <div class="site-headers">
