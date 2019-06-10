@@ -26,7 +26,7 @@
     attach : function(context, settings) {
 
       if (!$(".page-database-search").length) {
-        $('.ubn-facet-header').bind('click', function() {
+        $('.facetapi-facet-field-public-access .ubn-facet-header').bind('click', function() {
           let url = $(this).find('a').attr("href");
           window.location.href = url;
         });
