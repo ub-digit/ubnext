@@ -24,12 +24,12 @@
         <div class="col-md-7 col-xs-12">
           <div class="siteNav-logo <?php echo $language->language; ?>">
             <div class="logo">
-              <a href="<?php echo $GLOBALS['base_url']; ?>"><div class="logo-image"></div></a>
+              <a aria-label="<?php echo t("To Gothenburg University Library startpage") ?>" title="<?php echo t("Till universitetsbibliotekets startsida") ?>" href="<?php echo $GLOBALS['base_url'] . '/' . $language->language; ?>"><div class="logo-image"></div></a>
             </div>
           </div>
           <div class="site-headers">
             <div class="site-title">
-              <a href="<?php echo $GLOBALS['base_url']; ?>"><?php print variable_get('site_name'); ?></a>
+              <a href="<?php echo $GLOBALS['base_url'] . '/' . $language->language; ?>"><?php print variable_get('site_name'); ?></a>
             </div>
           </div>
         </div>
