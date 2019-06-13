@@ -1051,6 +1051,13 @@ function ubn_general_update_7232() {
 
 
 
+function ubn_general_update_7233() {
+  if ($instance = field_info_instance('node', 'field_referenced_app', 'page')) {
+    field_delete_instance($instance);
+  }
+}
+
+
 
 //TODO: Disable rdf module?
 // Enable entity translation for library
