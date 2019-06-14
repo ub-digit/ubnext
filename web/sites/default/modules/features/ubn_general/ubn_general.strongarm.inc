@@ -296,16 +296,24 @@ function ubn_general_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'variable_realm_list_language';
-  $strongarm->value = array(
-    0 => 'site_name',
-    1 => 'site_slogan',
+  $strongarm->value = array(  
+    1 => 'aria_label_logotype',
+    2 => 'footer_col1',
     2 => 'beta_info',
+    3 => 'footer_col2',
     3 => 'footer_col1',
+    4 => 'footer_col3',
     4 => 'footer_col2',
+    5 => 'placeholder',
     5 => 'footer_col3',
-    6 => 'slogan',
+    6 => 'site_name',
+    6 => 'link_logotype',
+    7 => 'site_slogan',
     7 => 'placeholder',
-    8 => 'aria_label',
+    8 => 'slogan',
+    8 => 'site_name',
+    9 => 'site_slogan',
+    10 => 'slogan',
   );
   $export['variable_realm_list_language'] = $strongarm;
 
