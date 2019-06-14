@@ -1042,6 +1042,30 @@ function ubn_general_update_7231() {
   }
 }
 
+/* Set source translation to swedish for database categories */
+function ubn_general_update_7232() {
+  db_query("
+    UPDATE entity_translation et
+      JOIN taxonomy_term_data ttd ON et.entity_id = ttd.tid AND et.entity_type = 'taxonomy_term'
+      JOIN taxonomy_vocabulary tv ON ttd.vid = tv.vid
+    SET et.source = 'sv'
+    WHERE et.language = 'en' AND tv.machine_name IN ('topics', 'media_types', 'database_availability')
+  ");
+  db_query("
+    UPDATE entity_translation et
+      JOIN taxonomy_term_data ttd ON et.entity_id = ttd.tid AND et.entity_type = 'taxonomy_term'
+      JOIN taxonomy_vocabulary tv ON ttd.vid = tv.vid
+    SET et.source = ''
+    WHERE et.language = 'sv' AND tv.machine_name IN ('topics', 'media_types', 'database_availability')
+  ");
+  db_query("
+    UPDATE taxonomy_term_data ttd
+      JOIN field_data_name_field fdnf ON ttd.tid = fdnf.entity_id AND entity_type = 'taxonomy_term'
+      JOIN taxonomy_vocabulary tv ON ttd.vid = tv.vid
+    SET ttd.name = fdnf.name_field_value
+    WHERE fdnf.language = 'sv' AND tv.machine_name IN ('topics', 'media_types', 'database_availability')
+  ");
+}
 
 function ubn_general_update_7232() {
   if ($instance = field_info_instance('node', 'field_description', 'blurb')) {
