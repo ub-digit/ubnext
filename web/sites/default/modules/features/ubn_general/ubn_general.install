@@ -1057,7 +1057,7 @@ function ubn_general_update_7233() {
   }
 }
 
-function ubn_general_update_7233() {
+function ubn_general_update_7234() {
   if ($instance = field_info_instance('node', 'field_description', 'blurb')) {
     field_delete_instance($instance);
   }
