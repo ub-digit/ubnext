@@ -39,7 +39,7 @@
 {% macro pane_head_title(title, namespace, options) %}
   {% set options = { 'header_level': 2 }|merge(options|default({})) %}
   {% if not title is empty %}
-    <h{{ options.header_level }} class="small header-list no-top-margin">{{ title|raw }}</h2>
+    <h{{ options.header_level }} class="small header-list no-top-margin">{{ title|raw }}</h{{ options.header_level }}>
   {% endif %}
 {% endmacro %}
 

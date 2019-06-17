@@ -24,6 +24,14 @@
 
   Drupal.behaviors.ubnext_database = {
     attach : function(context, settings) {
+
+      if (!$(".page-database-search").length) {
+        $('.facetapi-facet-field-public-access .ubn-facet-header').bind('click', function() {
+          let url = $(this).find('a').attr("href");
+          window.location.href = url;
+        });
+      }
+
       if (!$(".node-type-database").length) {
         return;
       }

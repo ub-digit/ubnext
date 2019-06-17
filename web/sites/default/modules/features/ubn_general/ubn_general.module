@@ -476,3 +476,52 @@ function ubn_general_node_access($node, $op, $account) {
   }
   return NODE_ACCESS_IGNORE;
 }
+
+
+
+function ubn_general_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
+   $form['header_settings'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Header settings'),
+        '#collapsible' => TRUE,
+//        '#tree' => TRUE,
+    );
+
+
+    $default_value = variable_get('link_logotype', 'http://www.ub.gu.se');
+    $form['header_settings']['link_logotype'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Link logotype'),
+      '#default_value' => $default_value,
+    );
+
+
+    $default_value = variable_get('aria_label_logotype', 'Back to homepage');
+    $form['header_settings']['aria_label_logotype'] = array(
+      '#type' => 'textfield',
+      '#title' => t('ARIA label'),
+      '#default_value' => $default_value,
+    );
+}
+
+function ubn_general_variable_info($options) {
+
+  $variables['aria_label_logotype'] = array(
+    'type' => 'text_format',
+    'title' => t('Aria label logotype'),
+    'default' => 'Aria label here',
+    'group' => 'site_information',
+    'localize' => TRUE,
+  );
+
+  $variables['link_logotype'] = array(
+    'type' => 'text_format',
+    'title' => t('Link logotype'),
+    'default' => 'Link to logotype',
+    'group' => 'site_information',
+    'localize' => TRUE,
+  );
+  return $variables;
+}  
+
+
