@@ -28,6 +28,8 @@ $conf['i18n_variables'] = array(
   'slogan',
   'placeholder',
   'aria_label',
+  'link_logotype',
+  'aria_label_logotype',
 );
 
 if (
