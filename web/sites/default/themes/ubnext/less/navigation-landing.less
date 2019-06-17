@@ -7,7 +7,22 @@
     color: @ub-link-color;
     /*float: right;*/
   }
+  .ubn-theme-links-item-body{
+    text-decoration: none;
+    color: #333333!important;
+    float: left;
+    &:hover{
+      text-decoration: none;
+    }
+  }
 
+  .link-wrapper{
+    &:hover{
+      .link-text{
+        text-decoration: underline;
+      }
+    }
+  }
   /* ubn-panel-links  overrides */
   .ubn-panel-links {
     &.shortcuts {
@@ -22,7 +37,7 @@
       .shortcuts-body {
         .shortcuts-link-list {
           .shortcuts-body-link {
-            a {
+            span {
               &::after  {
                 font-family: "FontAwesome";
                 //font-weight: 900;
@@ -94,11 +109,7 @@
             font-size: 16px;
           }
 
-          a {
-            span.link-text {
-              padding-right: 20px;
-            }
-            .fa {
+          .fa {
               display: inline-block;
               text-decoration: none;
               margin-left: -15px;
@@ -108,6 +119,15 @@
               vertical-align: middle;
               font-size: 12px;
             }
+
+            span{
+
+
+            }
+
+            span.link-text {
+              padding-right: 20px;
+            
           }
           &.primary {
             a {
@@ -136,7 +156,10 @@
       }
 
       .ubn-theme-links-item-body {
+        text-decoration: none;
+        color: #333333!important;
         float: left;
+        border: 5px solid green;
       }
     }
   }
