@@ -54,27 +54,36 @@
 {% macro link_list_links(list, namespace, options) %}
   {% import "macros/misc.html.twig" as misc %}
   {% set options = { 'hide_icon': false }|merge(options|default({})) %}
-
   {% if not list is empty %}
     <ul class="list-unstyled {{ ubn_namespace_classes('ubn-panel-links', namespace, 'link-list') }}">
     {% for link in list %}
+      <li>
+        {% set is_shortcut_link = false %}
+        {% set link_bundle = link.getBundle %}
+        {% if link_bundle == 'field_shortcut_links' %}
+          {% set type = link.field_type_to_use.value %}
+          {% if type == 'link' %}
+            {% set is_shortcut_link = true %}
+            <a class="short-cut-override" href="{{ url(link.field_link.value.url) }}">
+          {% endif %}
+        {% endif %}
       {{ _self.link_list_links_item_begin(namespace, options) }}
         {% if is_array(link) %}
-            <a href="{{ url(link.url) }}">{{ link.title }}</a> 
+            <a href="{{ url(link.url) }}">Link 1 {{ link.title }}</a> 
         {% else %}
           {% set link_bundle = link.getBundle %}
           {% if link_bundle == 'field_theme_link' %}
-            <a href="{{ url(link.field_link_to_theme.value.url) }}">{{ link.field_link_to_theme.value.title }}</a>
+            <a href="{{ url(link.field_link_to_theme.value.url) }}">Link 2 {{ link.field_link_to_theme.value.title }}</a>
           {% elseif link_bundle == 'field_shortcut_links' %}
             {% set type = link.field_type_to_use.value %}
             {% if type == 'link' %}
-              <a href="{{ url(link.field_link.value.url) }}">{{ link.field_link.value.title }}</a>
+              <span class="short-cut-override-text">{{ link.field_link.value.title }}</span>
             {% elseif type == 'file' %}
               {{ misc.file_atom(link.field_file, 'page_navigation_landing_shortcut')|raw }}
             {% endif %}
           {% endif %}
         {% endif %}
-      {{ _self.link_list_links_item_end() }}
+      {{ _self.link_list_links_item_end(is_shortcut_link) }}
     {% endfor %}
     </ul>
   {% endif %}
@@ -82,12 +91,15 @@
 
 {% macro link_list_links_item_begin(namespace, options) %}
   {% set options = { 'hide_icon' : false }|merge(options|default({})) %}
-  <li>
     {% if not options.hide_icon %}<i class="fa fa-chevron-right" aria-hidden="true"></i>{% endif %}
     <div class="{{ ubn_namespace_classes('ubn-panel-links', namespace, 'body-link') }}{% if not options.hide_icon %} icon{% endif %}">
 {% endmacro %}
 
-{% macro link_list_links_item_end() %}
+{% macro link_list_links_item_end(is_sc) %}
     </div>
+    {% if is_sc %}
+      </a>
+    {% endif %}
+  
   </li>
 {% endmacro %}

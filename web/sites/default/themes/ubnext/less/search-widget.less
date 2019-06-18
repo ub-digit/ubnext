@@ -103,6 +103,19 @@
 				}
 				.search-widget-link-list-body {
 					.search-widget-link-list-link-list {
+						.short-cut-override-text{
+							&::after  {
+						        font-family: "FontAwesome";
+						        //font-weight: 900;
+						        content: "\f061";
+						        position: relative;
+						        top: -2px;
+						        left: 8px;
+						        display: inline-block;
+						        font-size: 12px;
+						        margin-right: -34px;
+					      	}
+						}
 						.search-widget-link-list-body-link {
 							&.icon {
 								margin-left:0;
@@ -117,17 +130,20 @@
 						li {
 							a {
 					      color: @gray-lighter;
-					      padding-right: 34px;
+					     
 					      &::after  {
-					        font-family: "FontAwesome";
-					        //font-weight: 900;
-					        content: "\f061";
-					        position: relative;
-					        top: -2px;
-					        left: 8px;
-					        display: inline-block;
-					        font-size: 12px;
-					        margin-right: -34px;
+					      	&:not(.short-cut-override){
+					      		 padding-right: 34px;
+						        font-family: "FontAwesome";
+						        //font-weight: 900;
+						        content: "\f061";
+						        position: relative;
+						        top: -2px;
+						        left: 8px;
+						        display: inline-block;
+						        font-size: 12px;
+						        margin-right: -34px;
+					        }
 					      }
 							}
 						}

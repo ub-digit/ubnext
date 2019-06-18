@@ -14,16 +14,44 @@
   {% import "macros/panel-links.html.twig" as pane %}
   {% if oneColLayout %}
     <li class="col-xs-12 col-sm-10 col-md-8 col-lg-6  col-lg-offset-3 col-sm-offset-1 col-md-offset-2 one-col-layout">
+      {# If there are no children the a-tag should start here #}
+      {% if children is empty %}
+        <a href="{{ url(url) }}">
+      {% endif %}
   {% else %}
     <li class="col-xs-12 col-sm-6 col-md-4">
+
+      {# If there are no children the a-tag should start here #}
+      {% if children is empty %}
+        <a class="link-wrapper" href="{{ url(url) }}">
+      {% endif %}
+      {% if not  children is empty %}
+        <div> Children present </div>
+      {% endif %}
   {% endif %}
     {{ pane.pane_begin('ubn-theme-links-item', { 'hide_icon': true, 'min_height': false } ) }}
       <div class="ubn-theme-links-item-head">
         <div class="ubn-theme-links-item-head-link">
           {% if isPrimary %}
-            <h2 class="list header-list primary"><a href="{{ url(url) }}"><span class="link-text">{{linkTitle}}</span><i class="fa fa-arrow-right"></i></a></h2>
+            <h2 class="list header-list primary">
+              {% if not children is empty %}
+              <a href="{{ url(url) }}">
+              {% endif %}
+                <span class="link-text">{{linkTitle}}</span><i class="fa fa-arrow-right"></i>
+              {% if not children is empty %}
+                </a>
+              {% endif %}
+            </h2>
           {% else %}
-            <h2 class="list header-list secondary"><a href="{{ url(url) }}"><span class="link-text">{{linkTitle}}</span><i class="fa fa-arrow-right"></i></a></h2>
+            <h2 class="list header-list secondary">
+              {% if not children is empty %}
+                <a href="{{ url(url) }}">
+              {% endif %}
+                <span class="link-text">{{linkTitle}}</span><i class="fa fa-arrow-right"></i>
+              {% if not children is empty %}
+                </a>
+              {% endif %}
+            </h2>
           {% endif %}
         </div>
         <div class="ubn-theme-links-item-head-indicator">
@@ -33,6 +61,9 @@
         {{ description|raw }}
       </div>
     {{ pane.pane_end() }}
+    {% if children is empty %}
+    </a>
+    {% endif %}
   </li>
   {% set adjustedForExtraItem = addShortcuts ? 1 : 0 %}
   {% if (index + adjustedForExtraItem) % (3) == 0 %}

@@ -5,21 +5,21 @@
 #}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
 {% import "macros/misc.html.twig" as misc %}
+{% set url = url(entity.field_link.url.value, { 'absolute' : true }|merge(options|default([]))) %}
 <div class="blurb panel-separator col-sm-6">
+<a href="{{ url }}"class="blurb-wrapper-link">
 	<div class="blurb-wrapper">
-  <div class="blurb-image">
-    {{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}
-  </div>
-
-  <div class="story-promoted-text-wrapper">
-		<div class="story-promoted-container">
-			<div class="story-promoted-text">
-					<h2 class="blurb-header list primary">{{ misc.link(entity.title.value, entity.field_link.url.value) }}</h2>
+	 	<div class="blurb-image">
+	    	{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}
+	  	</div>
+	  	<div class="story-promoted-text-wrapper">
+			<div class="story-promoted-container">
+				<div class="story-promoted-text">
+					<h2 class="blurb-header list primary">{{ entity.title.value }}</h2>
 				</div>
 				<i class="story-arrow fa fa-arrow-right"></i>
+			</div>
 		</div>
 	</div>
-</div>
- 
-  
+</a>
 </div>

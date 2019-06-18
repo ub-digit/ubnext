@@ -35,6 +35,12 @@
   }
 
   .blurb {
+    &:hover{
+      cursor: pointer;
+      h2{
+        text-decoration: underline;
+      }
+    }
     .blurb-wrapper{
       height:100%;
       position: relative;
@@ -91,6 +97,9 @@
           font-weight: bold;
           line-height: 28px;
           margin-bottom: 0px!important;
+          padding: 0px;
+          font-family: "Open Sans", Arial, sans-serif;
+          color:  #fff;
           @media (min-width: @screen-sm) and (max-width: @screen-sm-max){
             font-size: 18px;
             line-height: 22px;

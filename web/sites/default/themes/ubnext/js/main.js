@@ -12,10 +12,10 @@
         $('#btn-load-more-shortcuts').toggleClass('closed');
       });
 
-      $('.shortcut-widget-link-list li').bind('click', function() {
-        let url = $(this).find('a').attr("href");
-        window.location.href = url;
-      });
+      // $('.shortcut-widget-link-list li').bind('click', function() {
+      //   let url = $(this).find('a').attr("href");
+      //   window.location.href = url;
+      // });
 
 
     }
@@ -41,14 +41,16 @@
     }
   };
 
-  Drupal.behaviors.ubnext_landing = {
-    attach : function(context, settings) {
-      $('.ubn-theme-links .ubn-theme-links-item').bind('click', function() {
-        let url = $(this).find('a').attr("href");
-        window.location.href = url;
-      });
-    }
-  };
+  // Drupal.behaviors.ubnext_landing = {
+  //   attach : function(context, settings) {
+  //     $('.ubn-theme-links .ubn-theme-links-item').bind('click', function() {
+  //       let url = $(this).find('a').attr("href");
+  //       alert('test');
+  //       window.location.href = url;
+
+  //     });
+  //   }
+  // };
 
 
   Drupal.behaviors.ubnext_fitvids = {

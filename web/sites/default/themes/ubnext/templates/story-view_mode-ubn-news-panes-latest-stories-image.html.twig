@@ -6,8 +6,9 @@
 {% import "macros/dates.html.twig" as dates %}
 {% import "macros/misc.html.twig" as misc %}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
-
 <div class="story-promoted">
+  {% set url = url(entity.url, { 'absolute' : true }|merge(options|default([]))) %}
+   <a href="{{ url }}"> 
   <div class="promoted-wrapper">
     <div class="story-promoted-image">
   	{% set atom = ubn_content_sections_atoms(entity.field_content_sections, 'image', 1)|first %}
@@ -17,11 +18,12 @@
       <div class="story-promoted-container">
         <div class="story-promoted-text">
           <div class="story-promoted-publication-date">{{ dates.date_default(entity.created) }}</div>
-          <h2 class="story-promoted-header list primary">{{ misc.link(entity.title_field.value, entity.url) }}</h2>
+          <h2 class="story-promoted-header list primary">{{ entity.title_field.value }}</h2>
         </div>
         <i class="story-arrow fa fa-arrow-right"></i>
       </div>
     </div>
   </div>
+</a>
 </div>
 

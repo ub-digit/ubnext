@@ -7,6 +7,7 @@
 {% import "macros/atom_styles.html.twig" as atom_styles %}
 
 <div class="story-promoted col-sm-6">
+	<a href="{{ story.url }}">
 	<div class="promoted-wrapper">
   		<div class="story-promoted-image news-archive">
   		{% set atom = ubn_content_sections_atoms(story.field_content_sections, 'image', 1)|first %}
@@ -16,10 +17,11 @@
 			<div class="story-promoted-container">
 				<div class="story-promoted-text">
 					<div class="story-promoted-publication-date">{{ dates.date_default(story.created) }}</div>
-					<h2 class="story-promoted-header list primary">{{ misc.link(story.title_field.value, story.url) }}</h2>
+					<h2 class="story-promoted-header list primary">{{ story.title_field.value }}</h2>
 				</div>
 				<i class="story-arrow fa fa-arrow-right"></i>
 			</div>
 		</div>
 	</div>
+	</a>
 </div>
