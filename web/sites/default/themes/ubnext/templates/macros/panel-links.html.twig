@@ -69,11 +69,11 @@
         {% endif %}
       {{ _self.link_list_links_item_begin(namespace, options) }}
         {% if is_array(link) %}
-            <a href="{{ url(link.url) }}">Link 1 {{ link.title }}</a> 
+            <a href="{{ url(link.url) }}">{{ link.title }}</a> 
         {% else %}
           {% set link_bundle = link.getBundle %}
           {% if link_bundle == 'field_theme_link' %}
-            <a href="{{ url(link.field_link_to_theme.value.url) }}">Link 2 {{ link.field_link_to_theme.value.title }}</a>
+            <a href="{{ url(link.field_link_to_theme.value.url) }}">{{ link.field_link_to_theme.value.title }}</a>
           {% elseif link_bundle == 'field_shortcut_links' %}
             {% set type = link.field_type_to_use.value %}
             {% if type == 'link' %}
