@@ -5,9 +5,8 @@
 #}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
 {% import "macros/misc.html.twig" as misc %}
-{% set url = url(entity.field_link.url.value, { 'absolute' : true }|merge(options|default([]))) %}
 <div class="blurb panel-separator col-sm-6">
-<a href="{{ url }}"class="blurb-wrapper-link">
+<a href="{{ url(entity.field_link.url.value, { 'absolute': true }) }}"class="blurb-wrapper-link">
 	<div class="blurb-wrapper">
 	 	<div class="blurb-image">
 	    	{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}
