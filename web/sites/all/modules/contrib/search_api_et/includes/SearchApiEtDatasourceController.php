@@ -80,7 +80,8 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
           $entity = clone $entities[$entity_id];
           $id = !empty($language) ? SearchApiEtHelper::buildItemId($entity_id, $language) : $entity_id;
           $entity->search_api_et_id = $id;
-          $entity->language = $language;
+          // Keep current entity language if language is NULL.
+          $entity->language = !is_null($language) ? $language : $entity->language;
           $items[$id] = $entity;
         }
       }
@@ -205,7 +206,10 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
    * {@inheritdoc}
    */
   public function getItemId($item) {
-    return isset($item->search_api_et_id) ? $item->search_api_et_id : NULL;
+    $entity_id = parent::getItemId($item);
+    $translation_handler = entity_translation_get_handler($this->entityType, $item);
+    $language = $translation_handler->getLanguage();
+    return $language ? SearchApiEtHelper::buildItemId($entity_id, $language) : $entity_id;
   }
 
   /**
@@ -218,7 +222,9 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
    * index changes, to take care of new and/or out-dated IDs.
    */
   public function startTracking(array $indexes) {
-    if (!$this->table) {
+    // In case an index is inserted during a site install, a batch is active
+    // so we skip this.
+    if (!$this->table || batch_get()) {
       return;
     }
     // We first clear the tracking table for all indexes, so we can just insert
@@ -238,6 +244,11 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
           array($index, $entity_ids, $step),
         );
       }
+    }
+
+    if (empty($operations)) {
+      // There is nothing to track yet: abort.
+      return;
     }
 
     // This might be called both from web interface as well as from drush.
@@ -305,6 +316,8 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
 
     $ids = array();
     $entity_type = $index->getEntityType();
+    $entity_controller = entity_get_controller($entity_type);
+    $entity_controller->resetCache($entity_ids);
     $entities = entity_load($entity_type, $entity_ids);
     foreach ($entities as $entity_id => $entity) {
       foreach (search_api_et_item_languages($entity, $entity_type, $index) as $lang) {
@@ -312,6 +325,28 @@ class SearchApiEtDatasourceController extends SearchApiEntityDataSourceControlle
         $ids[$item_id] = $item_id;
       }
     }
+    return $ids;
+  }
+
+  /**
+   * Helper function to return the list of ItemIDs, fiven
+   * @param \SearchApiIndex $index
+   * @param $mixed_ids
+   * @return array
+   */
+  protected function getTrackableItemIdsFromMixedSource(SearchApiIndex $index, $mixed_ids) {
+    // Check if we get Entity IDs or Item IDs.
+    $first_item_id = reset($mixed_ids);
+    $is_valid_item_id = SearchApiEtHelper::isValidItemId($first_item_id);
+    if (!$is_valid_item_id) {
+      $entity_id = $first_item_id;
+      $ids = $this->getTrackableItemIds($index, $entity_id);
+    }
+    else {
+      // Filter the item_ids that need to be tracked by this index.
+      $ids = $this->filterTrackableIds($index, $mixed_ids);
+    }
+
     return $ids;
   }
 

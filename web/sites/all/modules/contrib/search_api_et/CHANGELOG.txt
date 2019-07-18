@@ -1,5 +1,20 @@
-SearchAPI ET 7.x-2.x, xxxx-xx-xx
+SearchAPI ET 7.x-2.0-alpha9, 2019-04-01
 --------------------------------
+- Issue #3044889 by idebr: Use Entity Translation handler to determine language in \SearchApiEtDatasourceController::getItemId()
+
+SearchAPI ET 7.x-2.0-alpha8, 2019-03-29
+--------------------------------
+- Issue #2715115 by GaëlG, drunken monkey: Fix getItemId() to always return an ID
+- Issue #2809307 by idebr, GoZ: Change language do not delete the old language from index
+- Issue #2953473 by idebr, das-peter: All tracking items deleted when deleting single translation
+- Issue #2924846 by das-peter: Wrong language detection used in search_api_et_entity_update()
+- Issue #2823669 by idebr, TuWebO, patrik.hultgren, GoZ, jseffel, thePanz: Duplicate documents while updating a node
+- Issue #2811811 by idebr, Lendude, kporras07, joel_osc, david.lopez: Items are not getting deleted from search_api server
+- Issue #3036355 by idebr: Introduce an automated functional test
+- Issue #2860146 by Grayle: Do not trigger a batch in startTracking() when installing a site
+- Issue #3043753 by idebr: Commit test dependencies to enable automated testing
+- Issue #2748249 by GoZ: reset() expects parameter 1 to be array, null given search_api_et.batch.inc
+- Issue #2833126 by GoZ: Purge search_api_et and reindex items
 
 SearchAPI ET 7.x-2.0-alpha7, 2016-08-02
 ---------------------------------------

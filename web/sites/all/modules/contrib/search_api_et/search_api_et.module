@@ -300,55 +300,50 @@ function search_api_et_item_languages($entity, $entity_type, SearchApiIndex $ind
 }
 
 /**
- * Implements hook_entity_delete().
- */
-function search_api_et_entity_delete($entity, $entity_type) {
-  module_load_include('inc', 'search_api_et');
-  // We only react on entity operations for types with property information, as
-  // we don't provide search integration for the others.
-  if (!entity_get_property_info($entity_type)) {
-    return;
-  }
-
-  list($entity_id, $revision, $bundle) = entity_extract_ids($entity_type, $entity);
-  $item_ids = array();
-  foreach (search_api_et_item_languages_entity($entity, $entity_type) as $language) {
-    $item_ids[] = SearchApiEtHelper::buildItemId($language, $entity_id);
-  }
-  search_api_track_item_delete(SearchApiEtHelper::getItemType($entity_type), $item_ids);
-}
-
-/**
  * Implements hook_entity_update().
  */
 function search_api_et_entity_update($entity, $entity_type) {
   // We only react on entity operations for types with property information, as
   // we don't provide search integration for the others.
-  if (!entity_get_property_info($entity_type)) {
+  if (
+      !entity_get_property_info($entity_type) ||
+      !entity_translation_enabled($entity_type, $entity)
+  ) {
     return;
   }
+
   module_load_include('inc', 'search_api_et');
   list($entity_id, $revision, $bundle) = entity_extract_ids($entity_type, $entity);
   $et_entity_type = SearchApiEtHelper::getItemType($entity_type);
 
-  $language = entity_language($entity_type, $entity);
-  $old_language = entity_language($entity_type, $entity->original);
+  // entity_language will not work since formLanguage will be called
+  // which will always return the form language language, that is
+  // the language of $entity even though $entity->original is in a
+  // different language.
+  $handler = entity_translation_get_handler($entity_type, $entity);
+  $language = $handler->getLanguage();
 
-  // Check if the Entity language has been changed.
-  if (!empty($language) && !empty($old_language)) {
-    // If the Entity language has changed, remove the old tracked Item from the index.
-    if ($language != $old_language) {
-      search_api_track_item_delete($et_entity_type, array(SearchApiEtHelper::buildItemId($entity_id, $old_language)));
-    }
+  if (!isset($entity->original) || !is_object($entity->original)) {
+    $entity->original = entity_load_unchanged($entity_type, $entity_id);
   }
+  $handler = entity_translation_get_handler($entity_type, $entity->original);
+  $old_language = $handler->getLanguage();
 
+  $inserted_language = null;
+
+  // Check if the entity language has been changed.
+  // If the entity language has changed, remove the old tracked Item from the
+  // index.
+  if (!empty($language) && !empty($old_language) && $language != $old_language) {
+    search_api_track_item_delete($et_entity_type, array(SearchApiEtHelper::buildItemId($entity_id, $old_language)));
+    search_api_track_item_insert($et_entity_type, array(SearchApiEtHelper::buildItemId($entity_id, $language)));
+    $inserted_language = $language;
+  }
   $item_ids = array();
-  //TODO: Newly inserted item_id will also be included in $item_ids
-  //this should not be a problem though?
   foreach (search_api_et_item_languages_entity($entity, $entity_type) as $language) {
-    // Skip entity translation language since has already been processed
-    // through entity translation update/insert hooks
-    $item_ids[] = SearchApiEtHelper::buildItemId($entity_id, $language);
+    if (!isset($inserted_language) || $language !== $inserted_language) {
+      $item_ids[] = SearchApiEtHelper::buildItemId($entity_id, $language);
+    }
   }
 
   // Track the changes of translations.
@@ -551,5 +546,22 @@ function search_api_et_search_api_index_items_alter(array &$items, SearchApiInde
     foreach (element_children($items) as $item_id) {
       $items[$item_id]->search_api_index = $index;
     }
+  }
+}
+
+/**
+ * Implements hook_search_api_index_reindex().
+ */
+function search_api_et_search_api_index_reindex(SearchApiIndex $index, $clear = FALSE) {
+  // Search api Entity translation use a custom table for indexation. This table
+  // should be cleared when reindex is processed.
+  // Otherwise, some residual content or wrong content can persist.
+  if ($clear) {
+    // Index has to be cleared.
+    db_delete('search_api_et_item')
+      ->condition('index_id', $index->id)
+      ->execute();
+    // Add every items to queue so they will be indexed again.
+    $index->queueItems();
   }
 }
