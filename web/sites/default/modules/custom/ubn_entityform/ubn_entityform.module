@@ -171,7 +171,7 @@ function ubn_entityform_issue_entityform_edit_form_validate($form, &$form_state)
       'xlibrary' => !empty($entityform_wrapper->field_ttx_library->value()) ? $entityform_wrapper->field_ttx_library->field_value->value() : 'nochoice',
       'lang' => $language_content->language,
       'subject' => $entityform_wrapper->field_title->value(),
-      'problem' => $entityform_wrapper->field_message->value()  . "\r\n \r\nMeddelandet skickat från:\r\n" . $GLOBALS[['base_url']] . '/' . request_path(),
+      'problem' => $entityform_wrapper->field_message->value()  . "\r\n \r\nMeddelandet skickat från:\r\n" . $GLOBALS['base_url'] . '/' . request_path(),
       'name' => $entityform_wrapper->field_full_name->value(),
       'email' => $entityform_wrapper->field_email->value(),
       'kid' => time() . '-' . rand(1000000, 9999999),
