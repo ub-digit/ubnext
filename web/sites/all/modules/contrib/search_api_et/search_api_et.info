@@ -7,7 +7,13 @@ dependencies[] = field
 dependencies[] = search_api (>= 7.x-1.6)
 dependencies[] = entity_translation
 
+test_dependencies[] = entity
+test_dependencies[] = entity_translation
+test_dependencies[] = search_api
+test_dependencies[] = search_api_db
+
 files[] = includes/SearchApiEtDatasourceController.php
 files[] = includes/SearchApiEtHelper.php
 files[] = includes/SearchApiEtPropertyInfoAlter.php
 files[] = includes/SearchApiEtViewsQuery.php
+files[] = tests/search_api_et.test
