@@ -520,7 +520,7 @@ function gmap_tools_add_google_maps_js() {
   drupal_add_html_head(
     array(
       '#type' => 'markup',
-      '#markup' => '<script type="text/javascript" src="' . ($is_https ? 'https' : 'http') . '://maps.googleapis.com/maps/api/js?key=AIzaSyCGlET2FyLBhviUMa5VB87v78W8hSElljs&sensor=false"></script>',
+      '#markup' => '<script type="text/javascript" src="' . ($is_https ? 'https' : 'http') . '://maps.googleapis.com/maps/api/js?key=' . variable_get('ubn_google_key', FALSE). '&sensor=false"></script>',
     ),
     'gmap_tools'
   );
