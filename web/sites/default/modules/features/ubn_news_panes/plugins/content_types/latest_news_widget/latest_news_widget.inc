@@ -42,8 +42,14 @@ function ubn_news_panes_latest_news_widget_content_type_render($subtype, $conf, 
   }
 
   // Split stories into different arrays for rendering
-  $image_stories = array_slice($stories, 0, 2);
-  array_splice($stories, 0, 2);
+  $promoted_stories = array_filter($stories, function($obj){
+    if ($obj->field_promote_to_frontpage) {
+      return true;
+    }
+    return false;
+  });
+  $image_stories = array_slice($promoted_stories, 0, 2);
+  //array_splice($stories, 0, 2);
 
   $stories_renderable = entity_view('node', $stories, 'ubn_news_panes_latest_news');
   $image_stories_renderable = entity_view('node', $image_stories, 'ubn_news_panes_latest_news_image');
