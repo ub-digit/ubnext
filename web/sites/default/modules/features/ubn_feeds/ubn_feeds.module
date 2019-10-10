@@ -4,8 +4,6 @@
  * Code for the Feeds feature.
  */
 
-include_once 'ubn_feeds.features.inc';
-
 /**
  * Implements hook_cron()
  */
