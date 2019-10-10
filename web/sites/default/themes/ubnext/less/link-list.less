@@ -2,20 +2,25 @@
 //@boxes-min-height-extended: 230px;
 @inner-wrapper-min-height: 160px;
 //@inner-wrapper-min-height-extended: 190px;
+
 #btn-load-more-shortcuts {
-  font-size: 18px;
-  .closed-text {
-    display: none;
-  }
-  .open-text {
-    display: inline-block;
-  }
-  &.closed {
+  display: none;
+  @media (max-width: @screen-sm) {
+    display: block;
+    font-size: 18px;
     .closed-text {
-      display: inline-block;
+      display: none;
     }
     .open-text {
-      display: none;
+      display: inline-block;
+    }
+    &.closed {
+      .closed-text {
+        display: inline-block;
+      }
+      .open-text {
+        display: none;
+      }
     }
   }
 }
@@ -27,15 +32,18 @@
     }
     .ubn-panel-links-body {
       ul {
+
         li {
-          &:nth-child(n + 5) {
-            height: 0px;
-            visibility: hidden;
-            margin-bottom: 0px;
-            opacity: 0;
-            transition: opacity .25s ease-in-out;
-            -moz-transition: opacity .25s ease-in-out;
-            -webkit-transition: opacity .25s ease-in-out;
+          @media (max-width: @screen-sm) {
+            &:nth-child(n + 5) {
+              height: 0px;
+              visibility: hidden;
+              margin-bottom: 0px;
+              opacity: 0;
+              transition: opacity .25s ease-in-out;
+              -moz-transition: opacity .25s ease-in-out;
+              -webkit-transition: opacity .25s ease-in-out;
+            }
           }
         }
       }
