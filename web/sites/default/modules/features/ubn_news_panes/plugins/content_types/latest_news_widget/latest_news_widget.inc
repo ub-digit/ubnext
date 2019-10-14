@@ -43,10 +43,7 @@ function ubn_news_panes_latest_news_widget_content_type_render($subtype, $conf, 
 
   // Split stories into different arrays for rendering
   $promoted_stories = array_filter($stories, function($obj){
-    if ($obj->field_promote_to_frontpage) {
-      return true;
-    }
-    return false;
+    return ($obj->field_promote_to_frontpage[und][0][value]);
   });
   $image_stories = array_slice($promoted_stories, 0, 2);
   //array_splice($stories, 0, 2);
