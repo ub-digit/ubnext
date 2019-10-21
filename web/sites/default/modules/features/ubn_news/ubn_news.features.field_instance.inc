@@ -147,7 +147,7 @@ function ubn_news_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_promote_to_frontpage',
-    'label' => 'Promote to frontpage',
+    'label' => 'Promote to image-blurb',
     'required' => 0,
     'settings' => array(
       'entity_translation_sync' => FALSE,

@@ -1436,6 +1436,12 @@ function ubn_general_update_7236() {
     features_revert_module($module);
   }
 }
+
+function ubn_general_update_7237() {
+  foreach(array('ubn_news') as $module) {
+    features_revert_module($module);
+  }
+}
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
