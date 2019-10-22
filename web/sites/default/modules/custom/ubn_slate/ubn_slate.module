@@ -1,4 +1,50 @@
 <?php
+
+/* Perhaps not the rigth place for this, new module ubn_entity better
+but still deals with slate rendering behaviour */
+function ubn_slate_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'field_info_alter') {
+    $group = $implementations['ubn_slate'];
+    unset($implementations['ubn_slate']);
+    $implementations['ubn_slate'] = $group;
+  }
+}
+
+function ubn_slate_field_info_alter(&$info) {
+  foreach (array('text', 'text_long') as $type) {
+    $info[$type]['property_callbacks'][] = 'ubn_slate_metadata_field_no_language_fallback_property_callback';
+  }
+}
+
+function ubn_slate_metadata_field_no_language_fallback_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']]['getter callback'] = 'ubn_slate_metadata_field_no_language_fallback_property_get';
+}
+
+/**
+ * Callback for getting field property values without language fallback.
+ */
+function ubn_slate_metadata_field_no_language_fallback_property_get($entity, array $options, $name, $entity_type, $info) {
+  $field = field_info_field($name);
+  $columns = array_keys($field['columns']);
+  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
+
+  // $fallback parameter set to FALSE, TRUE in entity api version of this
+  // function
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode, FALSE);
+  $values = array();
+  if (isset($entity->{$name}[$langcode])) {
+    foreach ($entity->{$name}[$langcode] as $delta => $data) {
+      $values[$delta] = $data[$columns[0]];
+      if ($info['type'] == 'boolean' || $info['type'] == 'list<boolean>') {
+        // Ensure that we have a clean boolean data type.
+        $values[$delta] = (boolean) $values[$delta];
+      }
+    }
+  }
+  // For an empty single-valued field, we have to return NULL.
+  return $field['cardinality'] == 1 ? ($values ? reset($values) : NULL) : $values;
+}
+
 function _ubn_slate_content_sections_atoms($content_sections, $atom_type = NULL, $limit = NULL) {
   $atoms = array();
   foreach($content_sections as $content_section) {
