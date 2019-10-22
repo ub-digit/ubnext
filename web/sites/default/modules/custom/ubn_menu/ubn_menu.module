@@ -20,7 +20,7 @@ function ubn_menu_menu_alter(&$items) {
     else {
       drupal_set_message(
         "Missing \"$default_menu_item_to_callback_path\" router path, fix this in ubn_menu.module.",
-        'error'
+        'warning'
       );
     }
   }
