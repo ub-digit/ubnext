@@ -19,6 +19,17 @@
       $options = array();
       $options['attributes']['class'] =  'more-news-link';
     ?>
-    <div class="more-news-link pull-left"><?php print l(t("More news"), "/news") ?> <i class="fa fa-arrow-right"></i></div>
+
+    <?php
+      global $language ;
+      $lang_name = $language->language; 
+      if ($lang_name == "sv") {
+        $url = '/nyheter';
+      }
+      else {
+        $url = '/news';
+      }
+    ?>
+    <div class="more-news-link pull-left"><?php print l(t("More news"), $url) ?> <i class="fa fa-arrow-right"></i></div>
   </div>
 </div>

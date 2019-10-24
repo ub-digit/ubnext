@@ -622,11 +622,11 @@ function ubnext_bootstrap_search_api_page_search_form($variables) {
 
   $search_submit = drupal_render($element['submit' . $suffix]);
   $search_input = drupal_render($element['keys' . $suffix]);
+
   foreach(element_children($element, TRUE) as $key) {
     $element['#children'] .= drupal_render($element[$key]);
   }
   // Anonymous DIV to satisfy XHTML compliance.
-
   // Get path to empty search
   $searches = search_api_current_search();
   $search = reset($searches);
@@ -669,6 +669,7 @@ function _ubnext_search_form_alter(&$form, &$form_state, $form_id) {
   // Add bootstrap classes
   $suffix = '_' . $form['id']['#value'];
   $form['keys' . $suffix]['#attributes']['placeholder'] = t('Title, subject, supplier...');
+  $form['keys' . $suffix]['#attributes']['aria-label'] = t('Search by database titel, subject or supplier');
   $form['keys' . $suffix]['#attributes']['class'][] = 'form-control';
   $form['keys' . $suffix]['#attributes']['class'][] = 'input-lg';
 
