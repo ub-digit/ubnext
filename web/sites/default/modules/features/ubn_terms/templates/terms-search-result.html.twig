@@ -42,20 +42,11 @@
 {% import _self as helper %}
 
 
-<nav class="row letter-nav panel-separator visible-md-block visible-lg-block">
+<nav class="row letter-nav panel-separator">
   {{helper.generate_evenly_distributed_rows(term_groups, 30)}}
 </nav>
 
 
-
-<nav class="row letter-nav panel-separator visible-sm-block clearfix">
-  {{helper.generate_evenly_distributed_rows(term_groups, 30)}}
-</nav>
-
-
-<nav class="row letter-nav panel-separator visible-xs-block clearfix">
-  {{helper.generate_evenly_distributed_rows(term_groups, 30)}}
-</nav>
 
 
 
