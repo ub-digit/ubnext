@@ -1,17 +1,5 @@
 <?php
 
-/*
-Bug in scald or entitytranslation. This will force EN to default lang until bug is fixed.
-*/
-function ubn_scald_entity_presave($entity, $types) {
-  if ($entity->provider == 'scald_image') {
-    if (empty($entity->scald_thumbnail['sv']))  {
-      $entity->scald_thumbnail['sv'][0] = $entity->scald_thumbnail['und'][0];
-      unset($entity->scald_thumbnail['und']);
-    }
-  }
-}
-
 function ubn_scald_media_atoms_layout($wrapped_atoms, $context_override = NULL, $media_layout_override = NULL) {
   //$atom_types = array();
   $context_groups = array();
