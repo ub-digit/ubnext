@@ -152,12 +152,13 @@ Drupal.behaviors.database = {
             return true;
 
           case 9:  // Tab.
+            return true;
           case 13: 
-            /*if ($(input).hasClass('auto_submit')) {
+            if ($(input).hasClass('auto_submit')) {
                 var selector = getSetting(input, 'selector', ':submit');
                 $(selector, input.form).trigger('click');
                 Drupal.alreadyTriggered = true;
-            }*/
+            }
           case 27: // Esc.
             this.hidePopup(e.keyCode);
             return true;
