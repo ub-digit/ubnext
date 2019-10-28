@@ -186,9 +186,8 @@ namespace :drupal do
     task :'apply' => :'drupal:install_drush' do
       next unless data_permit_write
       on release_roles :app do
-        #TODO: drop before import?
-        # execute :drush, "sql-drop -y"a
         within current_path.join(fetch(:app_path)) do
+          execute :drush, "sql-drop -y"
           execute :drush, "sql-cli < \"#{current_path.join('database.sql')}\""
           invoke 'drupal:clear-cache'
         end
