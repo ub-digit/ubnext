@@ -113,11 +113,18 @@
 			.term {
 				font-size: 18px;
 				margin-bottom: 20px;
+                a:not(.btn):not(.right-arrow):not(.term-name) {
+                    text-decoration:underline;
+                    &:hover {
+                        color:#ab0000;
+                    };
+                }
 			}
 			.term-description {
 				> div {
 					padding-top: 5px;
 					padding-bottom: 50px;
+
 					.term-description-read-more-links {
 						margin-top: 20px;
 						a{
