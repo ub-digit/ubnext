@@ -96,7 +96,7 @@
  <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <nav class="nav-breadcrumb">
+        <nav class="nav-breadcrumb" aria-label="<?php print t('Breadcrumb') ?>">
           <!-- SECONDARY NAV -->
           <?php print render($content['breadcrumb']); ?>
           <!-- END SECONDARY NAV -->
@@ -113,7 +113,7 @@
  <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <nav class="nav-secondary">
+        <nav class="nav-secondary" aria-label="<?php print t('Secondary menu') ?>">
           <!-- SECONDARY NAV -->
           <?php print render($content['navigation_secondary']); ?>
           <!-- END SECONDARY NAV -->

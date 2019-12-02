@@ -42,7 +42,7 @@
 {% import _self as helper %}
 
 
-<nav class="row letter-nav panel-separator">
+<nav class="row letter-nav panel-separator" aria-label='{{t("Letter menu")}}'>
   {{helper.generate_evenly_distributed_rows(term_groups, 30)}}
 </nav>
 
