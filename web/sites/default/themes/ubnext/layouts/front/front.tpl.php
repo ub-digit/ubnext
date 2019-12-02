@@ -1,3 +1,5 @@
+
+<h1 class="sr-only"><?php print t('Startpage'); ?></h1>
 <?php if (!empty($content['search'])): ?>
   <div id="search">
       <?php print render($content['search']); ?>
