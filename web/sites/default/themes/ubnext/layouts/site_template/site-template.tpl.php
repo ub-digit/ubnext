@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="col-md-5">
-          <nav class="toplinks">
+          <nav class="toplinks" aria-label="<?php print t('Utility menu'); ?>">
             <div class="rs_skip rsbtn rs_preserve rs_portal"><a class="rsbtn_play" accesskey="L" rel="nofollow" title="<?php t('Listen to the page content') ?>" href="https://app-eu.readspeaker.com/cgi-bin/rsent?customerid=9467&amp;lang=<?php echo $readspeaker_lang ?>&amp;readclass=main-cms&amp;url=<?php echo $current_path ?>" data-rsevent-id="rs_599740" role="button"><?php print t('Listen') ?></a></div>
             <div class="lang-area">              
               <?php print render($content['toplinks']); ?>
@@ -52,7 +52,9 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <?php print render($content['shortcuts']); ?>
+        <nav class="shortcuts" aria-label="<?php print t('Shortcuts menu') ?>">
+          <?php print render($content['shortcuts']); ?>
+        </nav>
       </div>
     </div>
   </div>
@@ -64,7 +66,7 @@
   <div class="container">
     <div class="row border-mobile">
       <div class="col-xs-12">
-        <nav class="nav-primary">
+        <nav class="nav-primary" aria-label="<?php print t('Main menu') ?>">
           <!-- PRIMARY NAV -->
           <?php print render($content['navigation']); ?>
           <!-- END PRIMARY NAV -->
@@ -75,7 +77,7 @@
 </div>
 
 <div class="nav-cms primary-nav-cms-dropdown">
-    <nav class="nav-primary-dropdown">
+    <nav class="nav-primary-dropdown" aria-label="<?php print t('Main menu mobile') ?>">
       <!-- PRIMARY NAV -->
       <?php print render($content['dropdown_navigation']); ?>
       <!-- END PRIMARY NAV -->
@@ -94,7 +96,7 @@
  <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <nav class="nav-breadcrumb">
+        <nav class="nav-breadcrumb" aria-label="<?php print t('Breadcrumb') ?>">
           <!-- SECONDARY NAV -->
           <?php print render($content['breadcrumb']); ?>
           <!-- END SECONDARY NAV -->
@@ -111,7 +113,7 @@
  <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <nav class="nav-secondary">
+        <nav class="nav-secondary" aria-label="<?php print t('Secondary menu') ?>">
           <!-- SECONDARY NAV -->
           <?php print render($content['navigation_secondary']); ?>
           <!-- END SECONDARY NAV -->
@@ -152,11 +154,11 @@
 <?php endif; ?>
 
 <?php if (!empty($content['content'])): ?>
-  <div id="main-content" class="main-cms">
+  <main id="main-content" class="main-cms">
     <div class="wrap">
       <?php print render($content['content']); ?>
     </div>
-  </div>
+  </main>
 <?php endif; ?>
 
 <div class="footer-cms rs_skip">
