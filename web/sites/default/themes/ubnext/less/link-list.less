@@ -3,6 +3,30 @@
 @inner-wrapper-min-height: 160px;
 //@inner-wrapper-min-height-extended: 190px;
 
+.blurb-wrapper-link{
+  display: inline-block;
+  &:focus{
+    .blurb-wrapper{
+      outline: 1px solid #012d50;  
+    }
+    .story-promoted-text-wrapper{
+      h2{
+        text-decoration: underline;
+      }
+    }
+    
+  }
+}
+
+.short-cut-override{
+  &:focus{
+    .shortcut-widget-body-link {
+      background-color: #014174!important;
+      border-color: #012d50!important;
+    }
+  };
+}
+
 #btn-load-more-shortcuts {
   display: none;
   @media (max-width: @screen-md) {
