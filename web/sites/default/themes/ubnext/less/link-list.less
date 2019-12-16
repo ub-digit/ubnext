@@ -7,7 +7,10 @@
   display: inline-block;
   &:focus{
     .blurb-wrapper{
-      outline: 1px solid #012d50;  
+      &.show-focus-outlines{
+     // outline: 1px solid #012d50;
+        outline: 5px solid #333;
+      }  
     }
     .story-promoted-text-wrapper{
       h2{
