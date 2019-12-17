@@ -24,12 +24,12 @@
     attach: function(context, settings) {
       $(document).keydown(function(e){
         if(e.keyCode == 9){
-         $('.blurb-wrapper').addClass('show-focus-outlines');
+         $('.blurb-wrapper,.promoted-wrapper').addClass('show-focus-outlines');
         }
       });
 
       $(document).on('mousedown', function(){
-        $('.blurb-wrapper').removeClass('show-focus-outlines');
+        $('.blurb-wrapper,.promoted-wrapper').removeClass('show-focus-outlines');
       });
     }
   };
