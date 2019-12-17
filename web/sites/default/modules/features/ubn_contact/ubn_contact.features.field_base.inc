@@ -27,7 +27,7 @@ function ubn_contact_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => '',
-        1 => 'I like to be anonymous',
+        1 => 'I want to be anonymous and thus cannot get an answer to my message',
       ),
       'allowed_values_function' => '',
       'entity_translation_sync' => FALSE,
