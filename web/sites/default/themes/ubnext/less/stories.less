@@ -125,6 +125,22 @@
   .promoted-news {
     padding-bottom: 20px;
     padding-top: 30px;
+    a{
+      display: inline-block;
+      &:focus{
+        .promoted-wrapper{
+           &.show-focus-outlines{
+            outline: 5px solid #333;
+          }  
+        }
+        .story-promoted-text-wrapper{
+          h2{
+            text-decoration: underline;
+          }
+        }
+      }
+      
+    }
     .story-promoted {
       margin-bottom: 30px;
       //margin-top: 10px;
