@@ -2,6 +2,9 @@
 //TODO: cleanup
 //TODO: Uncouple this plugin from drupal, do not use Drupal.settings.gmap_tools for example
 //TODO: or make (this)? a drupal-specific plugin
+
+// wrapped in this because google maps do not always load  (https://stackoverflow.com/questions/9228958/how-to-check-if-google-maps-api-is-loaded)
+if (typeof google === 'object' && typeof google.maps === 'object') {
 (function($, maps) {
     //TODO: items should not be required, switch argument order?
     $.fn.gmap_tools_gmap = function(conf) {
@@ -301,6 +304,8 @@ Drupal.gmap_tools.gmap = function(map_wrapper, conf) {
   maps.event.trigger(this.gmap, 'zoom_changed');
 }
 })(jQuery, google.maps);
+
+} // end wrapped google is defined check
 
 (function($) {
     Drupal.behaviors.gmap_tools = {
