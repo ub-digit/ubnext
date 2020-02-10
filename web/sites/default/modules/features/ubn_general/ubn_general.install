@@ -1470,6 +1470,14 @@ function ubn_general_update_7241() {
     features_revert_module($module);
   }
 }
+
+
+
+function ubn_general_update_7242() {
+  //TODO: add as dependency instead
+  module_enable(array('override_node_options', 'view_unpublished'));
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
