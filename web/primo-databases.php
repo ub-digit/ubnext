@@ -10,6 +10,7 @@ $query = new EntityFieldQuery();
 
 $query->entityCondition('entity_type', 'node')
   ->entityCondition('bundle', 'database');
+  ->propertyCondition('status', NODE_PUBLISHED);
 
 $result = $query->execute();
 
