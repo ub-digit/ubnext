@@ -826,6 +826,24 @@ function ubnext_facetapi_deactivate_widget($variables) {
   return '<span class="fa fa-check-square-o"></span>';
 }
 
+
+function _get_total_indexed(SearchApiIndex $index) {
+    if (!$index->enabled) {
+    return 0;
+  }
+  // We want the raw count, without facets or other filters. Therefore we don't
+  // use the query's execute() method but pass it straight to the server for
+  // evaluation. Since this circumvents the normal preprocessing, which sets the
+  // fields (on which some service classes might even rely when there are no
+  // keywords), we set them manually here.
+  $query = $index->query()
+    ->fields(array())
+    ->range(0, 0);
+  $response = $index->server()->search($query);
+  return $response['result count'];
+
+}
+
 /**
  * Prefix function with "_" to exclude from normal hook detection
  * We add this in ubnext_theme_registry_alter instead
@@ -848,7 +866,8 @@ function _ubnext_preprocess_search_api_page_results(array &$variables) {
     'weight' => 5,
   ));
 
-  $variables['total-items-in-index'] = $variables['index']->datasource()->getIndexStatus($variables['index'])['indexed'];
+  //$variables['total-items-in-index'] = $variables['index']->datasource()->getIndexStatus($variables['index'])['indexed'];
+  $variables['total-items-in-index'] = _get_total_indexed($variables['index']);
   if(!empty($variables['results']['results'])) {
     $variables['items'] = $variables['index']->loadItems(array_keys($variables['results']['results']));
     // Overlay item entities with "result item" data (so we can access it in
