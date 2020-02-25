@@ -4,7 +4,6 @@ package = UBNext
 version = 7.x-0.24
 project = ubn_general
 dependencies[] = override_node_options
-dependencies[] = view_unpublish
 dependencies[] = admin_language
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar

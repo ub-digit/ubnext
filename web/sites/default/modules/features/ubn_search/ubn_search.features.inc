@@ -140,7 +140,7 @@ function ubn_search_default_search_api_index() {
           "settings" : { "lang_field" : "", "languages" : [] }
         },
         "search_api_alter_node_access" : { "status" : 1, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 0, "weight" : "0", "settings" : [] }
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] }
       },
       "processors" : {
         "search_api_case_ignore" : {
