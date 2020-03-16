@@ -8,13 +8,17 @@
   {%
     set baseUrl = url() ~ "/databases/search"
   %}
-
-  {% if item.parent[0].value.tid is empty %}
-    {% set url = baseUrl ~ "?f[0]=field_topics_depth_0:" ~ item.tid.value %}
+  {% if item.value.vocabulary_machine_name == "media_types" %}
+    {% set url = baseUrl ~ "?f[0]=field_media_types:" ~ item.tid.value %}
     {{url}}
   {% else %}
-    {% set url = baseUrl ~ "?f[0]=field_topics_depth_0:" ~ item.parent[0].value.tid ~ "&f[1]=field_topics_depth_1:" ~ item.tid.value %}
-    {{url}}
+    {% if item.parent[0].value.tid is empty %}
+      {% set url = baseUrl ~ "?f[0]=field_topics_depth_0:" ~ item.tid.value %}
+      {{url}}
+    {% else %}
+      {% set url = baseUrl ~ "?f[0]=field_topics_depth_0:" ~ item.parent[0].value.tid ~ "&f[1]=field_topics_depth_1:" ~ item.tid.value %}
+      {{url}}
+    {% endif %}
   {% endif %}
 {% endmacro %}
 
