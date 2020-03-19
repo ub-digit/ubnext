@@ -1485,6 +1485,19 @@ function ubn_general_update_7243() {
   };
 }
 
+// Regenerate broken menu (with duplicate items etc)
+function ubn_general_update_7244() {
+  $menus = db_or()
+    ->condition('menu_name', 'user-menu')
+    ->condition('menu_name', 'devel')
+    ->condition('menu_name', 'navigation')
+    ->condition('menu_name', 'management');
+  db_delete('menu_links')
+    ->condition($menus)
+    ->execute();
+  menu_rebuild();
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
