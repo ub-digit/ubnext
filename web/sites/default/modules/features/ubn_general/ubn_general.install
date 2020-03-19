@@ -1498,6 +1498,18 @@ function ubn_general_update_7244() {
   menu_rebuild();
 }
 
+/* Remove stale field config data */
+function ubn_general_update_7245() {
+  db_delete('field_config')
+    ->condition('field_name', 'field_theme_link')
+    ->execute();
+  db_delete('field_config_instance')
+    ->condition('field_name', 'field_theme_link')
+    ->execute();
+  field_cache_clear();
+}
+
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
