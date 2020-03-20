@@ -1,0 +1,10 @@
+{# slate
+  name = Event occation head
+  models[event_occation] = entity:node
+#}
+{% import "macros/components.html.twig" as components %}
+<div class="panel-separator">
+  {{ components.page_title(event_occation.field_event.title_field.value, false, 'event-occation') }}
+  <i>Date, location and "add to calendar" goes here</i>
+  {{ components.page_lead(event_occation.field_event.field_lead.value) }}
+</div>

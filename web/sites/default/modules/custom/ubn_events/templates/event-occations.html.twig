@@ -1,0 +1,12 @@
+{# slate
+  name = More event occations
+  models[event_occations_by_month] = item
+#}
+<div class="event-occations">
+  {% for month, event_occations in event_occations_by_month %}
+    <h3>{{ month }}</h3>
+    <div class="event-occations-by-month">
+      {{ event_occations | raw }}
+    </div>
+  {% endfor %}
+<div>

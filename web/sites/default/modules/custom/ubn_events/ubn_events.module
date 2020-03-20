@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ubn_events_ctools_plugin_directory($owner, $plugin_type) {
+  if (in_array($plugin_type, array('content_types'))) {
+    return "plugins/$plugin_type";
+  }
+}
+
+//TODO: Move these to ubn_general or other feature?
+// since general view mode and not specific to this feature
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ubn_events_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['ubn_teaser_small'] = array(
+    'label' => t('UBN small teaser'),
+    'custom settings' => FALSE,
+  );
+}
+
+/* "All day" events are scheduled at midnight in local timezone */
+function ubn_events_site_tz_midnight_in_utc() {
+    $utc = new DateTimeZone('UTC');
+    // Convert site's midnight of today to UTC
+    $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+    $site_tz_midnight_in_utc = new DateTime('now', $site_tz);
+    // Set to midnight in local timezone
+    $site_tz_midnight_in_utc->setTime(0, 0);
+    // Convert to UTC
+    $site_tz_midnight_in_utc->setTimeZone($utc);
+    return $site_tz_midnight_in_utc;
+}
+
+function ubn_events_format_event_time($timestamp) {
+  return t(
+    '!date, at !time',
+    array(
+      '!date' => format_date($timestamp, 'custom', 'l j F'),
+      '!time' => format_date($timestamp, 'custom', 'H:i')
+    )
+  );
+}

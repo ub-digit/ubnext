@@ -1,14 +1,21 @@
-
-
-{% macro page_head(title, lead, created, namespace) %}
+{% macro page_title(title, created, namespace) %}
   {% import "dates.html.twig" as dates %}
-  <h1 class="page-title">{{ title }}</h1>
+  <h1 class="page-title{{ namespace ? " page-title-" ~ namespace }}">{{ title }}</h1>
   {% if created %}
     <div class="date-created">
       {{ dates.date_default(created) }}
     </div>
   {% endif %}
+{% endmacro %}
+
+{% macro page_lead(lead, namespace) %}
   {% if not lead is empty %}
     <p class="lead">{{ lead }}</p>
   {% endif %}
+{% endmacro %}
+
+{% macro page_head(title, lead, created, namespace) %}
+  {% import _self as components %}
+  {{ components.page_title(title, created, namespace) }}
+  {{ components.page_lead(lead, namespace) }}
 {% endmacro %}

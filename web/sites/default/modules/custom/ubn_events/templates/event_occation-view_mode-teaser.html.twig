@@ -1,0 +1,17 @@
+{# slate
+  name = Event occation: View mode 'Teaser'
+  models[entity] = entity:node
+  view_mode[node][event_occation] = teaser
+#}
+{% import "macros/dates.html.twig" as dates %}
+{% import "macros/misc.html.twig" as misc %}
+<div class="event-occations-event-day-of-week">
+  {{ dates.date_custom(entity.field_scheduled_time.value, 'l') }}
+</div>
+<div class="event-occations-event-day-of-month">
+  {{ dates.date_custom(entity.field_scheduled_time.value, 'j') }}
+</div>
+<div class="event-occations-event-month">
+  {{ dates.date_custom(entity.field_scheduled_time.value, 'F') }}
+</div>
+<h3>{{ misc.link(entity.title_field.value, entity.url.value, 'event-occations-event-link') }}</h3>

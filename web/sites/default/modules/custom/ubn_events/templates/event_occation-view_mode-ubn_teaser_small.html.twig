@@ -1,0 +1,8 @@
+{# slate
+  name = Event occation: View mode 'Teaser small'
+  models[entity] = entity:node
+  view_mode[node][event_occation] = ubn_teaser_small
+#}
+{% import "macros/dates.html.twig" as dates %}
+{% import "macros/misc.html.twig" as misc %}
+<h3>{{ misc.link(ubn_events_format_event_time(entity.field_scheduled_time.value), entity.url.value, 'more-event-occations-link') }}</h3>

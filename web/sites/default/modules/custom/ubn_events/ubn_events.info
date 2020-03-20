@@ -1,0 +1,5 @@
+name = UBN Events
+description = Custom slate template plugins for events
+core = 7.x
+package = UBNext
+dependencies[] = slate
