@@ -200,35 +200,13 @@ function ubn_content_types_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_call_to_action_text'.
-  $field_bases['field_call_to_action_text'] = array(
+  // Exported field_base: 'field_call_to_action'.
+  $field_bases['field_call_to_action'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_call_to_action_text',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(
-      'entity_translation_sync' => FALSE,
-      'max_length' => 255,
-    ),
-    'translatable' => 1,
-    'type' => 'text',
-  );
-
-  // Exported field_base: 'field_call_to_action_url'.
-  $field_bases['field_call_to_action_url'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_call_to_action_url',
+    'field_name' => 'field_call_to_action',
     'indexes' => array(),
     'locked' => 0,
     'module' => 'link',
@@ -248,7 +226,7 @@ function ubn_content_types_field_default_field_bases() {
       'title_value' => '',
       'url' => 0,
     ),
-    'translatable' => 0,
+    'translatable' => 1,
     'type' => 'link_field',
   );
 
@@ -402,36 +380,6 @@ function ubn_content_types_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'field_collection',
-  );
-
-  // Exported field_base: 'field_date'.
-  $field_bases['field_date'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_date',
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'date',
-    'settings' => array(
-      'cache_count' => 4,
-      'cache_enabled' => 0,
-      'entity_translation_sync' => FALSE,
-      'granularity' => array(
-        'day' => 'day',
-        'hour' => 'hour',
-        'minute' => 'minute',
-        'month' => 'month',
-        'second' => 0,
-        'year' => 'year',
-      ),
-      'timezone_db' => 'UTC',
-      'todate' => 'optional',
-      'tz_handling' => 'site',
-    ),
-    'translatable' => 0,
-    'type' => 'datetime',
   );
 
   // Exported field_base: 'field_delivery_address'.
@@ -1534,6 +1482,36 @@ function ubn_content_types_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
+  );
+
+  // Exported field_base: 'field_scheduled_time'.
+  $field_bases['field_scheduled_time'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_scheduled_time',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'date',
+    'settings' => array(
+      'cache_count' => 4,
+      'cache_enabled' => 0,
+      'entity_translation_sync' => FALSE,
+      'granularity' => array(
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
+      ),
+      'timezone_db' => 'UTC',
+      'todate' => 'optional',
+      'tz_handling' => 'site',
+    ),
+    'translatable' => 0,
+    'type' => 'datetime',
   );
 
   // Exported field_base: 'field_scholarly_sharing'.

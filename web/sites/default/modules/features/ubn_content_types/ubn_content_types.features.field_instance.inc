@@ -2411,61 +2411,8 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-field_call_to_action_text'.
-  $field_instances['node-event-field_call_to_action_text'] = array(
-    'bundle' => 'event',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 5,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'ubn_search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_call_to_action_text',
-    'label' => 'Call to action - text',
-    'required' => 0,
-    'settings' => array(
-      'entity_translation_sync' => FALSE,
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'text_processing' => 0,
-      'ubn_property_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 38,
-    ),
-  );
-
-  // Exported field_instance: 'node-event-field_call_to_action_url'.
-  $field_instances['node-event-field_call_to_action_url'] = array(
+  // Exported field_instance: 'node-event-field_call_to_action'.
+  $field_instances['node-event-field_call_to_action'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
@@ -2476,7 +2423,7 @@ function ubn_content_types_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 6,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2492,8 +2439,8 @@ function ubn_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_call_to_action_url',
-    'label' => 'Call to action - URL',
+    'field_name' => 'field_call_to_action',
+    'label' => 'Call to action',
     'required' => 0,
     'settings' => array(
       'absolute_url' => 1,
@@ -2512,8 +2459,8 @@ function ubn_content_types_field_default_field_instances() {
       'entity_translation_sync' => FALSE,
       'linkit' => array(
         'button_text' => 'Search',
-        'enable' => 1,
-        'profile' => 'ubnext',
+        'enable' => 0,
+        'profile' => '',
       ),
       'rel_remove' => 'default',
       'title' => 'optional',
@@ -2529,7 +2476,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 39,
+      'weight' => 38,
     ),
   );
 
@@ -2726,6 +2673,56 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-event-title_field'.
+  $field_instances['node-event-title_field'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'title_field',
+    'label' => 'Title',
+    'required' => TRUE,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'hide_label' => array(
+        'entity' => FALSE,
+        'page' => FALSE,
+      ),
+      'text_processing' => 0,
+      'ubn_property_field' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => -5,
+    ),
+  );
+
   // Exported field_instance: 'node-event_occation-field_address_room'.
   $field_instances['node-event_occation-field_address_room'] = array(
     'bundle' => 'event_occation',
@@ -2827,68 +2824,6 @@ function ubn_content_types_field_default_field_instances() {
       ),
       'type' => 'options_onoff',
       'weight' => 36,
-    ),
-  );
-
-  // Exported field_instance: 'node-event_occation-field_date'.
-  $field_instances['node-event_occation-field_date'] = array(
-    'bundle' => 'event_occation',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_remaining_days' => FALSE,
-        ),
-        'type' => 'date_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'ubn_search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_date',
-    'label' => 'Date',
-    'required' => 1,
-    'settings' => array(
-      'default_value' => 'now',
-      'default_value2' => 'same',
-      'default_value_code' => '',
-      'default_value_code2' => '',
-      'entity_translation_sync' => FALSE,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'date',
-      'settings' => array(
-        'increment' => 15,
-        'input_format' => 'm/d/Y - H:i:s',
-        'input_format_custom' => '',
-        'label_position' => 'above',
-        'no_fieldset' => 0,
-        'text_parts' => array(),
-        'year_range' => '-0:+3',
-      ),
-      'type' => 'date_popup',
-      'weight' => 32,
     ),
   );
 
@@ -3057,6 +2992,119 @@ function ubn_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_select',
       'weight' => 37,
+    ),
+  );
+
+  // Exported field_instance: 'node-event_occation-field_scheduled_time'.
+  $field_instances['node-event_occation-field_scheduled_time'] = array(
+    'bundle' => 'event_occation',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+        ),
+        'type' => 'date_default',
+        'weight' => 8,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_scheduled_time',
+    'label' => 'Date',
+    'required' => 1,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'display_all_day' => 1,
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'no_fieldset' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_popup',
+      'weight' => 38,
+    ),
+  );
+
+  // Exported field_instance: 'node-event_occation-title_field'.
+  $field_instances['node-event_occation-title_field'] = array(
+    'bundle' => 'event_occation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'title_field',
+    'label' => 'Title',
+    'required' => TRUE,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'hide_label' => array(
+        'entity' => FALSE,
+        'page' => FALSE,
+      ),
+      'text_processing' => 0,
+      'ubn_property_field' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => -5,
     ),
   );
 
@@ -4329,8 +4377,7 @@ function ubn_content_types_field_default_field_instances() {
   t('Audience');
   t('Authors');
   t('Body');
-  t('Call to action - URL');
-  t('Call to action - text');
+  t('Call to action');
   t('Canceled');
   t('Check this box in order to hide the direct link to the database in the database search result list.');
   t('Click this if you want to mark this alert as a warning. This will place this item above any published alerts. It will be redish in color. ');
