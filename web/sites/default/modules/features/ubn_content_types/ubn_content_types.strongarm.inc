@@ -470,16 +470,16 @@ function ubn_content_types_strongarm() {
           'weight' => '-5',
         ),
         'path' => array(
-          'weight' => '30',
+          'weight' => '10',
         ),
         'redirect' => array(
-          'weight' => '30',
+          'weight' => '11',
         ),
         'xmlsitemap' => array(
-          'weight' => '30',
+          'weight' => '12',
         ),
         'language' => array(
-          'weight' => '5',
+          'weight' => '9',
         ),
       ),
       'display' => array(),
@@ -499,13 +499,13 @@ function ubn_content_types_strongarm() {
           'weight' => '-5',
         ),
         'path' => array(
-          'weight' => '30',
+          'weight' => '8',
         ),
         'redirect' => array(
-          'weight' => '30',
+          'weight' => '9',
         ),
         'xmlsitemap' => array(
-          'weight' => '30',
+          'weight' => '10',
         ),
       ),
       'display' => array(),
@@ -934,7 +934,6 @@ function ubn_content_types_strongarm() {
   $strongarm->name = 'node_options_event';
   $strongarm->value = array(
     0 => 'status',
-    1 => 'promote',
   );
   $export['node_options_event'] = $strongarm;
 
