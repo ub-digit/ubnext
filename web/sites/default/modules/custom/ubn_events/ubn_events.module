@@ -35,11 +35,18 @@ function ubn_events_site_tz_midnight_in_utc() {
 }
 
 function ubn_events_format_event_time($timestamp) {
-  return t(
-    '!date, at !time',
-    array(
-      '!date' => format_date($timestamp, 'custom', 'l j F'),
-      '!time' => format_date($timestamp, 'custom', 'H:i')
-    )
-  );
+  $time = format_date($timestamp, 'custom', 'H:i');
+  $date = format_date($timestamp, 'custom', 'l j F');
+  if ($time == '00:00') {
+    return $date;
+  }
+  else {
+    return t(
+      '!date, at !time',
+      array(
+        '!date' => $date,
+        '!time' => $time
+      )
+    );
+  }
 }
