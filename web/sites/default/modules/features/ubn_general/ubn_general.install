@@ -1509,6 +1509,10 @@ function ubn_general_update_7245() {
   field_cache_clear();
 }
 
+/* Enable ubn_events */
+function ubn_general_update_7246() {
+  module_enable(array('ubn_events'));
+}
 
 //TODO: Disable rdf module?
 // Enable entity translation for library
