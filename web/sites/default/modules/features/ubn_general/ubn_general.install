@@ -1514,6 +1514,11 @@ function ubn_general_update_7246() {
   module_enable(array('ubn_events'));
 }
 
+/* Enable ubn_events_content */
+function ubn_general_update_7247() {
+  module_enable(array('ubn_events_content'));
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*

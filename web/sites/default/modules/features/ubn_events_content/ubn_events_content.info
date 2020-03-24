@@ -1,0 +1,11 @@
+name = UBN events content
+core = 7.x
+package = UBNext
+version = 7.x-0.1
+dependencies[] = ctools
+dependencies[] = strongarm
+dependencies[] = ubn_content
+dependencies[] = uuid_entity_features
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[uuid_entity_node][] = ce579a0e-ea38-4398-a639-daf95923e105

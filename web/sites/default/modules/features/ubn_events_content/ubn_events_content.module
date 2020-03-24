@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the UBN events content feature.
+ */
+
+include_once 'ubn_events_content.features.inc';
