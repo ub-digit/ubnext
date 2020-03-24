@@ -48,6 +48,20 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_hide_translation_links_event';
+  $strongarm->value = 0;
+  $export['entity_translation_hide_translation_links_event'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_hide_translation_links_event_occation';
+  $strongarm->value = 0;
+  $export['entity_translation_hide_translation_links_event_occation'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'entity_translation_hide_translation_links_navigation_landing';
   $strongarm->value = 0;
   $export['entity_translation_hide_translation_links_navigation_landing'] = $strongarm;
@@ -65,6 +79,20 @@ function ubn_content_types_strongarm() {
   $strongarm->name = 'entity_translation_node_metadata_database';
   $strongarm->value = '0';
   $export['entity_translation_node_metadata_database'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_node_metadata_event';
+  $strongarm->value = '0';
+  $export['entity_translation_node_metadata_event'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_node_metadata_event_occation';
+  $strongarm->value = '0';
+  $export['entity_translation_node_metadata_event_occation'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -174,6 +202,19 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_settings_node__event';
+  $strongarm->value = array(
+    'default_language' => 'sv',
+    'hide_language_selector' => 1,
+    'exclude_language_none' => 1,
+    'lock_language' => 0,
+    'shared_fields_original_only' => 0,
+  );
+  $export['entity_translation_settings_node__event'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'entity_translation_settings_node__link_list';
   $strongarm->value = array(
     'default_language' => 'sv',
@@ -261,6 +302,45 @@ function ubn_content_types_strongarm() {
     'shared_fields_original_only' => 0,
   );
   $export['entity_translation_settings_scald_atom__video'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_settings_taxonomy_term__audience';
+  $strongarm->value = array(
+    'default_language' => 'sv',
+    'hide_language_selector' => 1,
+    'exclude_language_none' => 1,
+    'lock_language' => 0,
+    'shared_fields_original_only' => 0,
+  );
+  $export['entity_translation_settings_taxonomy_term__audience'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_settings_taxonomy_term__event_series';
+  $strongarm->value = array(
+    'default_language' => 'sv',
+    'hide_language_selector' => 1,
+    'exclude_language_none' => 1,
+    'lock_language' => 0,
+    'shared_fields_original_only' => 0,
+  );
+  $export['entity_translation_settings_taxonomy_term__event_series'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_settings_taxonomy_term__event_type';
+  $strongarm->value = array(
+    'default_language' => 'sv',
+    'hide_language_selector' => 1,
+    'exclude_language_none' => 1,
+    'lock_language' => 0,
+    'shared_fields_original_only' => 0,
+  );
+  $export['entity_translation_settings_taxonomy_term__event_type'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -372,6 +452,23 @@ function ubn_content_types_strongarm() {
   $strongarm->name = 'entity_translation_shared_labels';
   $strongarm->value = 1;
   $export['entity_translation_shared_labels'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_taxonomy';
+  $strongarm->value = array(
+    'media_types' => TRUE,
+    'term' => TRUE,
+    'topics' => TRUE,
+    'ttx_library' => TRUE,
+    'special_collection' => FALSE,
+    'database_availability' => TRUE,
+    'event_series' => TRUE,
+    'event_type' => TRUE,
+    'audience' => TRUE,
+  );
+  $export['entity_translation_taxonomy'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
