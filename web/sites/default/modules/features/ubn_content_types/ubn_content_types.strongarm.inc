@@ -467,6 +467,8 @@ function ubn_content_types_strongarm() {
     'event_series' => TRUE,
     'event_type' => TRUE,
     'audience' => TRUE,
+    'event_language' => TRUE,
+    'language' => TRUE,
   );
   $export['entity_translation_taxonomy'] = $strongarm;
 

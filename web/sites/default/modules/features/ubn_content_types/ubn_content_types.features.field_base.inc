@@ -855,18 +855,24 @@ function ubn_content_types_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_language',
     'indexes' => array(
-      'format' => array(
-        0 => 'format',
+      'tid' => array(
+        0 => 'tid',
       ),
     ),
     'locked' => 0,
-    'module' => 'text',
+    'module' => 'taxonomy',
     'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'language',
+          'parent' => 0,
+        ),
+      ),
       'entity_translation_sync' => FALSE,
-      'max_length' => 255,
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
-    'type' => 'text',
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_lead'.
