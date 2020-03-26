@@ -1,89 +1,88 @@
 .main-cms {
-    .content-sections {
-        .content-sections-section {
-            .content-sections-section-body {
-                a:not(.btn):not(.arrow) {
-                    text-decoration:underline;
-                    &:hover {
-                        color:#ab0000;
-                    };
-                }
-
-            }
+  .content-sections {
+    .content-sections-section {
+      .content-sections-section-body {
+        a:not(.btn):not(.arrow) {
+          text-decoration:underline;
+          &:hover {
+            color:#ab0000;
+          };
         }
-
-        img {
-          .img-responsive();
-        }
-
-        a{
-            &::after{
-                    content: none;        
-                }
-            }
-
-            .arrow, .ubn-call-to-action-link a {
-                &::after  {
-                font-family: "FontAwesome"; 
-                content: "\f061";
-                position: relative;
-                top: -2px;
-                margin-left: 8px;
-                display: inline-block;
-                font-size: 12px;
-            }
-        }
-
-        .field-name-scald-tags {
-        	display: none;
-        }
-
-        .content-section-term {
-            > div {
-                padding: 20px;
-                border-top: 1px solid @gray-light;
-                border-bottom: 1px solid @gray-light;
-                border-right: 1px solid @gray-light;
-            }
-            border-left: 6px solid @brand-primary;
-            .content-section-term-title {
-                margin-bottom: 5px;
-                .fa {
-                    margin-right: 5px;
-                    color: @brand-primary;
-                }
-            }
-            .content-section-term-description {
-                p:last-child {
-                    margin-bottom: 0;
-                }
-            }
-        }
-
-        .content-attachments {
-        	margin-bottom: 10px;
-        	table {
-        		font-size: 1em !important;
-        		table-layout: fixed;
-            border: none !important;
-            margin: 0;
-
-        		tr {
-        			border: none !important;
-        			td:first-child {
-        				width: 36px;
-        			}
-        			td {
-            			border: none !important;
-            			.fa {
-            				vertical-align: middle;
-            			}
-            			a {
-            				vertical-align: middle;
-            			}
-        			}
-        		}
-        	}
-        }
+      }
     }
+
+    img {
+      .img-responsive();
+    }
+
+    a {
+      &::after{
+        content: none;
+      }
+    }
+
+    .arrow, .ubn-call-to-action-link a {
+      &::after  {
+        font-family: "FontAwesome";
+        content: "\f061";
+        position: relative;
+        top: -2px;
+        margin-left: 8px;
+        display: inline-block;
+        font-size: 12px;
+      }
+    }
+
+    .field-name-scald-tags {
+      display: none;
+    }
+
+    .content-section-term {
+      > div {
+        padding: 20px;
+        border-top: 1px solid @gray-light;
+        border-bottom: 1px solid @gray-light;
+        border-right: 1px solid @gray-light;
+      }
+      border-left: 6px solid @brand-primary;
+      .content-section-term-title {
+        margin-bottom: 5px;
+        .fa {
+          margin-right: 5px;
+          color: @brand-primary;
+        }
+      }
+      .content-section-term-description {
+        p:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .content-attachments {
+      margin-bottom: 10px;
+      table {
+        font-size: 1em !important;
+        table-layout: fixed;
+        border: none !important;
+        margin: 0;
+
+        tr {
+          border: none !important;
+          td:first-child {
+            width: 36px;
+          }
+          td {
+            border: none !important;
+            .fa {
+              vertical-align: middle;
+            }
+            a {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
 }
