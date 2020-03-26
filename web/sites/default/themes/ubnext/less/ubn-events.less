@@ -1,0 +1,29 @@
+.node-type-event-occation .content-sections.panel-separator {
+  margin-bottom: 0;
+}
+
+.call-to-action-link a {
+  &::after  {
+    font-family: "FontAwesome";
+    content: "\f061";
+    position: relative;
+    top: -2px;
+    margin-left: 8px;
+    display: inline-block;
+    font-size: 12px;
+  }
+}
+
+/* TODO: Border and padding should not be hardcoded, create variables/mixins */
+/* and use in other places (list of links etc) as well */
+.event-occation-categories {
+  border-top: 1px solid #dbdbdb;
+  padding-top: 10px;
+  font-size: @font-size-extra-small;
+  .event-occations-categories-label {
+    font-weight: bold;
+  }
+  li {
+    margin-bottom: 2px;
+  }
+}

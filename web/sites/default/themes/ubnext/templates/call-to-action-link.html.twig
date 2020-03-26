@@ -1,0 +1,12 @@
+{# slate
+  name = Call to action link
+  models[entity] = entity:node
+#}
+<div class="row">
+  <div class="col-sm-10 col-md-8 col-lg-6 col-lg-offset-3 col-sm-offset-1 col-md-offset-2">
+    <div class="call-to-action-link panel-separator">
+    {% set link_title = entity.field_call_to_action.title %}
+      <a href="{{ entity.field_call_to_action.url  }}"{% if not link_title is empty %} title="{{ link_title }}"{% endif %}>{{ link_title }}</a>
+    </div>
+  </div>
+</div>
