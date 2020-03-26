@@ -3,6 +3,13 @@
   models[event_occation] = entity:node
 #}
 {% import "macros/components.html.twig" as components %}
+{% import "macros/misc.html.twig" as misc %}
+
+{% if user_access('Event: Edit any content') %}
+  <div class="pull-right">
+    {{ misc.link(t('Edit event'), event_occation.field_event.edit_url, '', { query: drupal_get_destination(), html: true }) }}
+  </div>
+{% endif %}
 <div class="panel-separator">
   {{ components.page_title(event_occation.field_event.title_field.value, false, 'event-occation') }}
   <i>Date, location and "add to calendar" goes here</i>
