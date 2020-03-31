@@ -1,6 +1,27 @@
 <?php
 
 /**
+ * Implements hook_slate_twig_alter().
+ */
+function ubn_events_slate_twig_alter($twig) {
+  $path = libraries_get_path('calendar-links');
+
+  // Could probably autoload, but meh, keep things simple
+  require_once $path . '/src/Generator.php';
+  require_once $path . '/src/Generators/Google.php';
+  require_once $path . '/src/Generators/Ics.php';
+  require_once $path . '/src/Generators/WebOutlook.php';
+  require_once $path . '/src/Generators/Yahoo.php';
+  require_once $path . '/src/Exceptions/InvalidLink.php';
+  require_once $path . '/src/Link.php';
+
+  $path = drupal_get_path('module', 'ubn_events');
+  require_once $path . '/CalendarLinkTwigExtension.php';
+
+  $twig->addExtension(new Drupal\ubn_events\Twig\CalendarLinkTwigExtension());
+}
+
+/**
  * Implements hook_ctools_plugin_directory().
  */
 function ubn_events_ctools_plugin_directory($owner, $plugin_type) {
@@ -32,6 +53,14 @@ function ubn_events_site_tz_midnight_in_utc() {
     // Convert to UTC
     $site_tz_midnight_in_utc->setTimeZone($utc);
     return $site_tz_midnight_in_utc;
+}
+
+
+/* Helpers: */
+
+function ubn_events_is_all_day($field) {
+  //TODO: Implement
+  return false;
 }
 
 function ubn_events_format_event_time($timestamp) {
