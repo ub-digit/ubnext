@@ -1,5 +1,23 @@
-.node-type-event-occation .content-sections.panel-separator {
-  margin-bottom: 0;
+.node-type-event-occation {
+  .content-sections.panel-separator {
+    margin-bottom: 0;
+  }
+}
+
+.event-occation-head-info {
+    border-bottom: 1px solid @ub-grey;
+    margin-bottom: 15px;
+    padding-bottom: 6px;
+    font-size: @font-size-extra-small;
+
+    .fa-calendar {
+      padding-right: 6px;
+      font-size: @font-size-small;
+    }
+    #event-occation-add-to-calendar {
+      font-size: @font-size-small;
+    }
+
 }
 
 .call-to-action-link a {
@@ -17,8 +35,8 @@
 /* TODO: Border and padding should not be hardcoded, create variables/mixins */
 /* and use in other places (list of links etc) as well */
 .event-occation-categories {
-  border-top: 1px solid #dbdbdb;
-  padding-top: 10px;
+  border-top: 1px solid @ub-grey;
+  padding-top: 6px;
   font-size: @font-size-extra-small;
   .event-occations-categories-label {
     font-weight: bold;
