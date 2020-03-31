@@ -1,0 +1,11 @@
+{% macro event_address_room(address_room) %}
+  <div class="event-occation-info-item">
+    <i class="fa fa-map-marker" aria-hidden="true"></i> {{ address_room }}
+  </div>
+{% endmacro %}
+
+{% macro event_scheduled_time(scheduled_time) %}
+  <div class="event-occation-info-item">
+    <i class="fa fa-clock-o" aria-hidden="true"></i> {{ scheduled_time | trim | raw }}
+  </div>
+{% endmacro %}
