@@ -1,23 +1,41 @@
+@ubn-events-border-padding: 8px;
+
+@media (min-width: @screen-sm-min) {
+  .pull-sm-right {
+    float: right;
+  }
+}
+
+@media (max-width: @screen-sm-max) {
+  .event-occation-add-to-calendar-links {
+    margin-top: 10px;
+  }
+}
+
+.event-occation-teaser-small {
+  font-size: @font-size-small;
+  border-bottom: 1px solid @ub-grey;
+}
+
 .node-type-event-occation {
   .content-sections.panel-separator {
     margin-bottom: 0;
   }
 }
-
 .event-occation-head-info {
     border-bottom: 1px solid @ub-grey;
     margin-bottom: 15px;
-    padding-bottom: 6px;
-    font-size: @font-size-extra-small;
+    padding-bottom: @ubn-events-border-padding;
+    font-size: @font-size-small;
 
     .fa-calendar {
       padding-right: 6px;
-      font-size: @font-size-small;
+      font-size: @font-size-base;
     }
     .event-occation-add-to-calendar-links {
-      font-size: @font-size-small;
+      font-size: @font-size-base;
       .dropdown-menu {
-        font-size: @font-size-small;
+        font-size: @font-size-base;
       }
     }
 }
@@ -38,12 +56,15 @@
 /* and use in other places (list of links etc) as well */
 .event-occation-categories {
   border-top: 1px solid @ub-grey;
-  padding-top: 6px;
-  font-size: @font-size-extra-small;
+  padding-top: @ubn-events-border-padding;
+  font-size: @font-size-small;
   .event-occations-categories-label {
     font-weight: bold;
   }
   li {
     margin-bottom: 2px;
+  }
+  ul.list-unstyled {
+    margin-bottom: 0;
   }
 }

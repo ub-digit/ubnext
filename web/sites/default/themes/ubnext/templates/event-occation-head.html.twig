@@ -17,11 +17,16 @@
 
   {{ components.page_title(title, false, 'event-occation') }}
   <div class="row event-occation-head-info">
-    <div class="col-sm-6">
-      <i class="fa fa-clock-o" aria-hidden="true"></i> {{ ubn_events_format_event_time(event_occation.field_scheduled_time.value) }}
+    <div class="col-xs-12 col-sm-6">
+      <div>
+        <i class="fa fa-clock-o" aria-hidden="true"></i> {{ ubn_events_format_event_time(event_occation.field_scheduled_time.value) }}
+      </div>
+      <div>
+        <i class="fa fa-map-marker" aria-hidden="true"></i> {{ event_occation.field_address_room }}
+      </div>
     </div>
-    <div class="col-sm-6">
-      <div class="dropdown pull-right event-occation-add-to-calendar-links">
+    <div class="col-xs-12 col-sm-6">
+      <div class="dropdown pull-sm-right xs-pt-20 event-occation-add-to-calendar-links">
         <i class="fa fa-xs fa-calendar" aria-hidden="true">
         <a href="#" class="dropdown-toggle" id="event-occation-add-to-calendar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
           </i>{{ t('Add to calendar') }}
@@ -33,9 +38,6 @@
           {% endfor %}
         </ul>
       </div>
-    </div>
-    <div class="col-sm-12">
-      <i class="fa fa-map-marker" aria-hidden="true"></i> {{ event_occation.field_address_room }}
     </div>
   </div>
   {{ components.page_lead(event_occation.field_event.field_lead.value) }}
