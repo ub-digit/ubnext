@@ -52,6 +52,7 @@ function ubn_events_event_occations_content_type_render($subtype, $conf, $panel_
       $item = $event_occation->field_scheduled_time['und'][0];
       $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
       $scheduled_time->setTimezone($site_tz);
+      //TODO: Could use date_format_date instead
       $month = drupal_ucfirst(
         t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
       );

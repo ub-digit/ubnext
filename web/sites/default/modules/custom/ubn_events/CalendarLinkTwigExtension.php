@@ -50,12 +50,8 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *   Generator key to use for link building.
    * @param string $title
    *   Calendar entry title.
-   * @param DateTime $from
-   *   Calendar entry start date and time.
-   * @param DateTime $to
-   *   Calendar entry end date and time.
-   * @param bool $all_day
-   *   Indicator for an "all day" calendar entry.
+  * @param EntityWrapperStructure $field
+   *   Calendar date field structure.
    * @param string $description
    *   Calendar entry description.
    * @param string $address
@@ -64,17 +60,17 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    * @return string
    *   URL for the specific calendar type.
    */
-  public function calendarLink($type, $title, $from, $to, $all_day = FALSE, $description = '', $address = '') {
+  public function calendarLink($type, $title, $field, $description = '', $address = '') {
     if (!isset(self::$types[$type])) {
       throw new Exception('Invalid calendar link type.');
     }
 
-    // This should work, $from->value is unix timestamp
-    $from = new \DateObject($from->value());
-    $to = new \DateObject($to->value());
+    $raw = $field->raw();
+    $from = new \DateObject($raw['value'], $raw['timezone_db']);
+    $to = new \DateObject($raw['value'], $raw['timezone_db']);
 
     try {
-      $link = Link::create($title, $from, $to, $all_day);
+      $link = Link::create($title, $from, $to, ubn_events_is_all_day($from, $to));
     }
     catch (InvalidLink $e) {
       throw new CalendarLinkException($this->t('Invalid calendar link data.'));
@@ -96,12 +92,8 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *
    * @param string $title
    *   Calendar entry title.
-   * @param DateTime $from
-   *   Calendar entry start date and time.
-   * @param DateTime $to
-   *   Calendar entry end date and time.
-   * @param bool $all_day
-   *   Indicator for an "all day" calendar entry.
+   * @param EntityWrapperStructure $field
+   *   Calendar date field structure.
    * @param string $description
    *   Calendar entry description.
    * @param string $address
@@ -112,14 +104,14 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *   - type_name: Human-readable name for the calendar type.
    *   - url: URL for the specific calendar type.
    */
-  public function calendarLinks($title, $from, $to, $all_day = FALSE, $description = '', $address = '') {
+  public function calendarLinks($title, $field, $description = '', $address = '') {
     $links = [];
 
     foreach (self::$types as $type => $name) {
       $links[$type] = [
         'type_key' => $type,
         'type_name' => $name,
-        'url' => $this->calendarLink($type, $title, $from, $to, $all_day, $description, $address),
+        'url' => $this->calendarLink($type, $title, $field, $description, $address),
       ];
     }
 

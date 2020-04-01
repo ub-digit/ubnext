@@ -14,13 +14,13 @@
 <div class="panel-separator">
   {% set title = event_occation.field_event.title_field.value %}
   {% set field_scheduled_time = event_occation.field_scheduled_time %}
-  {% set links = calendar_links(title, field_scheduled_time.value, field_scheduled_time.value2, ubn_events_is_all_day(field_scheduled_time), event_occation.field_event.field_lead.value) %}
+  {% set links = calendar_links(title, field_scheduled_time, event_occation.field_event.field_lead.value) %}
 
   {{ components.page_title(title, false, 'event-occation') }}
   <div class="row event-occation-head-info">
     <div class="col-xs-12 col-sm-6">
       <div>
-        {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(event_occation.field_scheduled_time.value)) }}
+        {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(event_occation.field_scheduled_time)) }}
       </div>
       <div>
         {{ ubn_events.event_address_room(event_occation.field_address_room) }}

@@ -58,24 +58,57 @@ function ubn_events_site_tz_midnight_in_utc() {
 
 /* Helpers: */
 
-function ubn_events_is_all_day($field) {
-  //TODO: Implement
-  return false;
+function ubn_events_is_all_day($from, $to) {
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $from->setTimezone($site_tz);
+  $to->setTimezone($site_tz);
+  return $from->format('H:i') == '00:00' &&
+    $from->format('Y-m-d H:i') == $to->format('Y-m-d H:i');
 }
 
-function ubn_events_format_event_time($timestamp) {
-  $time = format_date($timestamp, 'custom', 'H:i');
-  $date = format_date($timestamp, 'custom', 'l j F');
-  if ($time == '00:00') {
-    return $date;
+function ubn_events_format_event_time($field) {
+  $raw = $field->raw();
+
+  $from = new DateObject($raw['value'], $raw['timezone_db']);
+  $to = new DateObject($raw['value2'], $raw['timezone_db']);
+
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $from->setTimezone($site_tz);
+  $to->setTimezone($site_tz);
+
+  $from_date = date_format_date($from, 'custom', 'l j F');
+  if (ubn_events_is_all_day($from, $to)) {
+    return $from_date;
   }
   else {
-    return t(
+    $from_formatted = t(
       '!date, at !time',
       array(
-        '!date' => $date,
-        '!time' => $time
+        '!date' => $from_date,
+        '!time' => $from->format('H:i'),
       )
     );
+
+    // Same dates
+    if($from->format('Y-m-d') == $to->format('Y-m-d')) {
+      // Same time
+      if ($from->format('H:i') == $to->format('H:i')) {
+        return $from_formatted;
+      }
+      else {
+        // Different time, append end time
+        return $from_formatted . ' - ' . $to->format('H:i');
+      }
+    }
+    else {
+      // Different dates (and times)
+      return $from_formatted . ' - ' . t(
+        '!date, at !time',
+        array(
+          '!date' => date_format_date($to, 'custom', 'l j F'),
+          '!time' => $to->format('H:i'),
+        )
+      );
+    }
   }
 }
