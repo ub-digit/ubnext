@@ -190,7 +190,7 @@ function _token_token_tree_format_row($token, array $token_info, $is_group = FAL
     'class' => array(),
     'data' => array(
       'name' => '',
-      'token' => '',
+      'token' => array(),
       'value' => '',
       'description' => '',
     ),
