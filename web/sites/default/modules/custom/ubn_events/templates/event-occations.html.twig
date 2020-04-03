@@ -2,11 +2,13 @@
   name = More event occations
   models[event_occations_by_month] = item
 #}
-<div class="event-occations">
+<div class="event-occations row">
   {% for month, event_occations in event_occations_by_month %}
-    <h3>{{ month }}</h3>
+  <div class="col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
+    <span class="event-month">{{ month }}</span>
     <div class="event-occations-by-month">
       {{ event_occations | raw }}
     </div>
+  </div>
   {% endfor %}
 <div>
