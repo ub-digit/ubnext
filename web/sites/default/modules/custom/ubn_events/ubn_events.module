@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * Code for the UBN events feature.
+ */
+
+include_once 'ubn_events.features.inc';
 
 function ubn_events_form_event_occation_node_form_alter(&$form, &$form_state) {
   // Hide title field to set automatically on save
