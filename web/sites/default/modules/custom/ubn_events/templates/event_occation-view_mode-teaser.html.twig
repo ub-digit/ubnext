@@ -7,7 +7,7 @@
 {% import "macros/misc.html.twig" as misc %}
 {% import "macros/components.html.twig" as components %}
 {% import "macros/ubn-events.html.twig" as ubn_events %}
-
+{% set event_occasion = entity%}
 <div class="row event-occasion-wrapper">
 	<div class="col-sm-2">
 		<div class="event-date-wrapper">
@@ -28,7 +28,7 @@
   	<span  class="alert alert-danger event-canceled" role="alert">inställt</span>
 		{% endif %}
 		<div>
-		{{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time.value)) }}
+		{{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time)) }}
 		</div>
 		<div>
 		{{ ubn_events.event_location(entity.field_address_room, entity.field_library.title_field) }}
