@@ -1534,6 +1534,11 @@ function ubn_general_update_7250() {
   module_enable(array('computed_field'));
 }
 
+/* Enable entityreference_prepopulate module */
+function ubn_general_entityreference_prepopulate_7251() {
+  module_enable(array('entityreference_prepopulate'));
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
