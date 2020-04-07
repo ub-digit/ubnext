@@ -1529,6 +1529,10 @@ function ubn_general_update_7249() {
   features_revert_module('ubn_page');
 }
 
+/* Enable computed_field module */
+function ubn_general_update_7250() {
+  module_enable(array('computed_field'));
+}
 
 //TODO: Disable rdf module?
 // Enable entity translation for library

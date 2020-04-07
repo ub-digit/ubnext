@@ -489,6 +489,37 @@ function ubn_content_types_field_default_field_bases() {
     'type' => 'list_text',
   );
 
+  // Exported field_base: 'field_edit_event_occasions'.
+  $field_bases['field_edit_event_occasions'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_edit_event_occasions',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'computed_field',
+    'settings' => array(
+      'code' => '$entity_field[0][\'value\'] = \'admin/content/event-occasions/\' . $entity->nid;',
+      'database' => array(
+        'data_default' => '',
+        'data_index' => 0,
+        'data_length' => 128,
+        'data_not_NULL' => 1,
+        'data_precision' => 10,
+        'data_scale' => 2,
+        'data_size' => 'normal',
+        'data_type' => 'varchar',
+      ),
+      'display_format' => '$display_output =  l(t(\'edit occations\'), $entity_field_item[\'value\']);',
+      'entity_translation_sync' => FALSE,
+      'recalculate' => 0,
+      'store' => 1,
+    ),
+    'translatable' => 0,
+    'type' => 'computed',
+  );
+
   // Exported field_base: 'field_event'.
   $field_bases['field_event'] = array(
     'active' => 1,

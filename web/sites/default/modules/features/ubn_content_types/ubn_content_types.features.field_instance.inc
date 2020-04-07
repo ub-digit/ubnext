@@ -2476,7 +2476,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 7,
+      'weight' => 6,
     ),
   );
 
@@ -2527,6 +2527,49 @@ function ubn_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'field_collection_embed',
       'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_edit_event_occasions'.
+  $field_instances['node-event-field_edit_event_occasions'] = array(
+    'bundle' => 'event',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'computed_field',
+        'settings' => array(),
+        'type' => 'computed_field_plain',
+        'weight' => 9,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_edit_event_occasions',
+    'label' => 'Edit event occasions',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'computed_field',
+      'settings' => array(),
+      'type' => 'computed',
+      'weight' => 7,
     ),
   );
 
@@ -4751,6 +4794,7 @@ function ubn_content_types_field_default_field_instances() {
   t('Don\'t show a link to this page for the term view on the alphabetical listing.');
   t('Download article/chapter');
   t('Download article/chapter description');
+  t('Edit event occasions');
   t('Enables the Service disruption message (ie makes it visible to users)');
   t('Event');
   t('Event location - URL');
