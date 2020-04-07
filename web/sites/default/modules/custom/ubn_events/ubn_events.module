@@ -5,23 +5,20 @@ function ubn_events_form_event_occation_node_form_alter(&$form, &$form_state) {
   $form['title_field']['#access'] = FALSE;
 }
 
-
-function ubn_events_node_presave($node) {
-  if ($node->type == 'event_occation') {
-    // TODO: Test this, editing in multiple languages
-    // Or could use entity wrapper to set?
-    //$event = node_load($node->field_event['und'][0]['target_id']);
-    $langcode = title_entity_language('node', $node);
-    $event_wrapper = entity_metadata_wrapper('node', $node->field_event['und'][0]['target_id']);
+/* TODO hook_node_presave probably works to */
+function ubn_events_entity_presave($entity, $entity_type) {
+  if ($entity_type === 'node' && $entity->type === 'event_occation') {
+    $langcode = title_entity_language('node', $entity);
+    $event_wrapper = entity_metadata_wrapper('node', $entity->field_event['und'][0]['target_id']);
     $event_wrapper->language($langcode);
 
     $scheduled_time = new DateObject(
-      $node->field_scheduled_time['und'][0]['value'],
-      $node->field_scheduled_time['und'][0]['timezone_db']
+      $entity->field_scheduled_time['und'][0]['value'],
+      $entity->field_scheduled_time['und'][0]['timezone_db']
     );
-    $field_tz = new DateTimeZone($node->field_scheduled_time['und'][0]['timezone']);
+    $field_tz = new DateTimeZone($entity->field_scheduled_time['und'][0]['timezone']);
     $scheduled_time->setTimezone($field_tz);
-    $node->title_field[$langcode][0]['value'] = $event_wrapper->label() . ' ' . $scheduled_time->format('Y-m-d');
+    $entity->title = $event_wrapper->label() . ' ' . $scheduled_time->format('Y-m-d');
   }
 }
 
