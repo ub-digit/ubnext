@@ -1534,9 +1534,9 @@ function ubn_general_update_7250() {
   module_enable(array('computed_field'));
 }
 
-/* Enable entityreference_prepopulate module */
-function ubn_general_entityreference_prepopulate_7251() {
-  module_enable(array('entityreference_prepopulate'));
+function ubn_general_update_7251() {
+  module_enable(array('views_bulk_operations', 'entityreference_prepopulate'));
+  features_revert_module('ubn_content_types');
 }
 
 //TODO: Disable rdf module?
