@@ -8,18 +8,14 @@
 {% import "macros/ubn-events.html.twig" as ubn_events %}
 
 <div class="event-occation-teaser-small">
-  <div>
-    {{
-      ubn_events.event_scheduled_time(
-        misc.link(
-          ubn_events_format_event_time(entity.field_scheduled_time),
-          entity.url.value,
-          'more-event-occations-link'
-        )
+  {{
+    ubn_events.event_scheduled_time(
+      misc.link(
+        ubn_events_format_event_time(entity.field_scheduled_time),
+        entity.url.value,
+        'more-event-occations-link'
       )
-    }}
-  </div>
-  <div>
-    {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label) }}
-  </div>
+    )
+  }}
+  {{ ubn_events.event_location(entity.field_address_room.value, entity.field_library.label) }}
 </div>

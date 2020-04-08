@@ -1,7 +1,9 @@
 {% macro event_location(address_room, library) %}
-  <div class="event-occation-info-item">
-    <i class="fa fa-map-marker" aria-hidden="true"></i> {{ library is empty ? address_room : library ~ ', ' ~ address_room }}
-  </div>
+  {% if not address_room is empty %}
+    <div class="event-occation-info-item">
+      <i class="fa fa-map-marker" aria-hidden="true"></i> {{ library is empty ? address_room : library ~ ', ' ~ address_room }}
+    </div>
+  {% endif %}
 {% endmacro %}
 
 {% macro event_scheduled_time(scheduled_time) %}
