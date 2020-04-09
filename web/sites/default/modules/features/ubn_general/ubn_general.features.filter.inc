@@ -44,6 +44,7 @@ function ubn_general_filter_default_formats() {
         'settings' => array(
           'local_paths' => '',
           'protocol_style' => 'path',
+          'settings_source' => 'global',
         ),
       ),
       'ubn_scald_render_sas_atoms' => array(

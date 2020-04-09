@@ -15,7 +15,7 @@ function ubn_events_content_uuid_entity_default_node() {
     'comment' => 0,
     'promote' => 0,
     'sticky' => 0,
-    'vuuid' => 'd50ada96-8649-4962-9c71-356227744fe4',
+    'vuuid' => 'c48c51bb-fad2-4e51-b5af-2a5269071fd4',
     'type' => 'page',
     'language' => 'sv',
     'tnid' => 0,
@@ -25,9 +25,9 @@ function ubn_events_content_uuid_entity_default_node() {
     'title_field' => array(
       'en' => array(
         0 => array(
-          'value' => 'Library calendar',
+          'value' => 'Bibliotekets kalender',
           'format' => NULL,
-          'safe_value' => 'Library calendar',
+          'safe_value' => 'Bibliotekets kalender',
         ),
       ),
       'sv' => array(
