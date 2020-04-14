@@ -1696,7 +1696,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'set alert_and_info_message published on date',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'publication_date',
   );
@@ -1725,29 +1724,21 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'set app published on date'.
   $permissions['set app published on date'] = array(
     'name' => 'set app published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set blurb published on date'.
   $permissions['set blurb published on date'] = array(
     'name' => 'set blurb published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set contact published on date'.
   $permissions['set contact published on date'] = array(
     'name' => 'set contact published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
@@ -1755,9 +1746,7 @@ function ubn_general_user_default_permissions() {
   $permissions['set database published on date'] = array(
     'name' => 'set database published on date',
     'roles' => array(
-      'administrator' => 'administrator',
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'publication_date',
   );
@@ -1765,78 +1754,56 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'set embedded_page published on date'.
   $permissions['set embedded_page published on date'] = array(
     'name' => 'set embedded_page published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set event published on date'.
   $permissions['set event published on date'] = array(
     'name' => 'set event published on date',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set event_occation published on date'.
   $permissions['set event_occation published on date'] = array(
     'name' => 'set event_occation published on date',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set library published on date'.
   $permissions['set library published on date'] = array(
     'name' => 'set library published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set link_list published on date'.
   $permissions['set link_list published on date'] = array(
     'name' => 'set link_list published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set navigation_landing published on date'.
   $permissions['set navigation_landing published on date'] = array(
     'name' => 'set navigation_landing published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set page published on date'.
   $permissions['set page published on date'] = array(
     'name' => 'set page published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set story published on date'.
   $permissions['set story published on date'] = array(
     'name' => 'set story published on date',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'publication_date',
   );
 
