@@ -1,7 +1,7 @@
 name = UBN General
 core = 7.x
 package = UBNext
-version = 7.x-0.25
+version = 7.x-0.26
 project = ubn_general
 dependencies[] = admin_language
 dependencies[] = admin_menu

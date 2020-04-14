@@ -1826,14 +1826,18 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'set event published on date'.
   $permissions['set event published on date'] = array(
     'name' => 'set event published on date',
-    'roles' => array(),
+    'roles' => array(
+      'editor' => 'editor',
+    ),
     'module' => 'publication_date',
   );
 
   // Exported permission: 'set event_occation published on date'.
   $permissions['set event_occation published on date'] = array(
     'name' => 'set event_occation published on date',
-    'roles' => array(),
+    'roles' => array(
+      'editor' => 'editor',
+    ),
     'module' => 'publication_date',
   );
 

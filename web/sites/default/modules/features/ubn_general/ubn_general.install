@@ -1544,6 +1544,13 @@ function ubn_general_update_7252() {
   features_revert_module('ubn_general');
 }
 
+/* Revert features */
+function ubn_general_update_7253() {
+  foreach(array('ubn_content_types', 'ubn_general') as $module) {
+    features_revert_module($module);
+  };
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
