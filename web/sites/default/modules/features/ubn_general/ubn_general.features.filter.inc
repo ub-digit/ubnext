@@ -42,9 +42,9 @@ function ubn_general_filter_default_formats() {
         'weight' => -41,
         'status' => 1,
         'settings' => array(
+          'settings_source' => 'global',
           'local_paths' => '',
           'protocol_style' => 'path',
-          'settings_source' => 'global',
         ),
       ),
       'ubn_scald_render_sas_atoms' => array(

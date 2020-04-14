@@ -463,7 +463,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'administer taxonomy',
     'roles' => array(
       'administrator' => 'administrator',
-      'database editor' => 'database editor',
       'editor' => 'editor',
     ),
     'module' => 'taxonomy',
@@ -990,7 +989,7 @@ function ubn_general_user_default_permissions() {
   $permissions['delete terms in database_availability'] = array(
     'name' => 'delete terms in database_availability',
     'roles' => array(
-      'editor' => 'editor',
+      'database editor' => 'database editor',
     ),
     'module' => 'taxonomy',
   );
@@ -998,36 +997,28 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete terms in event_series'.
   $permissions['delete terms in event_series'] = array(
     'name' => 'delete terms in event_series',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in event_type'.
   $permissions['delete terms in event_type'] = array(
     'name' => 'delete terms in event_type',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in language'.
   $permissions['delete terms in language'] = array(
     'name' => 'delete terms in language',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in library_properties'.
   $permissions['delete terms in library_properties'] = array(
     'name' => 'delete terms in library_properties',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1036,7 +1027,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'delete terms in media_types',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1046,7 +1036,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'delete terms in publishers',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1054,45 +1043,35 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete terms in scald_authors'.
   $permissions['delete terms in scald_authors'] = array(
     'name' => 'delete terms in scald_authors',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in scald_tags'.
   $permissions['delete terms in scald_tags'] = array(
     'name' => 'delete terms in scald_tags',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in special_collection'.
   $permissions['delete terms in special_collection'] = array(
     'name' => 'delete terms in special_collection',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in tags'.
   $permissions['delete terms in tags'] = array(
     'name' => 'delete terms in tags',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in term_synonym'.
   $permissions['delete terms in term_synonym'] = array(
     'name' => 'delete terms in term_synonym',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1101,7 +1080,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'delete terms in topics',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1109,18 +1087,14 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'delete terms in ttx_group'.
   $permissions['delete terms in ttx_group'] = array(
     'name' => 'delete terms in ttx_group',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in ttx_library'.
   $permissions['delete terms in ttx_library'] = array(
     'name' => 'delete terms in ttx_library',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1386,7 +1360,7 @@ function ubn_general_user_default_permissions() {
   $permissions['edit terms in database_availability'] = array(
     'name' => 'edit terms in database_availability',
     'roles' => array(
-      'editor' => 'editor',
+      'database editor' => 'database editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1394,36 +1368,28 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit terms in event_series'.
   $permissions['edit terms in event_series'] = array(
     'name' => 'edit terms in event_series',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in event_type'.
   $permissions['edit terms in event_type'] = array(
     'name' => 'edit terms in event_type',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in language'.
   $permissions['edit terms in language'] = array(
     'name' => 'edit terms in language',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in library_properties'.
   $permissions['edit terms in library_properties'] = array(
     'name' => 'edit terms in library_properties',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1432,7 +1398,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'edit terms in media_types',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1442,7 +1407,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'edit terms in publishers',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1450,45 +1414,35 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit terms in scald_authors'.
   $permissions['edit terms in scald_authors'] = array(
     'name' => 'edit terms in scald_authors',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in scald_tags'.
   $permissions['edit terms in scald_tags'] = array(
     'name' => 'edit terms in scald_tags',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in special_collection'.
   $permissions['edit terms in special_collection'] = array(
     'name' => 'edit terms in special_collection',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in tags'.
   $permissions['edit terms in tags'] = array(
     'name' => 'edit terms in tags',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in term_synonym'.
   $permissions['edit terms in term_synonym'] = array(
     'name' => 'edit terms in term_synonym',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1497,7 +1451,6 @@ function ubn_general_user_default_permissions() {
     'name' => 'edit terms in topics',
     'roles' => array(
       'database editor' => 'database editor',
-      'editor' => 'editor',
     ),
     'module' => 'taxonomy',
   );
@@ -1505,18 +1458,14 @@ function ubn_general_user_default_permissions() {
   // Exported permission: 'edit terms in ttx_group'.
   $permissions['edit terms in ttx_group'] = array(
     'name' => 'edit terms in ttx_group',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in ttx_library'.
   $permissions['edit terms in ttx_library'] = array(
     'name' => 'edit terms in ttx_library',
-    'roles' => array(
-      'editor' => 'editor',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
