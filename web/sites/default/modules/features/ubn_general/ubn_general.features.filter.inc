@@ -42,6 +42,7 @@ function ubn_general_filter_default_formats() {
         'weight' => -41,
         'status' => 1,
         'settings' => array(
+          'settings_source' => 'global',
           'local_paths' => '',
           'protocol_style' => 'path',
         ),

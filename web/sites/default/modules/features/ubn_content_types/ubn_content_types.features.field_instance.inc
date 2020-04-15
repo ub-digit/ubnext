@@ -2874,6 +2874,7 @@ function ubn_content_types_field_default_field_instances() {
   $field_instances['node-event_occation-field_event'] = array(
     'bundle' => 'event_occation',
     'default_value' => NULL,
+    'default_value_function' => 'entityreference_prepopulate_field_default_value',
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -2913,6 +2914,19 @@ function ubn_content_types_field_default_field_instances() {
     'label' => 'Event',
     'required' => 1,
     'settings' => array(
+      'behaviors' => array(
+        'prepopulate' => array(
+          'action' => 'disable',
+          'action_on_edit' => 0,
+          'fallback' => 'none',
+          'providers' => array(
+            'og_context' => FALSE,
+            'url' => 1,
+          ),
+          'skip_perm' => 0,
+          'status' => 1,
+        ),
+      ),
       'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),

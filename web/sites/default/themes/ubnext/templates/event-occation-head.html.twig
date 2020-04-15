@@ -6,7 +6,7 @@
 {% import "macros/misc.html.twig" as misc %}
 {% import "macros/ubn-events.html.twig" as ubn_events %}
 
-{% if user_access('Event: Edit any content') %}
+{% if node_access('update', event_occation.value) %}
   <div class="pull-right">
     {{ misc.link(t('Edit event'), event_occation.field_event.edit_url, '', { query: drupal_get_destination(), html: true }) }}
   </div>
