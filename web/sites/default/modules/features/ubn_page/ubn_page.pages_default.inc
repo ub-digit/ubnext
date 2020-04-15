@@ -1192,7 +1192,7 @@ function ubn_page_default_page_manager_handlers() {
     $pane->pid = 'new-2779aeab-7968-40c0-8c1a-8a93ecadce33';
     $pane->panel = 'main';
     $pane->type = 'slate_render';
-    $pane->subtype = 'slate_render:event-occation-catategories';
+    $pane->subtype = 'slate_render:event-occation-categories';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
