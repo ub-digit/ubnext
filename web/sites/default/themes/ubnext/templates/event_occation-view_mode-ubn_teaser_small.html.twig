@@ -23,7 +23,7 @@
   {% endif%}
   </div>
   <div>
-    {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label) }}
+    {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label, event_occation.field_event_location_url.url) }}
   </div>
   {% if not entity.field_language.name.value is empty %}
     <div>

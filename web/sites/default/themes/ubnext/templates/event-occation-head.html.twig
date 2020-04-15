@@ -23,7 +23,7 @@
       <span  class="alert alert-danger event-canceled" role="alert">{{ event_occation.field_canceled._label }}</span>
       {% endif %}
       {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(event_occation.field_scheduled_time)) }}
-      {{ ubn_events.event_location(event_occation.field_address_room, event_occation.field_library.label) }}
+      {{ ubn_events.event_location(event_occation.field_address_room.value, event_occation.field_library.label, event_occation.field_event_location_url.url) }}
     </div>
     <div class="col-xs-12 col-sm-4">
       <div class="dropdown pull-sm-right xs-pt-20 event-occation-add-to-calendar-links">
