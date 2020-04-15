@@ -8,6 +8,7 @@
 {% import "macros/ubn-events.html.twig" as ubn_events %}
 
 <div class="event-occation-teaser-small">
+ 
   <div>
     {{
       ubn_events.event_scheduled_time(
@@ -18,6 +19,9 @@
         )
       )
     }}
+  {% if entity.field_canceled == true %}
+  <span class="alert alert-danger event-canceled">{{ entity.field_canceled._label }} </span>
+  {% endif%}
   </div>
   <div>
     {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label) }}

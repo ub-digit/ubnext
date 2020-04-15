@@ -19,6 +19,9 @@
   {{ components.page_title(title, false, 'event-occation') }}
   <div class="row event-occation-head-info">
     <div class="col-xs-12 col-sm-8">
+      {% if event_occation.field_canceled.value == true %}
+      <span  class="alert alert-danger event-canceled" role="alert">{{ event_occation.field_canceled._label }}</span>
+      {% endif %}
       {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(event_occation.field_scheduled_time)) }}
       {{ ubn_events.event_location(event_occation.field_address_room, event_occation.field_library.label) }}
     </div>
