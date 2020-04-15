@@ -25,4 +25,9 @@
   <div>
     {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label) }}
   </div>
+  {% if not entity.field_language.name.value is empty %}
+    <div>
+      <span class="event-occations-categories-label">{{ entity.field_language._label }}</span>: {{ entity.field_language.name.value }}
+    </div>
+  {% endif %}
 </div>
