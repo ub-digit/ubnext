@@ -1079,7 +1079,8 @@ function ubn_content_types_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_event';
   $strongarm->value = array(
-    0 => 'status',
+    0 => 'moderation',
+    1 => 'revision',
   );
   $export['node_options_event'] = $strongarm;
 
@@ -1090,6 +1091,7 @@ function ubn_content_types_strongarm() {
   $strongarm->value = array(
     0 => 'status',
     1 => 'promote',
+    2 => 'revision',
   );
   $export['node_options_event_occation'] = $strongarm;
 
