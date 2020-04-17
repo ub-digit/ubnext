@@ -18,7 +18,7 @@
         )
       )
     }}
-  {% if entity.field_canceled == true %}
+  {% if entity.field_canceled.value == true %}
   <span class="alert alert-danger event-canceled">{{ entity.field_canceled._label }} </span>
   {% endif%}
   </div>
