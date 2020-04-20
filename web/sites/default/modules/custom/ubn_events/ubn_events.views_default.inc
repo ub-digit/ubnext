@@ -328,7 +328,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Add occasion';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occation?field_event=[nid]">add occasion</a>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occation?field_event=[nid]&destination=admin/content/events"">add occasion</a>';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published status */
@@ -507,8 +507,9 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['fields']['title_field']['table'] = 'field_data_title_field';
   $handler->display->display_options['fields']['title_field']['field'] = 'title_field';
   $handler->display->display_options['fields']['title_field']['relationship'] = 'field_event_target_id';
-  $handler->display->display_options['fields']['title_field']['label'] = 'Event';
+  $handler->display->display_options['fields']['title_field']['label'] = '';
   $handler->display->display_options['fields']['title_field']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title_field']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title_field']['link_to_entity'] = 0;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -593,6 +594,21 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['filters']['title_field_value']['expose']['remember_roles'] = array(
     2 => '2',
   );
+  /* Filter criterion: Content: Date -  start date (field_scheduled_time) */
+  $handler->display->display_options['filters']['field_scheduled_time_value']['id'] = 'field_scheduled_time_value';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['table'] = 'field_data_field_scheduled_time';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['field'] = 'field_scheduled_time_value';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['operator'] = '>=';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_scheduled_time_value']['expose']['operator_id'] = 'field_scheduled_time_value_op';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['expose']['label'] = 'Event date';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['expose']['operator'] = 'field_scheduled_time_value_op';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['expose']['identifier'] = 'field_scheduled_time_value';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['expose']['remember_roles'] = array(
+    2 => '2',
+  );
+  $handler->display->display_options['filters']['field_scheduled_time_value']['form_type'] = 'date_popup';
+  $handler->display->display_options['filters']['field_scheduled_time_value']['default_date'] = 'now';
   $handler->display->display_options['path'] = 'admin/content/event-occasions';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Event occasions';

@@ -1556,6 +1556,11 @@ function ubn_general_update_7254() {
   features_revert_module('ubn_content_types');
 }
 
+function ubn_general_update_7255() {
+  module_enable(array('date_views'));
+  features_revert_module('ubn_events');
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*
