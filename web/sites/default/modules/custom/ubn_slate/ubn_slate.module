@@ -18,7 +18,10 @@ function ubn_slate_field_info_alter(&$info) {
 
 function ubn_slate_metadata_field_no_language_fallback_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
   $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
-  if ($property['getter callback'] == 'entity_metadata_field_property_get') {
+  if (
+    $entity_type == 'field_collection_item' &&
+    $property['getter callback'] == 'entity_metadata_field_property_get'
+  ) {
     $property['getter callback'] = 'ubn_slate_metadata_field_no_language_fallback_property_get';
   }
 }
