@@ -32,14 +32,17 @@ function ubn_events_event_occations_content_type_render($subtype, $conf, $panel_
   $block->content = '';
 
   // "All day" events are scheduled at midnight in local timezone
-  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc();
+  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
+  //$current_events_nids = ubn_events_current_events($site_tz_midnight_in_utc);
+
   $query = new EntityFieldQuery();
   $results = $query
     ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'event_occation')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc->format('Y-m-d H:i'), '>=')
-    ->fieldOrderBy('field_scheduled_time', 'value', 'DESC')
+    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
+    //->fieldCondition('field_event', 'target_id', $current_events_nids, 'IN')
+    ->fieldOrderBy('field_scheduled_time', 'value', 'ASC')
     ->execute();
 
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));

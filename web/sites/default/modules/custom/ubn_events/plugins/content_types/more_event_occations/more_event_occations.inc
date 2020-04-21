@@ -45,7 +45,7 @@ function ubn_events_more_event_occations_content_type_render($subtype, $conf, $p
       ->propertyCondition('status', NODE_PUBLISHED)
       ->fieldCondition('field_event', 'target_id', $event_occation_wrapper->field_event->getIdentifier())
       ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc->format('Y-m-d H:i'), '>=')
-      ->fieldOrderBy('field_scheduled_time', 'value', 'DESC')
+      ->fieldOrderBy('field_scheduled_time', 'value', 'ASC')
       ->execute();
     if (!empty($results['node'])) {
       $event_occations = entity_load('node', array_keys($results['node']));
