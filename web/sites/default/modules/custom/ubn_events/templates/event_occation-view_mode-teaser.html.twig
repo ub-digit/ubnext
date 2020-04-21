@@ -34,7 +34,7 @@
 		</div>
 		<div>
 			<span class="event-lead">{{ entity.field_event.field_event_type.name.value }} </span>
-			<span>{{ entity.field_event.field_lead.value }}</span>
+			<span>{{ entity.field_event.field_lead.value|truncate(150) }}</span>
 		</div>
 	</div>
 </div>
