@@ -18,7 +18,13 @@
 <div class="panel-separator">
   {% set title = event.title_field.value %}
   {% set field_scheduled_time = event_occation.field_scheduled_time %}
-  {% set links = calendar_links(title, field_scheduled_time, event.field_lead.value) %}
+  {% set library = event_occation.field_library.label %}
+  {% set location_info = array_filter([library, event_occation.field_address_room.value]) | join(', ') %}
+  {% set event_info = event_occation.field_event_location_url.url is empty ?
+    event.field_lead.value :
+    event.field_lead.value ~ "\n\n" ~ event_occation.field_event_location_url.url
+  %}
+  {% set link = calendar_link('ics', title, field_scheduled_time, event_info, location_info) %}
 
   {{ components.page_title(title, false, 'event-occation') }}
   <div class="row event-occation-head-info">
@@ -31,16 +37,8 @@
     </div>
     <div class="col-xs-12 col-sm-4">
       <div class="dropdown pull-sm-right xs-pt-20 event-occation-add-to-calendar-links">
-        <i class="fa fa-xs fa-calendar" aria-hidden="true">
-        <a href="#" class="dropdown-toggle" id="event-occation-add-to-calendar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
-          </i>{{ t('Add to calendar') }}
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="event-occation-add-to-calendar">
-          {% for link in links %}
-            <li><a href="{{ link.url }}" class="calendar-link-{{ link.type_key }}">{{ link.type_name }}</a></li>
-          {% endfor %}
-        </ul>
+        <i class="fa fa-xs fa-calendar" aria-hidden="true"></i>
+        <a href="{{ link }}">{{ t('Add to calendar') }}</a>
       </div>
     </div>
   </div>

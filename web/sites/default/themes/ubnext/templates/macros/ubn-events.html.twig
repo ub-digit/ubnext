@@ -1,6 +1,6 @@
 {% macro event_location(address_room, library, url) %}
   {% if not address_room is empty %}
-    {% set location_text = library is empty ? address_room : library ~ ', ' ~ address_room %}
+    {% set location_text = array_filter([library, event_occation.field_address_room.value]) | join(', ') %}
     <div class="event-occation-info-item">
       <i class="fa fa-map-marker" aria-hidden="true"></i>
       {% if not url is empty %}
