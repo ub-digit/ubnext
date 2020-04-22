@@ -328,7 +328,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Add occasion';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occation?field_event=[nid]&destination=admin/content/events"">add occasion</a>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occation?field_event=[nid]">add occasion</a>';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Type */
