@@ -26,12 +26,8 @@
 		{% if entity.field_canceled.value == true %}
   	<span  class="alert alert-danger event-canceled" role="alert">{{ entity.field_canceled._label }}</span>
 		{% endif %}
-		<div>
 		{{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time)) }}
-		</div>
-		<div>
 		{{ ubn_events.event_location(entity.field_address_room, entity.field_library.title_field) }}
-		</div>
 		<div>
 			<span class="event-lead">{{ entity.field_event.field_event_type.name.value }} </span>
 			<span>{{ entity.field_event.field_lead.value|truncate(150) }}</span>
