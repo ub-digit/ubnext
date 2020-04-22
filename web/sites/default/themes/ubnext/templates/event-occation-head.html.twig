@@ -7,15 +7,18 @@
 {% import "macros/misc.html.twig" as misc %}
 {% import "macros/ubn-events.html.twig" as ubn_events %}
 
+{% set event = event_occation.field_event %}
+
 {% if node_access('update', event_occation.value) %}
-  <div class="pull-right">
-    {{ misc.link(t('Edit event'), event_occation.field_event.edit_url, '', { query: drupal_get_destination(), html: true }) }}
+  <div class="pull-right event-occation-admin-links">
+    {{ misc.link(t('Edit event'), event.edit_url, '', { query: drupal_get_destination(), html: true }) }}
+    {{ misc.link(t('Add event occasion'), '/node/add/event-occation', '', { query: { field_event: event.getIdentifier }, html: true }) }}
   </div>
 {% endif %}
 <div class="panel-separator">
-  {% set title = event_occation.field_event.title_field.value %}
+  {% set title = event.title_field.value %}
   {% set field_scheduled_time = event_occation.field_scheduled_time %}
-  {% set links = calendar_links(title, field_scheduled_time, event_occation.field_event.field_lead.value) %}
+  {% set links = calendar_links(title, field_scheduled_time, event.field_lead.value) %}
 
   {{ components.page_title(title, false, 'event-occation') }}
   <div class="row event-occation-head-info">
@@ -41,5 +44,5 @@
       </div>
     </div>
   </div>
-  {{ components.page_lead(event_occation.field_event.field_lead.value) }}
+  {{ components.page_lead(event.field_lead.value) }}
 </div>
