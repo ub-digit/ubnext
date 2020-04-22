@@ -1,12 +1,15 @@
 name = UBN events
 core = 7.x
 package = UBNext
-version = 7.x-0.5
+version = 7.x-0.6
 dependencies[] = date_views
+dependencies[] = features
 dependencies[] = slate
+dependencies[] = ubn_events
 dependencies[] = views
 dependencies[] = views_bulk_operations
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
+features[user_permission][] = view event occasions with unpublished event
 features[views_view][] = event_occasions_admin
 features_exclude[dependencies][ctools] = ctools
