@@ -1,18 +1,23 @@
 @ubn-events-border-padding: 8px;
 
-@media (min-width: @screen-sm-min) {
-  .pull-sm-right {
-    float: right;
-  }
+//@media (min-width: @screen-sm-min) {
+//  .pull-sm-right {
+//    float: right;
+//  }
+//}
+
+//@media (max-width: @screen-sm-max) {
+//  .event-occation-add-to-calendar-links {
+//    margin-top: 10px;
+//  }
+//}
+
+.event-occation-add-to-calendar-link {
+  font-size: @font-size-small;
+  margin-bottom: @ubn-events-border-padding * 2;
 }
 
-@media (max-width: @screen-sm-max) {
-  .event-occation-add-to-calendar-links {
-    margin-top: 10px;
-  }
-}
-
-.event-canceled{
+.event-canceled {
     padding: 0px 3px 0px 3px;
     font-weight: bold;
     font-size: 12px;
@@ -24,8 +29,12 @@
   border-bottom: 1px solid @ub-grey;
   margin-bottom: @ubn-events-border-padding;
   padding-bottom: @ubn-events-border-padding;
-  .event-occation-info-item{
+  .event-occation-info-item {
     display: inline-block;
+  }
+  .event-occation-categories-label:first-child {
+    display: inline-block;
+    margin-top: @ubn-events-border-padding;
   }
 }
 
@@ -43,21 +52,20 @@
 }
 
 .event-occation-head-info {
-    border-bottom: 1px solid @ub-grey;
-    margin-bottom: 15px;
-    padding-bottom: @ubn-events-border-padding;
     font-size: @font-size-small;
+    .event-canceled {
+      display: inline-block;
+      margin-bottom: 2px;
+    }
+    .event-occation-info-item:last-child {
+      border-bottom: 1px solid @ub-grey;
+      margin-bottom: @ubn-events-border-padding;
+      padding-bottom: @ubn-events-border-padding;
+    }
+}
 
-    .fa-calendar {
-      padding-right: 6px;
-      font-size: @font-size-base;
-    }
-    .event-occation-add-to-calendar-links {
-      font-size: @font-size-base;
-      .dropdown-menu {
-        font-size: @font-size-base;
-      }
-    }
+.node-type-event-occation h3 {
+  font-size: @font-size-h3;
 }
 
 .call-to-action-link a {
@@ -75,7 +83,7 @@
 /* TODO: Border and padding should not be hardcoded, create variables/mixins */
 /* and use in other places (list of links etc) as well */
 
-.event-occations-categories-label {
+.event-occation-categories-label {
   font-weight: bold;
 }
 

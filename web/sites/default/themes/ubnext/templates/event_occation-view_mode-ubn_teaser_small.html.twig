@@ -22,12 +22,10 @@
   <span class="alert alert-danger event-canceled">{{ entity.field_canceled._label }} </span>
   {% endif%}
   </div>
-  <div>
-    {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label, event_occation.field_event_location_url.url) }}
-  </div>
+  {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label, event_occation.field_event_location_url.url) }}
   {% if not entity.field_language.name.value is empty %}
     <div>
-      <span class="event-occations-categories-label">{{ entity.field_language._label }}</span>: {{ entity.field_language.name.value }}
+      <span class="event-occation-categories-label">{{ entity.field_language._label }}:</span> {{ entity.field_language.name.value }}
     </div>
   {% endif %}
 </div>
