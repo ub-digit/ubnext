@@ -210,7 +210,7 @@ function ubn_events_is_all_day($from, $to) {
     $from->format('Y-m-d H:i') == $to->format('Y-m-d H:i');
 }
 
-function ubn_events_format_event_time($field) {
+function ubn_events_format_event_time($field, $end_time = TRUE) {
   $raw = $field->raw();
 
   $from = new DateObject($raw['value'], $raw['timezone_db']);
@@ -233,8 +233,12 @@ function ubn_events_format_event_time($field) {
       )
     );
 
+    if (!$end_time) {
+      return $from_formatted;
+    }
+
     // Same dates
-    if($from->format('Y-m-d') == $to->format('Y-m-d')) {
+    if ($from->format('Y-m-d') == $to->format('Y-m-d')) {
       // Same time
       if ($from->format('H:i') == $to->format('H:i')) {
         return $from_formatted;
