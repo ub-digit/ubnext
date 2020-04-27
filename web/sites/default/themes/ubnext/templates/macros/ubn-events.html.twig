@@ -14,11 +14,20 @@
   {% endif %}
 {% endmacro %}
 
-{% macro event_scheduled_time(scheduled_time) %}
+{% macro event_scheduled_time(scheduled_time, suffix) %}
   <div class="event-occation-info-item">
     <i class="fa fa-clock-o" aria-hidden="true"></i>
     <div>
       {{ scheduled_time | trim | raw }}
     </div>
+    {% if suffix %}
+      {{ suffix | raw }}
+    {% endif %}
   </div>
+{% endmacro %}
+
+{% macro event_canceled(field_canceled) %}
+  {% if field_canceled.value %}
+    <span class="alert alert-danger event-canceled" role="alert">{{ field_canceled._label }}</span>
+  {% endif %}
 {% endmacro %}

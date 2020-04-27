@@ -23,9 +23,7 @@
   </div>
   <div class="col-sm-10 event-occasion-info-wrapper">
     <h3>{{ misc.link(entity.field_event.title_field.value, entity.url.value, 'event-occations-event-link') }}</h3>
-    {% if entity.field_canceled.value == true %}
-      <span  class="alert alert-danger event-canceled" role="alert">{{ entity.field_canceled._label }}</span>
-    {% endif %}
+    {{ ubn_events.event_canceled(entity.field_canceled) }}
     {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time, FALSE)) }}
     {{ ubn_events.event_location(entity.field_address_room.value, entity.field_library.label) }}
     <div>
