@@ -3,17 +3,22 @@
     {% set location_text = array_filter([library, address_room]) | join(', ') %}
     <div class="event-occation-info-item">
       <i class="fa fa-map-marker" aria-hidden="true"></i>
-      {% if not url is empty %}
-        <a href="{{ url }}" title="{{ location_text }}">{{ location_text }}</a>
-      {% else %}
-        {{ location_text }}
-      {% endif %}
+      <div>
+        {% if not url is empty %}
+          <a href="{{ url }}" title="{{ location_text }}">{{ location_text }}</a>
+        {% else %}
+          {{ location_text }}
+        {% endif %}
+      </div>
     </div>
   {% endif %}
 {% endmacro %}
 
 {% macro event_scheduled_time(scheduled_time) %}
   <div class="event-occation-info-item">
-    <i class="fa fa-clock-o" aria-hidden="true"></i> {{ scheduled_time | trim | raw }}
+    <i class="fa fa-clock-o" aria-hidden="true"></i>
+    <div>
+      {{ scheduled_time | trim | raw }}
+    </div>
   </div>
 {% endmacro %}
