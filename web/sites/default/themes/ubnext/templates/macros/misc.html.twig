@@ -46,7 +46,7 @@
       {%
         set event_occations = section.field_event_series is empty ?
           '' :
-          ubn_events_event_series_event_occations_rendered(section.field_event_series.tid) | raw
+          ubn_events_event_series_event_occations_rendered(section.field_event_series.tid, section.field_event_occasions_limit.value) | raw
       %}
       {%
         set body = event_occations is empty ?
