@@ -41,6 +41,35 @@ function ubn_content_types_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_event_series|field_collection_item|field_content_sections|form';
+  $field_group->group_name = 'group_event_series';
+  $field_group->entity_type = 'field_collection_item';
+  $field_group->bundle = 'field_content_sections';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Event series',
+    'weight' => '10',
+    'children' => array(
+      0 => 'field_event_series',
+      1 => 'field_event_occasions_limit',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Event series',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'classes' => 'group-event-series field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $export['group_event_series|field_collection_item|field_content_sections|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_file_attachments|field_collection_item|field_content_sections|form';
   $field_group->group_name = 'group_file_attachments';
   $field_group->entity_type = 'field_collection_item';
@@ -79,8 +108,8 @@ function ubn_content_types_field_group_info() {
     'label' => 'Media settings',
     'weight' => '1',
     'children' => array(
-      0 => 'field_media_layout',
-      1 => 'field_media_context',
+      0 => 'field_media_context',
+      1 => 'field_media_layout',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
