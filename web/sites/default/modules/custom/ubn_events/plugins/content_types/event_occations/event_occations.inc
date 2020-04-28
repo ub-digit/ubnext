@@ -48,7 +48,7 @@ function ubn_events_event_occations_content_type_render($subtype, $conf, $panel_
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));
   if (!empty($results['node'])) {
     $event_occations = entity_load('node', array_keys($results['node']));
-    $event_occations_by_month = array();
+    $event_occations_by_year_month = array();
     foreach($event_occations as $event_occation) {
       // Not using entity_metadat_wrapper here since carries quite some overhead
       // and also what to deal with DateObject not formatted value
@@ -56,16 +56,19 @@ function ubn_events_event_occations_content_type_render($subtype, $conf, $panel_
       $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
       $scheduled_time->setTimezone($site_tz);
       //TODO: Could use date_format_date instead
+      $year = $scheduled_time->format('Y');
       $month = drupal_ucfirst(
         t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
       );
-      $event_occations_by_month[$month][] = $event_occation;
+      $event_occations_by_year_month[$year][$month][] = $event_occation;
     }
-    foreach($event_occations_by_month as $month => $event_occations) {
-      $event_occations_by_month[$month] = entity_view('node', $event_occations, 'teaser');
-      $event_occations_by_month[$month] = drupal_render($event_occations_by_month[$month]);
+    foreach($event_occations_by_year_month as $year => $event_occations) {
+      foreach($event_occations_by_year_month[$year] as $month => $event_occations) {
+        $event_occations_by_year_month[$year][$month] = entity_view('node', $event_occations, 'teaser');
+        $event_occations_by_year_month[$year][$month] = drupal_render($event_occations_by_year_month[$year][$month]);
+      }
     }
-    $block->content = slate_render('event-occations', array('event_occations_by_month' => $event_occations_by_month));
+    $block->content = slate_render('event-occations', array('event_occations_by_year_month' => $event_occations_by_year_month));
   }
 
   return $block;

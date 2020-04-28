@@ -1,7 +1,7 @@
 name = UBN events
 core = 7.x
 package = UBNext
-version = 7.x-0.6
+version = 7.x-0.7
 dependencies[] = date_views
 dependencies[] = features
 dependencies[] = slate

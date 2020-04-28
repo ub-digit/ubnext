@@ -1,19 +1,33 @@
 {% macro event_location(address_room, library, url) %}
-  {% if not address_room is empty %}
-    {% set location_text = library is empty ? address_room : library ~ ', ' ~ address_room %}
+  {% if not (address_room is empty and library is empty) %}
+    {% set location_text = array_filter([library, address_room]) | join(', ') %}
     <div class="event-occation-info-item">
       <i class="fa fa-map-marker" aria-hidden="true"></i>
-      {% if not url is empty %}
-        <a href="{{ url }}" title="{{ location_text }}">{{ location_text }}</a>
-      {% else %}
-        {{ location_text }}
-      {% endif %}
+      <div>
+        {% if not url is empty %}
+          <a href="{{ url }}" title="{{ location_text }}">{{ location_text }}</a>
+        {% else %}
+          {{ location_text }}
+        {% endif %}
+      </div>
     </div>
   {% endif %}
 {% endmacro %}
 
-{% macro event_scheduled_time(scheduled_time) %}
+{% macro event_scheduled_time(scheduled_time, suffix) %}
   <div class="event-occation-info-item">
-    <i class="fa fa-clock-o" aria-hidden="true"></i> {{ scheduled_time | trim | raw }}
+    <i class="fa fa-clock-o" aria-hidden="true"></i>
+    <div>
+      {{ scheduled_time | trim | raw }}
+    </div>
+    {% if suffix %}
+      {{ suffix | raw }}
+    {% endif %}
   </div>
+{% endmacro %}
+
+{% macro event_canceled(field_canceled) %}
+  {% if field_canceled.value %}
+    <span class="alert alert-danger event-canceled" role="alert">{{ field_canceled._label }}</span>
+  {% endif %}
 {% endmacro %}

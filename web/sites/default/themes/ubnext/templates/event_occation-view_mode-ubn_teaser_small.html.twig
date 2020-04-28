@@ -12,22 +12,18 @@
     {{
       ubn_events.event_scheduled_time(
         misc.link(
-          ubn_events_format_event_time(entity.field_scheduled_time),
+          ubn_events_format_event_time(entity.field_scheduled_time, FALSE),
           entity.url.value,
           'more-event-occations-link'
-        )
+        ),
+        ubn_events.event_canceled(entity.field_canceled)
       )
     }}
-  {% if entity.field_canceled.value == true %}
-  <span class="alert alert-danger event-canceled">{{ entity.field_canceled._label }} </span>
-  {% endif%}
   </div>
-  <div>
-    {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label, event_occation.field_event_location_url.url) }}
-  </div>
+  {{ ubn_events.event_location(entity.field_address_room, entity.field_library.label) }}
   {% if not entity.field_language.name.value is empty %}
     <div>
-      <span class="event-occations-categories-label">{{ entity.field_language._label }}</span>: {{ entity.field_language.name.value }}
+      <span class="event-occation-categories-label">{{ entity.field_language._label }}:</span> {{ entity.field_language.name.value }}
     </div>
   {% endif %}
 </div>
