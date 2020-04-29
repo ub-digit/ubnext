@@ -1,80 +1,59 @@
-.event-occations{
-	.event-month-wrapper {
-    	text-align: center;
-	}
-}
+  .event-occasion-wrapper{
+    margin-bottom: @ubn-events-border-padding;
+    padding-bottom: 16px;
+  }
+  .event-occasion-info-wrapper{
+    padding-left: 10px;
+  }
+  .event-date-wrapper{
+    display: inline-block;
+    text-align: center;
+  }
 
+  .event-occation-info-item{
+    font-size: 12px;
+  }
+  
+  .event-occations-event-day-of-week{
+    font-size: 11px;
+    font-weight: bold;
+    padding-top: 8px;
+  }
 
+  .event-occations-event-month{
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+  
+  .event-occations-event-link{
+    font-family: @font-family-sans-serif;
+    margin-right: 22px;
+      font-size: 18px;
+      line-height: 1.5;
+      padding-right: 20px;
+      display: inline-block;
+      &:after{
+        font-family: "FontAwesome";
+        content: "\f061";
+        position: relative;
+        top: -2px;
+        left: 26px;
+        margin-left: -15px;
+        display: inline-block;
+        font-size: 12px;
+        margin-left: -20px;
+        width: 20px;
+      }
+  }
 
-.event-occations-by-month{
-	.event-canceled{
-		margin-left: -22px;
-	}
-	.event-occasion-wrapper{
-		border-bottom: 1px solid @ub-grey;
- 		margin-bottom: @ubn-events-border-padding;
-		padding-bottom: 16px;
-	}
-	.event-occasion-info-wrapper{
-		padding-left: 10px;
-	}
-	.event-date-wrapper{
-		text-align: center;
-	}
+  .event-occations-event-day-of-month{
+    font-size: 34px;
+      font-weight: bold;
+      margin-top: -10px;
+      margin-bottom: -18px;
+  }
 
-	.event-occation-info-item{
-		font-size: 12px;
-	}
-	.event-month-wrapper{
-		text-align: center;
-		border: 2px solid red;
-	}
-	.event-occations-event-day-of-week{
-		font-size: 11px;
-		font-weight: bold;
-		padding-top: 8px;
-	}
-
-	.event-occations-event-month{
-		font-size: 11px;
-		font-weight: bold;
-		margin-top: 8px;
-	}
-	h3{
-		display: inline;
-	}
-
-	
-
-	.event-occations-event-link{
-		font-family: @font-family-sans-serif;
-		margin-right: 22px;
-    	font-size: 18px;
-    	line-height: 1.5;
-    	padding-right: 20px;
-    	display: inline-block;
-    	&:after{
-    		font-family: "FontAwesome";
-    		content: "\f061";
-    		position: relative;
-    		top: -2px;
-    		left: 26px;
-    		margin-left: -15px;
-    		display: inline-block;
-    		font-size: 12px;
-    		margin-left: -20px;
-  			width: 20px;
-    	}
-	}
-
-	.event-occations-event-day-of-month{
-		font-size: 34px;
-    	font-weight: bold;
-    	margin-top: -10px;
-    	margin-bottom: -18px;
-	}
-
-	.event-lead{
-		font-weight: bold;
-	}
-}
+  .event-lead{
+    font-weight: bold;
+  }

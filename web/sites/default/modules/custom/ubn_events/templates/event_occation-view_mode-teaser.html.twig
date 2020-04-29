@@ -8,27 +8,26 @@
 {% import "macros/components.html.twig" as components %}
 {% import "macros/ubn-events.html.twig" as ubn_events %}
 <div class="row event-occasion-wrapper">
-	<div class="col-sm-2">
-		<div class="event-date-wrapper">
-			<div class="event-occations-event-day-of-week">
-			  {{ dates.date_custom(entity.field_scheduled_time.value, 'l') }}
-			</div>
-			<div class="event-occations-event-day-of-month">
-			  {{ dates.date_custom(entity.field_scheduled_time.value, 'j') }}
-			</div>
-			<div class="event-occations-event-month">
-			  {{ dates.date_custom(entity.field_scheduled_time.value, 'F') }}
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-10 event-occasion-info-wrapper">
-		<h3>{{ misc.link(entity.field_event.title_field.value, entity.url.value, 'event-occations-event-link') }}</h3>
-		{{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time), ubn_events.event_canceled(entity.field_canceled)) }}
-		{{ ubn_events.event_location(entity.field_address_room, entity.field_library.title_field) }}
-		<div>
-			<span class="event-lead">{{ entity.field_event.field_event_type.name.value }} </span>
-			<span>{{ entity.field_event.field_lead.value|truncate(100) }}</span>
-		</div>
-	</div>
+  <div class="col-xs-2">
+    <div class="event-date-wrapper">
+      <div class="event-occations-event-day-of-week">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'l') }}
+      </div>
+      <div class="event-occations-event-day-of-month">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'j') }}
+      </div>
+      <div class="event-occations-event-month">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'F') }}
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 event-occasion-info-wrapper">
+    <h3>{{ misc.link(entity.field_event.title_field.value, entity.url.value, 'event-occations-event-link') }}</h3>
+    {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time, FALSE), ubn_events.event_canceled(entity.field_canceled)) }}
+    {{ ubn_events.event_location(entity.field_address_room.value, entity.field_library.label) }}
+    <div>
+      <span class="event-lead">{{ entity.field_event.field_event_type.name.value }} </span>
+      <span>{{ entity.field_event.field_lead.value|truncate(110) }}</span>
+    </div>
+  </div>
 </div>
-
