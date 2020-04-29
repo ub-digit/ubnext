@@ -43,10 +43,24 @@
           </div>
         </section>
       {% endif %}
-      {% if section.field_title.value or section.field_body.value %}
+      {%
+        set event_occations = section.field_event_series is empty ?
+          '' :
+          ubn_events_event_series_event_occations_rendered(section.field_event_series.tid.value, section.field_event_occasions_limit.value) | raw
+      %}
+      {%
+        set body = not section.field_event_series is empty and event_occations is empty ?
+          t('There are currently no upcoming events for %event_series.', { '%event_series': section.field_event_series.name } ) :
+          section.field_body.value
+      %}
+      {% if not (section.field_title.value is empty and body is empty) %}
         <section class="content-sections-section">
-         {% if section.field_title.value %}<h2 class="content-sections-section-title">{{ section.field_title.value }}</h2>{% endif %}
-         {% if section.field_body.value %}<div class="content-sections-section-body">{{ section.field_body.value|raw }}</div>{% endif %}
+          {% if not section.field_title.value is empty %}
+            <h2 class="content-sections-section-title">{{ section.field_title.value }}</h2>
+          {% endif %}
+          {% if not body is empty %}
+            <div class="content-sections-section-body">{{ body | raw }}</div>
+          {% endif %}
         </section>
       {% endif %}
       {% if not section.field_file_atoms.value is empty %}
@@ -57,8 +71,9 @@
         </ul>
       {% endif %}
       {% if not section.field_contact_instances is empty %}
-        {{  contacts.contact_list(section.field_contact_instances) }}
+        {{ contacts.contact_list(section.field_contact_instances) }}
       {% endif %}
+      {{ event_occations | raw }}
     {% endfor %}
   {% endif %}
   </div>

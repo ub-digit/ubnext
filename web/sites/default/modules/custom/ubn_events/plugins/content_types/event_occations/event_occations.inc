@@ -31,43 +31,12 @@ function ubn_events_event_occations_content_type_render($subtype, $conf, $panel_
   $block->title = t('Event occations');
   $block->content = '';
 
-  // "All day" events are scheduled at midnight in local timezone
-  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
-  //$current_events_nids = ubn_events_current_events($site_tz_midnight_in_utc);
-
-  $query = new EntityFieldQuery();
-  $results = $query
-    ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'event_occation')
-    ->propertyCondition('status', NODE_PUBLISHED)
-    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
-    //->fieldCondition('field_event', 'target_id', $current_events_nids, 'IN')
-    ->fieldOrderBy('field_scheduled_time', 'value', 'ASC')
+  $results = ubn_events_current_event_occations_efq()
     ->execute();
 
-  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
   if (!empty($results['node'])) {
     $event_occations = entity_load('node', array_keys($results['node']));
-    $event_occations_by_year_month = array();
-    foreach($event_occations as $event_occation) {
-      // Not using entity_metadat_wrapper here since carries quite some overhead
-      // and also what to deal with DateObject not formatted value
-      $item = $event_occation->field_scheduled_time['und'][0];
-      $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
-      $scheduled_time->setTimezone($site_tz);
-      //TODO: Could use date_format_date instead
-      $year = $scheduled_time->format('Y');
-      $month = drupal_ucfirst(
-        t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
-      );
-      $event_occations_by_year_month[$year][$month][] = $event_occation;
-    }
-    foreach($event_occations_by_year_month as $year => $event_occations) {
-      foreach($event_occations_by_year_month[$year] as $month => $event_occations) {
-        $event_occations_by_year_month[$year][$month] = entity_view('node', $event_occations, 'teaser');
-        $event_occations_by_year_month[$year][$month] = drupal_render($event_occations_by_year_month[$year][$month]);
-      }
-    }
+    $event_occations_by_year_month = ubn_events_event_occations_by_year_month_rendered($event_occations);
     $block->content = slate_render('event-occations', array('event_occations_by_year_month' => $event_occations_by_year_month));
   }
 

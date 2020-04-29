@@ -144,6 +144,79 @@ function ubn_events_current_events($current_date) {
   return $result->fetchCol(0);
 }
 
+function ubn_events_event_occations_by_year_month_rendered($event_occations) {
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $event_occations_by_year_month = array();
+  foreach($event_occations as $event_occation) {
+    // Not using entity_metadat_wrapper here since carries quite some overhead
+    // and also what to deal with DateObject not formatted value
+    $item = $event_occation->field_scheduled_time['und'][0];
+    $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
+    $scheduled_time->setTimezone($site_tz);
+    //TODO: Could use date_format_date instead
+    $year = $scheduled_time->format('Y');
+    $month = drupal_ucfirst(
+      t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
+    );
+    $event_occations_by_year_month[$year][$month][] = $event_occation;
+  }
+  foreach($event_occations_by_year_month as $year => $event_occations) {
+    foreach($event_occations_by_year_month[$year] as $month => $event_occations) {
+      $event_occations_by_year_month[$year][$month] = entity_view('node', $event_occations, 'teaser');
+      $event_occations_by_year_month[$year][$month] = drupal_render($event_occations_by_year_month[$year][$month]);
+    }
+  }
+  return $event_occations_by_year_month;
+}
+
+
+function ubn_events_event_series_event_occations_rendered($event_series_tid, $limit = null) {
+  // EFQ do not support releations so have to perform two queries
+  // Fetch all event nids for event series term
+
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'event')
+    ->condition('n.status', NODE_PUBLISHED);
+  $query->join('field_data_field_event_series', 'fes', 'n.nid = fes.entity_id');
+
+  $result = $query
+    ->condition('fes.entity_type', 'node')
+    ->condition('fes.bundle', 'event')
+    ->condition('fes.field_event_series_tid', $event_series_tid)
+    ->execute();
+
+  $event_nids = $result->fetchCol(0);
+  if (!empty($event_nids)) {
+    $query = ubn_events_current_event_occations_efq()
+      ->fieldCondition('field_event', 'target_id', $event_nids, 'IN');
+
+    if (!empty($limit)) {
+      $query->range(0, $limit);
+    }
+
+    $results = $query->execute();
+    if (!empty($results['node'])) {
+      $event_occations = entity_load('node', array_keys($results['node']));
+      $event_series_event_occations = entity_view('node', $event_occations, 'teaser');
+      return drupal_render($event_series_event_occations);
+    }
+  }
+  return '';
+}
+
+function ubn_events_current_event_occations_efq() {
+  // "All day" events are scheduled at midnight in local timezone
+  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
+  $query = new EntityFieldQuery();
+  return $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'event_occation')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
+    ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');
+}
+
 /**
  * Implements hook_slate_twig_alter().
  */
