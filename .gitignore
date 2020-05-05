@@ -15,3 +15,15 @@ web/sites/default/themes/ubnext/package-lock.json
 
 web/sites/default/themes/ubnext/supervisord.log
 web/sites/default/themes/ubnext/supervisord.pid
+
+# Ignore configuration files that may contain sensitive, or site specific
+# information.
+web/sites/*/secret.settings.php
+web/sites/*/site.settings.php
+web/sites/default/themes/ubnext/css/ubnext.css
+
+# Ignore paths that contain user-generated content.
+# !sites/*/files
+web/sites/*/files/*
+!web/sites/*/files/unmanaged_files
+web/sites/*/private
