@@ -85,49 +85,56 @@ function _ubn_slate_opening_hours_items($opening_hours_values, $weekdays = NULL,
     // The $timezone parameter and the current timezone are ignored when the
     // $time parameter either is a UNIX timestamp (e.g. @946684800) or specifies
     // a timezone (e.g. 2010-01-28T15:00:00+02:00).
-    $opening_hours_date_datetime = new DateTime('@' . $opening_hours->field_opening_hours_date->value());
-    $opening_hours_date_datetime->setTimezone($tz);
-    $opening_hours_date = $opening_hours_date_datetime->format('Y-m-d');
+    try {
+      $opening_hours_date_datetime = new DateTime('@' . $opening_hours->field_opening_hours_date->value());
+      $opening_hours_date_datetime->setTimezone($tz);
+      $opening_hours_date = $opening_hours_date_datetime->format('Y-m-d');
 
-    $weekday = NULL;
-    if ($opening_hours_date === $today) {
-      $weekday = t('Today');
-    }
-    elseif ($opening_hours_date === $tomorrow) {
-      $weekday = t('Tomorrow');
-    }
-    else {
-      //Could replace with lookup-table (php array) to avoid variable in t()
-      $weekday = t($opening_hours_date_datetime->format("l"));
-    }
-    if(is_array($weekdays))  {
-      if(in_array($weekday, $weekdays)) {
-        unset($weekdays[array_search($weekday, $weekdays)]);
+      $weekday = NULL;
+      if ($opening_hours_date === $today) {
+        $weekday = t('Today');
+      }
+      elseif ($opening_hours_date === $tomorrow) {
+        $weekday = t('Tomorrow');
       }
       else {
-        continue;
+        //Could replace with lookup-table (php array) to avoid variable in t()
+        $weekday = t($opening_hours_date_datetime->format("l"));
+      }
+      if(is_array($weekdays))  {
+        if(in_array($weekday, $weekdays)) {
+          unset($weekdays[array_search($weekday, $weekdays)]);
+        }
+        else {
+          continue;
+        }
+      }
+      $opening_hours_items[$i] = array(
+        'weekday' => $weekday,
+        'timestamp' => $opening_hours_date_datetime->getTimestamp(),
+        'is_open' => (bool) $opening_hours->field_opening_hours_is_open->value(),
+        'date' => $opening_hours_date,
+      );
+
+      if($opening_hours_items[$i]['is_open']) {
+        //TODO: would be more correct to get timezone from field, or if ->value()
+        //produced an ISO-formatted time-string with timezone-information
+        $opening_hours_from = new DateTime('@' . $opening_hours->field_opening_hours_datetime->value->value());
+        $opening_hours_from->setTimezone($tz);
+        $opening_hours_to = new DateTime('@' . $opening_hours->field_opening_hours_datetime->value2->value());
+        $opening_hours_to->setTimezone($tz);
+        $opening_hours_items[$i]['hours'] = $opening_hours_from->format('H:i') . ' - ' . $opening_hours_to->format('H:i');
+      }
+      else {
+        $opening_hours_items[$i]['hours'] = t('Closed');
+      }
+      $opening_hours_items[$i]['is_exception'] = (bool) $opening_hours->field_opening_hours_is_exception->value();
+    }
+    catch (Exception $e) {
+      if (user_is_logged_in()) {
+        drupal_set_message('Corrupted field collection item data for opening hours (https://gubdigit.atlassian.net/browse/UBNEXT-1327)', 'error', FALSE);
       }
     }
-    $opening_hours_items[$i] = array(
-      'weekday' => $weekday,
-      'timestamp' => $opening_hours_date_datetime->getTimestamp(),
-      'is_open' => (bool) $opening_hours->field_opening_hours_is_open->value(),
-      'date' => $opening_hours_date,
-    );
-
-    if($opening_hours_items[$i]['is_open']) {
-      //TODO: would be more correct to get timezone from field, or if ->value()
-      //produced an ISO-formatted time-string with timezone-information
-      $opening_hours_from = new DateTime('@' . $opening_hours->field_opening_hours_datetime->value->value());
-      $opening_hours_from->setTimezone($tz);
-      $opening_hours_to = new DateTime('@' . $opening_hours->field_opening_hours_datetime->value2->value());
-      $opening_hours_to->setTimezone($tz);
-      $opening_hours_items[$i]['hours'] = $opening_hours_from->format('H:i') . ' - ' . $opening_hours_to->format('H:i');
-    }
-    else {
-      $opening_hours_items[$i]['hours'] = t('Closed');
-    }
-    $opening_hours_items[$i]['is_exception'] = (bool) $opening_hours->field_opening_hours_is_exception->value();
   }
   usort($opening_hours_items, '_ubn_slate_opening_hours_timestamp_compare');
   return array_values($opening_hours_items);
