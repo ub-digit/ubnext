@@ -26,7 +26,8 @@ server 'beta.ub.gu.se', user: 'drupal-deploy', roles: %w{app},
 set :deploy_to, '/var/www/drupal/production'
 
 # Set release tag
-ask :branch, proc { fetch(:branch) }.call
+#ask :branch, proc { fetch(:branch) }.call
+ask :branch, ''
 
 # Drupal deploy
 set :drupal_data_permit_write, false
