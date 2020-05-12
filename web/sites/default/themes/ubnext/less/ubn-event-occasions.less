@@ -54,3 +54,17 @@
   .event-lead{
     font-weight: bold;
   }
+
+   .event-occations-event-day-of-week.short, .event-occations-event-month.short{
+    display: none;
+   }
+
+@media screen and (max-width: @screen-sm-min){
+  .event-occations-event-day-of-week, .event-occations-event-month{
+    display: none;
+  }
+
+  .event-occations-event-day-of-week.short, .event-occations-event-month.short{
+    display: block;
+  }
+}

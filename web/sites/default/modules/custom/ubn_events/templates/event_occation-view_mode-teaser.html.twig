@@ -13,11 +13,17 @@
       <div class="event-occations-event-day-of-week">
         {{ dates.date_custom(entity.field_scheduled_time.value, 'l') }}
       </div>
+      <div class="event-occations-event-day-of-week short">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'D') }}
+      </div>
       <div class="event-occations-event-day-of-month">
         {{ dates.date_custom(entity.field_scheduled_time.value, 'j') }}
       </div>
       <div class="event-occations-event-month">
         {{ dates.date_custom(entity.field_scheduled_time.value, 'F') }}
+      </div>
+      <div class="event-occations-event-month short">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'M') }}
       </div>
     </div>
   </div>
@@ -26,7 +32,9 @@
     {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time, FALSE), ubn_events.event_canceled(entity.field_canceled)) }}
     {{ ubn_events.event_location(entity.field_address_room.value, entity.field_library.label) }}
     <div>
-      <span class="event-lead">{{ entity.field_event.field_event_type.name.value }} </span>
+      {% if entity.field_event.field_event_type.name.value is not empty %}
+      <span class="event-lead">{{ entity.field_event.field_event_type.name.value }}. </span>
+      {% endif %}
       <span>{{ entity.field_event.field_lead.value|truncate(110) }}</span>
     </div>
   </div>
