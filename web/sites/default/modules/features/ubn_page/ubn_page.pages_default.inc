@@ -185,7 +185,7 @@ function ubn_page_default_page_manager_handlers() {
   $handler->handler = 'panel_context';
   $handler->weight = -26;
   $handler->conf = array(
-    'title' => 'Event occations',
+    'title' => 'Event occasions',
     'no_blocks' => 0,
     'pipeline' => 'standard',
     'body_classes_to_remove' => '',
@@ -293,8 +293,8 @@ function ubn_page_default_page_manager_handlers() {
     $pane = new stdClass();
     $pane->pid = 'new-4babc9f2-8a53-4380-9617-91840def0b6c';
     $pane->panel = 'main';
-    $pane->type = 'event_occations';
-    $pane->subtype = 'event_occations';
+    $pane->type = 'event_occasions';
+    $pane->subtype = 'event_occasions';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
@@ -1034,7 +1034,7 @@ function ubn_page_default_page_manager_handlers() {
   $handler->handler = 'panel_context';
   $handler->weight = -21;
   $handler->conf = array(
-    'title' => 'Event occation',
+    'title' => 'Event occasion',
     'no_blocks' => 0,
     'pipeline' => 'standard',
     'body_classes_to_remove' => '',
@@ -1059,7 +1059,7 @@ function ubn_page_default_page_manager_handlers() {
           'name' => 'node_type',
           'settings' => array(
             'type' => array(
-              'event_occation' => 'event_occation',
+              'event_occasion' => 'event_occasion',
             ),
           ),
           'context' => 'argument_entity_id:node_1',
@@ -1111,7 +1111,7 @@ function ubn_page_default_page_manager_handlers() {
     $pane->pid = 'new-21cd88b0-8b65-489a-8cd7-f1dada0e1440';
     $pane->panel = 'header';
     $pane->type = 'slate_render';
-    $pane->subtype = 'slate_render:event-occation-head';
+    $pane->subtype = 'slate_render:event-occasion-head';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
@@ -1192,7 +1192,7 @@ function ubn_page_default_page_manager_handlers() {
     $pane->pid = 'new-2779aeab-7968-40c0-8c1a-8a93ecadce33';
     $pane->panel = 'main';
     $pane->type = 'slate_render';
-    $pane->subtype = 'slate_render:event-occation-categories';
+    $pane->subtype = 'slate_render:event-occasion-categories';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
@@ -1218,8 +1218,8 @@ function ubn_page_default_page_manager_handlers() {
     $pane = new stdClass();
     $pane->pid = 'new-65c17a59-b372-4574-b6ad-26f0d69a4c74';
     $pane->panel = 'main';
-    $pane->type = 'more_event_occations';
-    $pane->subtype = 'more_event_occations';
+    $pane->type = 'more_event_occasions';
+    $pane->subtype = 'more_event_occasions';
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(

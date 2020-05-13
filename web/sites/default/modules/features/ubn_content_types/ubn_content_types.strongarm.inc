@@ -62,9 +62,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'entity_translation_hide_translation_links_event_occation';
+  $strongarm->name = 'entity_translation_hide_translation_links_event_occasion';
   $strongarm->value = 0;
-  $export['entity_translation_hide_translation_links_event_occation'] = $strongarm;
+  $export['entity_translation_hide_translation_links_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -111,9 +111,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'entity_translation_node_metadata_event_occation';
+  $strongarm->name = 'entity_translation_node_metadata_event_occasion';
   $strongarm->value = '0';
-  $export['entity_translation_node_metadata_event_occation'] = $strongarm;
+  $export['entity_translation_node_metadata_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -249,7 +249,7 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'entity_translation_settings_node__event_occation';
+  $strongarm->name = 'entity_translation_settings_node__event_occasion';
   $strongarm->value = array(
     'default_language' => 'sv',
     'hide_language_selector' => 1,
@@ -257,7 +257,7 @@ function ubn_content_types_strongarm() {
     'lock_language' => 0,
     'shared_fields_original_only' => 0,
   );
-  $export['entity_translation_settings_node__event_occation'] = $strongarm;
+  $export['entity_translation_settings_node__event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -636,7 +636,7 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__event_occation';
+  $strongarm->name = 'field_bundle_settings_node__event_occasion';
   $strongarm->value = array(
     'view_modes' => array(),
     'extra_fields' => array(
@@ -657,7 +657,7 @@ function ubn_content_types_strongarm() {
       'display' => array(),
     ),
   );
-  $export['field_bundle_settings_node__event_occation'] = $strongarm;
+  $export['field_bundle_settings_node__event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -885,9 +885,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'language_content_type_event_occation';
+  $strongarm->name = 'language_content_type_event_occasion';
   $strongarm->value = '4';
-  $export['language_content_type_event_occation'] = $strongarm;
+  $export['language_content_type_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -952,11 +952,11 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'menu_options_event_occation';
+  $strongarm->name = 'menu_options_event_occasion';
   $strongarm->value = array(
     0 => 'main-menu',
   );
-  $export['menu_options_event_occation'] = $strongarm;
+  $export['menu_options_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1017,9 +1017,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'menu_parent_event_occation';
+  $strongarm->name = 'menu_parent_event_occasion';
   $strongarm->value = 'main-menu:0';
-  $export['menu_parent_event_occation'] = $strongarm;
+  $export['menu_parent_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1087,13 +1087,13 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_event_occation';
+  $strongarm->name = 'node_options_event_occasion';
   $strongarm->value = array(
     0 => 'status',
     1 => 'promote',
     2 => 'revision',
   );
-  $export['node_options_event_occation'] = $strongarm;
+  $export['node_options_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1156,9 +1156,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_event_occation';
+  $strongarm->name = 'node_preview_event_occasion';
   $strongarm->value = '1';
-  $export['node_preview_event_occation'] = $strongarm;
+  $export['node_preview_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1205,9 +1205,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_submitted_event_occation';
+  $strongarm->name = 'node_submitted_event_occasion';
   $strongarm->value = 1;
-  $export['node_submitted_event_occation'] = $strongarm;
+  $export['node_submitted_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1331,30 +1331,30 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'pathauto_node_event_occation_en_pattern';
+  $strongarm->name = 'pathauto_node_event_occasion_en_pattern';
   $strongarm->value = 'calendar/[node:title_field]';
-  $export['pathauto_node_event_occation_en_pattern'] = $strongarm;
+  $export['pathauto_node_event_occasion_en_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'pathauto_node_event_occation_pattern';
+  $strongarm->name = 'pathauto_node_event_occasion_pattern';
   $strongarm->value = '';
-  $export['pathauto_node_event_occation_pattern'] = $strongarm;
+  $export['pathauto_node_event_occasion_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'pathauto_node_event_occation_sv_pattern';
+  $strongarm->name = 'pathauto_node_event_occasion_sv_pattern';
   $strongarm->value = 'kalender/[node:title_field]';
-  $export['pathauto_node_event_occation_sv_pattern'] = $strongarm;
+  $export['pathauto_node_event_occasion_sv_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'pathauto_node_event_occation_und_pattern';
+  $strongarm->name = 'pathauto_node_event_occasion_und_pattern';
   $strongarm->value = '';
-  $export['pathauto_node_event_occation_und_pattern'] = $strongarm;
+  $export['pathauto_node_event_occasion_und_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1541,9 +1541,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'workbench_moderation_default_state_event_occation';
+  $strongarm->name = 'workbench_moderation_default_state_event_occasion';
   $strongarm->value = 'draft';
-  $export['workbench_moderation_default_state_event_occation'] = $strongarm;
+  $export['workbench_moderation_default_state_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1555,9 +1555,9 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'workbench_scheduler_event_occation';
+  $strongarm->name = 'workbench_scheduler_event_occasion';
   $strongarm->value = array();
-  $export['workbench_scheduler_event_occation'] = $strongarm;
+  $export['workbench_scheduler_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1602,12 +1602,12 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'xmlsitemap_settings_node_event_occation';
+  $strongarm->name = 'xmlsitemap_settings_node_event_occasion';
   $strongarm->value = array(
     'status' => '0',
     'priority' => '0.5',
   );
-  $export['xmlsitemap_settings_node_event_occation'] = $strongarm;
+  $export['xmlsitemap_settings_node_event_occasion'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

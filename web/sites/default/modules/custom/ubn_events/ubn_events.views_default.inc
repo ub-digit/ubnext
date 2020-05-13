@@ -176,7 +176,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'event_occation' => 'event_occation',
+    'event_occasion' => 'event_occasion',
   );
   /* Filter criterion: Field: Title (title_field) */
   $handler->display->display_options['filters']['title_field_value']['id'] = 'title_field_value';
@@ -328,7 +328,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Add occasion';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occation?field_event=[nid]">add occasion</a>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="/node/add/event-occasion?field_event=[nid]">add occasion</a>';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Type */
@@ -444,7 +444,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="/node/add/event-occation?destination=admin/content/event-occasions">Add event occation</a>';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="/node/add/event-occasion?destination=admin/content/event-occasions">Add event occasion</a>';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_event_target_id']['id'] = 'field_event_target_id';
@@ -564,7 +564,7 @@ function ubn_events_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'event_occation' => 'event_occation',
+    'event_occasion' => 'event_occasion',
   );
   /* Filter criterion: Field: Title (title_field) */
   $handler->display->display_options['filters']['title_field_value']['id'] = 'title_field_value';

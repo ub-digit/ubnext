@@ -15,7 +15,7 @@ function ubn_events_content_uuid_entity_default_menu_position_rule() {
     'conditions' => array(
       'content_type' => array(
         'content_type' => array(
-          'event_occation' => 'event_occation',
+          'event_occasion' => 'event_occasion',
         ),
       ),
     ),

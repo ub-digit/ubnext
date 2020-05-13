@@ -44,12 +44,12 @@
         </section>
       {% endif %}
       {%
-        set event_occations = section.field_event_series is empty ?
+        set event_occasions = section.field_event_series is empty ?
           '' :
-          ubn_events_event_series_event_occations_rendered(section.field_event_series.tid.value, section.field_event_occasions_limit.value) | raw
+          ubn_events_event_series_event_occasions_rendered(section.field_event_series.tid.value, section.field_event_occasions_limit.value) | raw
       %}
       {%
-        set body = not section.field_event_series is empty and event_occations is empty ?
+        set body = not section.field_event_series is empty and event_occasions is empty ?
           t('There are currently no upcoming events for %event_series.', { '%event_series': section.field_event_series.name } ) :
           section.field_body.value
       %}
@@ -73,7 +73,7 @@
       {% if not section.field_contact_instances is empty %}
         {{ contacts.contact_list(section.field_contact_instances) }}
       {% endif %}
-      {{ event_occations | raw }}
+      {{ event_occasions | raw }}
     {% endfor %}
   {% endif %}
   </div>

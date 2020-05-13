@@ -6,14 +6,14 @@
 
 include_once 'ubn_events.features.inc';
 
-function ubn_events_form_event_occation_node_form_alter(&$form, &$form_state) {
+function ubn_events_form_event_occasion_node_form_alter(&$form, &$form_state) {
   // Hide title field to set automatically on save
   $form['title_field']['#access'] = FALSE;
 }
 
 /* TODO hook_node_presave probably works to */
 function ubn_events_entity_presave($entity, $entity_type) {
-  if ($entity_type === 'node' && $entity->type === 'event_occation') {
+  if ($entity_type === 'node' && $entity->type === 'event_occasion') {
     $langcode = title_entity_language('node', $entity);
     $event_wrapper = entity_metadata_wrapper('node', $entity->field_event['und'][0]['target_id']);
     $event_wrapper->language($langcode);
@@ -31,7 +31,7 @@ function ubn_events_entity_presave($entity, $entity_type) {
 /* Implements hook_node_access_records() */
 function ubn_events_node_access_records($node) {
   $grants = array();
-  if ($node->type == 'event_occation') {
+  if ($node->type == 'event_occasion') {
     $items = field_get_items('node', $node, 'field_event');
 
     // We could be inside transation because this is
@@ -53,7 +53,7 @@ function ubn_events_node_access_records($node) {
       */
       // will be added in node_access_acquire_grants
 
-      // Prevent anonymous viewing published event_occations
+      // Prevent anonymous viewing published event_occasions
       // by default.
       // Specific permission required to view occasion with
       // unpublished event.
@@ -85,37 +85,37 @@ function ubn_events_permission() {
   return array(
     'view event occasions with unpublished event' => array(
       'title' => t('View event occasions with unpublished event'),
-      'descripition' => t('View event occation even if the referenced event is unpublished'),
+      'descripition' => t('View event occasion even if the referenced event is unpublished'),
     )
   );
 }
 
 // TODO: Invoke from node save instead because of reasons
-// Abusing node access so that event occations with unpublished events
+// Abusing node access so that event occasions with unpublished events
 // are not viewable by anonymous users
 /* Implements hook_permission() */
 function ubn_events_node_update($node) {
   if ($node->type == 'event' && !$node->is_draft_revision) {
     $query = new EntityFieldQuery();
 
-    // Published event occations that should be
+    // Published event occasions that should be
     // granted or revoked access to depending
     // on event publications status
     $results = $query
       ->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'event_occation')
+      ->entityCondition('bundle', 'event_occasion')
       //->propertyCondition('status', NODE_PUBLISHED)
       ->fieldCondition('field_event', 'target_id', $node->nid)
       ->execute();
 
     if (!empty($results['node'])) {
       $nids = array_keys($results['node']);
-      $event_occations = entity_load('node', $nids);
+      $event_occasions = entity_load('node', $nids);
       // Trigger aquire grants for occasions
       // TODO: Check if publication status changed and only trigger
       // in that case
-      foreach ($event_occations as $event_occation) {
-        node_access_acquire_grants($event_occation);
+      foreach ($event_occasions as $event_occasion) {
+        node_access_acquire_grants($event_occasion);
       }
     }
   }
@@ -135,22 +135,22 @@ function ubn_events_current_events($current_date) {
   $result = $query->condition('node_event.type', 'event')
     ->condition('node_event.status', NODE_PUBLISHED)
     ->condition('fe.entity_type', 'node')
-    ->condition('fe.bundle', 'event_occation')
+    ->condition('fe.bundle', 'event_occasion')
     ->condition('fst.entity_type', 'node')
-    ->condition('fst.bundle', 'event_occation')
+    ->condition('fst.bundle', 'event_occasion')
     ->condition('fst.field_scheduled_time_value', $current_date, '>=')
     ->execute();
 
   return $result->fetchCol(0);
 }
 
-function ubn_events_event_occations_by_year_month_rendered($event_occations) {
+function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));
-  $event_occations_by_year_month = array();
-  foreach($event_occations as $event_occation) {
+  $event_occasions_by_year_month = array();
+  foreach($event_occasions as $event_occasion) {
     // Not using entity_metadat_wrapper here since carries quite some overhead
     // and also what to deal with DateObject not formatted value
-    $item = $event_occation->field_scheduled_time['und'][0];
+    $item = $event_occasion->field_scheduled_time['und'][0];
     $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
     $scheduled_time->setTimezone($site_tz);
     //TODO: Could use date_format_date instead
@@ -158,19 +158,19 @@ function ubn_events_event_occations_by_year_month_rendered($event_occations) {
     $month = drupal_ucfirst(
       t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
     );
-    $event_occations_by_year_month[$year][$month][] = $event_occation;
+    $event_occasions_by_year_month[$year][$month][] = $event_occasion;
   }
-  foreach($event_occations_by_year_month as $year => $event_occations) {
-    foreach($event_occations_by_year_month[$year] as $month => $event_occations) {
-      $event_occations_by_year_month[$year][$month] = entity_view('node', $event_occations, 'teaser');
-      $event_occations_by_year_month[$year][$month] = drupal_render($event_occations_by_year_month[$year][$month]);
+  foreach($event_occasions_by_year_month as $year => $event_occasions) {
+    foreach($event_occasions_by_year_month[$year] as $month => $event_occasions) {
+      $event_occasions_by_year_month[$year][$month] = entity_view('node', $event_occasions, 'teaser');
+      $event_occasions_by_year_month[$year][$month] = drupal_render($event_occasions_by_year_month[$year][$month]);
     }
   }
-  return $event_occations_by_year_month;
+  return $event_occasions_by_year_month;
 }
 
 
-function ubn_events_event_series_event_occations_rendered($event_series_tid, $limit = null) {
+function ubn_events_event_series_event_occasions_rendered($event_series_tid, $limit = null) {
   // EFQ do not support releations so have to perform two queries
   // Fetch all event nids for event series term
 
@@ -188,7 +188,7 @@ function ubn_events_event_series_event_occations_rendered($event_series_tid, $li
 
   $event_nids = $result->fetchCol(0);
   if (!empty($event_nids)) {
-    $query = ubn_events_current_event_occations_efq()
+    $query = ubn_events_current_event_occasions_efq()
       ->fieldCondition('field_event', 'target_id', $event_nids, 'IN');
 
     if (!empty($limit)) {
@@ -197,21 +197,21 @@ function ubn_events_event_series_event_occations_rendered($event_series_tid, $li
 
     $results = $query->execute();
     if (!empty($results['node'])) {
-      $event_occations = entity_load('node', array_keys($results['node']));
-      $event_series_event_occations = entity_view('node', $event_occations, 'teaser');
-      return drupal_render($event_series_event_occations);
+      $event_occasions = entity_load('node', array_keys($results['node']));
+      $event_series_event_occasions = entity_view('node', $event_occasions, 'teaser');
+      return drupal_render($event_series_event_occasions);
     }
   }
   return '';
 }
 
-function ubn_events_current_event_occations_efq() {
+function ubn_events_current_event_occasions_efq() {
   // "All day" events are scheduled at midnight in local timezone
   $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
   $query = new EntityFieldQuery();
   return $query
     ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'event_occation')
+    ->entityCondition('bundle', 'event_occasion')
     ->propertyCondition('status', NODE_PUBLISHED)
     ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
     ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');

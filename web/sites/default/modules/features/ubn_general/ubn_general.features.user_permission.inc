@@ -685,9 +685,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'create event_occation content'.
-  $permissions['create event_occation content'] = array(
-    'name' => 'create event_occation content',
+  // Exported permission: 'create event_occasion content'.
+  $permissions['create event_occasion content'] = array(
+    'name' => 'create event_occasion content',
     'roles' => array(),
     'module' => 'node',
   );
@@ -810,9 +810,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any event_occation content'.
-  $permissions['delete any event_occation content'] = array(
-    'name' => 'delete any event_occation content',
+  // Exported permission: 'delete any event_occasion content'.
+  $permissions['delete any event_occasion content'] = array(
+    'name' => 'delete any event_occasion content',
     'roles' => array(),
     'module' => 'node',
   );
@@ -925,9 +925,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own event_occation content'.
-  $permissions['delete own event_occation content'] = array(
-    'name' => 'delete own event_occation content',
+  // Exported permission: 'delete own event_occasion content'.
+  $permissions['delete own event_occasion content'] = array(
+    'name' => 'delete own event_occasion content',
     'roles' => array(),
     'module' => 'node',
   );
@@ -1192,9 +1192,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any event_occation content'.
-  $permissions['edit any event_occation content'] = array(
-    'name' => 'edit any event_occation content',
+  // Exported permission: 'edit any event_occasion content'.
+  $permissions['edit any event_occasion content'] = array(
+    'name' => 'edit any event_occasion content',
     'roles' => array(),
     'module' => 'node',
   );
@@ -1307,9 +1307,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit own event_occation content'.
-  $permissions['edit own event_occation content'] = array(
-    'name' => 'edit own event_occation content',
+  // Exported permission: 'edit own event_occasion content'.
+  $permissions['edit own event_occasion content'] = array(
+    'name' => 'edit own event_occasion content',
     'roles' => array(),
     'module' => 'node',
   );
@@ -1765,9 +1765,9 @@ function ubn_general_user_default_permissions() {
     'module' => 'publication_date',
   );
 
-  // Exported permission: 'set event_occation published on date'.
-  $permissions['set event_occation published on date'] = array(
-    'name' => 'set event_occation published on date',
+  // Exported permission: 'set event_occasion published on date'.
+  $permissions['set event_occasion published on date'] = array(
+    'name' => 'set event_occasion published on date',
     'roles' => array(),
     'module' => 'publication_date',
   );

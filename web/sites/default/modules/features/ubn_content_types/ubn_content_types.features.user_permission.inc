@@ -158,9 +158,9 @@ function ubn_content_types_user_default_permissions() {
     'module' => 'view_unpublished',
   );
 
-  // Exported permission: 'view any unpublished event_occation content'.
-  $permissions['view any unpublished event_occation content'] = array(
-    'name' => 'view any unpublished event_occation content',
+  // Exported permission: 'view any unpublished event_occasion content'.
+  $permissions['view any unpublished event_occasion content'] = array(
+    'name' => 'view any unpublished event_occasion content',
     'roles' => array(),
     'module' => 'view_unpublished',
   );

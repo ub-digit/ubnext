@@ -511,7 +511,7 @@ function ubn_content_types_field_default_field_bases() {
         'data_size' => 'normal',
         'data_type' => 'varchar',
       ),
-      'display_format' => '$display_output =  l(t(\'edit occations\'), $entity_field_item[\'value\']);',
+      'display_format' => '$display_output =  l(t(\'edit occasions\'), $entity_field_item[\'value\']);',
       'entity_translation_sync' => FALSE,
       'recalculate' => 0,
       'store' => 1,

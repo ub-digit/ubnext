@@ -2843,9 +2843,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_address_room'.
-  $field_instances['node-event_occation-field_address_room'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_address_room'.
+  $field_instances['node-event_occasion-field_address_room'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -2896,9 +2896,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_canceled'.
-  $field_instances['node-event_occation-field_canceled'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_canceled'.
+  $field_instances['node-event_occasion-field_canceled'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => array(
       0 => array(
         'value' => 0,
@@ -2947,9 +2947,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_event'.
-  $field_instances['node-event_occation-field_event'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_event'.
+  $field_instances['node-event_occasion-field_event'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'default_value_function' => 'entityreference_prepopulate_field_default_value',
     'deleted' => 0,
@@ -2970,7 +2970,7 @@ function ubn_content_types_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
-      'ubn_event_occation_teaser_small' => array(
+      'ubn_event_occasion_teaser_small' => array(
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
@@ -3020,9 +3020,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_event_location_url'.
-  $field_instances['node-event_occation-field_event_location_url'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_event_location_url'.
+  $field_instances['node-event_occasion-field_event_location_url'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -3089,9 +3089,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_language'.
-  $field_instances['node-event_occation-field_language'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_language'.
+  $field_instances['node-event_occasion-field_language'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -3134,9 +3134,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_library'.
-  $field_instances['node-event_occation-field_library'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_library'.
+  $field_instances['node-event_occasion-field_library'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -3180,9 +3180,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-field_scheduled_time'.
-  $field_instances['node-event_occation-field_scheduled_time'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-field_scheduled_time'.
+  $field_instances['node-event_occasion-field_scheduled_time'] = array(
+    'bundle' => 'event_occasion',
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -3243,9 +3243,9 @@ function ubn_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event_occation-title_field'.
-  $field_instances['node-event_occation-title_field'] = array(
-    'bundle' => 'event_occation',
+  // Exported field_instance: 'node-event_occasion-title_field'.
+  $field_instances['node-event_occasion-title_field'] = array(
+    'bundle' => 'event_occasion',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
