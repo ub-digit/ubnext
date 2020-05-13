@@ -1,0 +1,106 @@
+@ubn-events-border-padding: 8px;
+
+//@media (min-width: @screen-sm-min) {
+//  .pull-sm-right {
+//    float: right;
+//  }
+//}
+
+//@media (max-width: @screen-sm-max) {
+//  .event-occasion-add-to-calendar-links {
+//    margin-top: 10px;
+//  }
+//}
+
+.event-occasion-add-to-calendar-link {
+  font-size: @font-size-small;
+  margin-bottom: @ubn-events-border-padding * 2;
+}
+
+.event-canceled {
+  padding: 0px 3px 0px 3px;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-bottom: 0;
+  margin-left: 0.5em;
+}
+
+.event-occasion-teaser-small {
+  font-size: @font-size-small;
+  border-bottom: 1px solid @ub-grey;
+  margin-bottom: @ubn-events-border-padding;
+  padding-bottom: @ubn-events-border-padding;
+  .event-occasion-categories-label:first-child {
+    display: inline-block;
+    margin-top: @ubn-events-border-padding;
+  }
+}
+
+.node-type-event-occasion {
+  .content-sections.panel-separator {
+    margin-bottom: 0;
+  }
+}
+
+.event-occasion-info-item {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  .fa {
+    flex-basis: 1em;
+    display: inline-block;
+    margin-right: 0.214em;
+    text-align: center;
+  }
+}
+
+.event-occasion-head-info {
+    font-size: @font-size-small;
+    .event-occasion-info-item:last-child {
+      border-bottom: 1px solid @ub-grey;
+      margin-bottom: @ubn-events-border-padding;
+      padding-bottom: @ubn-events-border-padding;
+    }
+}
+
+.node-type-event-occasion h3 {
+  font-size: @font-size-h3;
+}
+
+.call-to-action-link a {
+  &::after  {
+    font-family: "FontAwesome";
+    content: "\f061";
+    position: relative;
+    top: -2px;
+    margin-left: 8px;
+    display: inline-block;
+    font-size: 12px;
+  }
+}
+
+/* TODO: Border and padding should not be hardcoded, create variables/mixins */
+/* and use in other places (list of links etc) as well */
+
+.event-occasion-categories-label {
+  font-weight: bold;
+}
+
+.event-occasion-categories {
+  font-size: @font-size-small;
+  li {
+    margin-bottom: 2px;
+  }
+  ul.list-unstyled {
+    margin-bottom: 0;
+  }
+}
+
+.event-occasion-admin-links {
+  a {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: @font-size-small;
+  }
+}

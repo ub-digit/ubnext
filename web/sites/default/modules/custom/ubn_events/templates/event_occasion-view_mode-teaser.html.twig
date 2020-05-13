@@ -1,0 +1,42 @@
+{# slate
+  name = Event occasion: View mode 'Teaser'
+  models[entity] = entity:node
+  view_mode[node][event_occasion] = teaser
+#}
+{% import "macros/dates.html.twig" as dates %}
+{% import "macros/misc.html.twig" as misc %}
+{% import "macros/components.html.twig" as components %}
+{% import "macros/ubn-events.html.twig" as ubn_events %}
+<div class="row event-occasion-wrapper">
+  <div class="col-xs-2">
+    <div class="event-date-wrapper">
+      <div class="event-occasions-event-day-of-week">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'l') }}
+      </div>
+      <div class="event-occasions-event-day-of-week short">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'D') }}
+      </div>
+      <div class="event-occasions-event-day-of-month">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'j') }}
+      </div>
+      <div class="event-occasions-event-month">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'F') }}
+      </div>
+      <div class="event-occasions-event-month short">
+        {{ dates.date_custom(entity.field_scheduled_time.value, 'M') }}
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 event-occasion-info-wrapper">
+    <h3>{{ misc.link(entity.field_event.title_field.value, entity.url.value, 'event-occasions-event-link') }}</h3>
+    {{ ubn_events.event_scheduled_time(ubn_events_format_event_time(entity.field_scheduled_time, FALSE), ubn_events.event_canceled(entity.field_canceled)) }}
+    {{ ubn_events.event_location(entity.field_address_room.value, entity.field_library.label) }}
+    <div>
+      {% if entity.field_event.field_event_type.name.value is not empty %}
+      <span class="event-lead">{{ entity.field_event.field_event_type.name.value }}. </span>
+      {% endif %}
+      <span>{{ entity.field_event.field_lead.value|truncate(110) }}</span>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>

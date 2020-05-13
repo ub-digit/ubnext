@@ -1,0 +1,17 @@
+name = UBN events content
+core = 7.x
+package = UBNext
+version = 7.x-0.2
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = entity_menu_links
+dependencies[] = menu_position
+dependencies[] = menu_position_uuid
+dependencies[] = strongarm
+dependencies[] = ubn_content
+dependencies[] = uuid_entity_features
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[uuid_entity_menu_link][] = 5bcf4a48-75f8-4e41-82c7-6c65b0cc7d90
+features[uuid_entity_menu_position_rule][] = 1c73c98b-0132-4313-a845-30a18ffc8ce5
+features[uuid_entity_node][] = ce579a0e-ea38-4398-a639-daf95923e105
