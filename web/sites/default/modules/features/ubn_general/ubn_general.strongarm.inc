@@ -35,8 +35,29 @@ function ubn_general_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'date_first_day';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['date_first_day'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_long';
+  $strongarm->value = 'l, F j, Y - H:i';
+  $export['date_format_long'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_medium';
+  $strongarm->value = 'D, d/m/Y - H:i';
+  $export['date_format_medium'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_short';
+  $strongarm->value = 'd/m/Y - H:i';
+  $export['date_format_short'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -99,7 +120,7 @@ function ubn_general_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'language_cookie_domain';
-  $strongarm->value = '';
+  $strongarm->value = '.ub.gu.se';
   $export['language_cookie_domain'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -145,7 +166,7 @@ function ubn_general_strongarm() {
     'domain' => '',
     'prefix' => 'sv',
     'weight' => '0',
-    'javascript' => 'QDvA4ZiyfcW1OPvBg-2vYzihgoOQGfxDf40nWB3Vn8o',
+    'javascript' => 'yDVwE832av55Bzie6L5U43pcgMzHRO9Cet3gL5raUDw',
   );
   $export['language_default'] = $strongarm;
 
@@ -188,6 +209,12 @@ function ubn_general_strongarm() {
         'url_rewrite' => 'locale_language_url_rewrite_url',
       ),
       'file' => 'includes/locale.inc',
+    ),
+    'language_cookie' => array(
+      'callbacks' => array(
+        'language' => 'language_cookie_language',
+      ),
+      'file' => 'sites/all/modules/contrib/language_cookie/language_cookie.module',
     ),
     'language-default' => array(
       'callbacks' => array(
@@ -296,21 +323,14 @@ function ubn_general_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'variable_realm_list_language';
-  $strongarm->value = array(  
+  $strongarm->value = array(
     1 => 'aria_label_logotype',
-    2 => 'footer_col1',
     2 => 'beta_info',
-    3 => 'footer_col2',
     3 => 'footer_col1',
-    4 => 'footer_col3',
     4 => 'footer_col2',
-    5 => 'placeholder',
     5 => 'footer_col3',
-    6 => 'site_name',
     6 => 'link_logotype',
-    7 => 'site_slogan',
     7 => 'placeholder',
-    8 => 'slogan',
     8 => 'site_name',
     9 => 'site_slogan',
     10 => 'slogan',

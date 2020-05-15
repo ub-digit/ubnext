@@ -1509,6 +1509,85 @@ function ubn_general_update_7245() {
   field_cache_clear();
 }
 
+/* Enable ubn_events */
+function ubn_general_update_7246() {
+  module_enable(array('ubn_events'));
+}
+
+/* Enable ubn_events_content */
+function ubn_general_update_7247() {
+  module_enable(array('ubn_events_content'));
+}
+
+/* Revert features */
+function ubn_general_update_7248() {
+  features_revert_module('ubn_content_types');
+}
+
+/* Revert features */
+function ubn_general_update_7249() {
+  features_revert_module('ubn_page');
+}
+
+/* Enable computed_field module */
+function ubn_general_update_7250() {
+  module_enable(array('computed_field'));
+}
+
+function ubn_general_update_7251() {
+  module_enable(array('views_bulk_operations', 'entityreference_prepopulate'));
+  features_revert_module('ubn_content_types');
+}
+
+/* Revert features */
+function ubn_general_update_7252() {
+  features_revert_module('ubn_general');
+}
+
+/* Revert features */
+function ubn_general_update_7253() {
+  foreach(array('ubn_content_types', 'ubn_general') as $module) {
+    features_revert_module($module);
+  };
+}
+
+/* Revert features */
+function ubn_general_update_7254() {
+  features_revert_module('ubn_content_types');
+}
+
+function ubn_general_update_7255() {
+  module_enable(array('date_views'));
+  features_revert_module('ubn_events');
+}
+
+function ubn_general_update_7256() {
+  features_revert_module('ubn_general');
+}
+
+function ubn_general_update_7257() {
+  features_revert_module('ubn_events');
+}
+
+function ubn_general_update_7258() {
+  features_revert_module('ubn_events');
+}
+
+function ubn_general_update_7259() {
+  features_revert_module('ubn_general');
+}
+
+function ubn_general_update_7260() {
+  features_revert_module('ubn_content_types');
+}
+
+function ubn_general_update_7261() {
+  module_enable(array('view_unpublished'));
+  field_delete_field('field_language');
+  ubn_general_content_type_delete('event_occation');
+  features_revert_module('ubn_content_types');
+  features_revert_module('ubn_library');
+}
 
 //TODO: Disable rdf module?
 // Enable entity translation for library

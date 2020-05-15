@@ -1,0 +1,335 @@
+<?php
+/**
+ * @file
+ * Code for the UBN events feature.
+ */
+
+include_once 'ubn_events.features.inc';
+
+function ubn_events_form_event_occasion_node_form_alter(&$form, &$form_state) {
+  // Hide title field to set automatically on save
+  $form['title_field']['#access'] = FALSE;
+}
+
+/* TODO hook_node_presave probably works to */
+function ubn_events_entity_presave($entity, $entity_type) {
+  if ($entity_type === 'node' && $entity->type === 'event_occasion') {
+    $langcode = title_entity_language('node', $entity);
+    $event_wrapper = entity_metadata_wrapper('node', $entity->field_event['und'][0]['target_id']);
+    $event_wrapper->language($langcode);
+
+    $scheduled_time = new DateObject(
+      $entity->field_scheduled_time['und'][0]['value'],
+      $entity->field_scheduled_time['und'][0]['timezone_db']
+    );
+    $field_tz = new DateTimeZone($entity->field_scheduled_time['und'][0]['timezone']);
+    $scheduled_time->setTimezone($field_tz);
+    $entity->title = $event_wrapper->label() . ' ' . $scheduled_time->format('Y-m-d');
+  }
+}
+
+/* Implements hook_node_access_records() */
+function ubn_events_node_access_records($node) {
+  $grants = array();
+  if ($node->type == 'event_occasion') {
+    $items = field_get_items('node', $node, 'field_event');
+
+    // We could be inside transation because this is
+    // called from hook_node_update.
+    // Need to clear cache or we could get old node (?)
+    entity_get_controller('node')->resetCache(array($items[0]['target_id']));
+    $event = node_load($items[0]['target_id']);
+
+    if ($event->status != NODE_PUBLISHED) {
+      // Need to provide grant or the default:
+      /*
+        $grants[] = array(
+          'realm' => 'all',
+          'gid' => 0,
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+        );
+      */
+      // will be added in node_access_acquire_grants
+
+      // Prevent anonymous viewing published event_occasions
+      // by default.
+      // Specific permission required to view occasion with
+      // unpublished event.
+      $grants[] = array(
+        'realm' => 'ubn_events_view_event_occasion_event_unpublished',
+        'gid' => 1, // grant id, not to be confused with group id
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+      );
+    }
+  }
+  return $grants;
+}
+
+/* Implements hook_node_grants() */
+function ubn_events_node_grants($account, $op) {
+  $grants = array();
+  if (user_access('view event occasions with unpublished event')) {
+    $grants['ubn_events_view_event_occasion_event_unpublished'] = array(
+      1,
+    );
+  }
+  return $grants;
+}
+
+/* Implements hook_permission() */
+function ubn_events_permission() {
+  return array(
+    'view event occasions with unpublished event' => array(
+      'title' => t('View event occasions with unpublished event'),
+      'descripition' => t('View event occasion even if the referenced event is unpublished'),
+    )
+  );
+}
+
+// TODO: Invoke from node save instead because of reasons
+// Abusing node access so that event occasions with unpublished events
+// are not viewable by anonymous users
+/* Implements hook_permission() */
+function ubn_events_node_update($node) {
+  if ($node->type == 'event' && !$node->is_draft_revision) {
+    $query = new EntityFieldQuery();
+
+    // Published event occasions that should be
+    // granted or revoked access to depending
+    // on event publications status
+    $results = $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'event_occasion')
+      //->propertyCondition('status', NODE_PUBLISHED)
+      ->fieldCondition('field_event', 'target_id', $node->nid)
+      ->execute();
+
+    if (!empty($results['node'])) {
+      $nids = array_keys($results['node']);
+      $event_occasions = entity_load('node', $nids);
+      // Trigger aquire grants for occasions
+      // TODO: Check if publication status changed and only trigger
+      // in that case
+      foreach ($event_occasions as $event_occasion) {
+        node_access_acquire_grants($event_occasion);
+      }
+    }
+  }
+}
+
+function ubn_events_current_events($current_date) {
+  $query = db_select('node', 'node_event')
+    ->fields('node_event', array('nid'));
+
+  // Make distinct, could use sub-queries instead
+  $query->distinct();
+
+  // Joins cannot be chained for some stupid reason
+  $query->join('field_data_field_event', 'fe', 'node_event.nid = fe.field_event_target_id');
+  $query->join('field_data_field_scheduled_time', 'fst', 'fe.entity_id = fst.entity_id');
+
+  $result = $query->condition('node_event.type', 'event')
+    ->condition('node_event.status', NODE_PUBLISHED)
+    ->condition('fe.entity_type', 'node')
+    ->condition('fe.bundle', 'event_occasion')
+    ->condition('fst.entity_type', 'node')
+    ->condition('fst.bundle', 'event_occasion')
+    ->condition('fst.field_scheduled_time_value', $current_date, '>=')
+    ->execute();
+
+  return $result->fetchCol(0);
+}
+
+function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $event_occasions_by_year_month = array();
+  foreach($event_occasions as $event_occasion) {
+    // Not using entity_metadat_wrapper here since carries quite some overhead
+    // and also what to deal with DateObject not formatted value
+    $item = $event_occasion->field_scheduled_time['und'][0];
+    $scheduled_time = new DateObject($item['value'], $item['timezone_db']);
+    $scheduled_time->setTimezone($site_tz);
+    //TODO: Could use date_format_date instead
+    $year = $scheduled_time->format('Y');
+    $month = drupal_ucfirst(
+      t($scheduled_time->format('F'), array(), array('context' => 'Long month name'))
+    );
+    $event_occasions_by_year_month[$year][$month][] = $event_occasion;
+  }
+  foreach($event_occasions_by_year_month as $year => $event_occasions) {
+    foreach($event_occasions_by_year_month[$year] as $month => $event_occasions) {
+      $event_occasions_by_year_month[$year][$month] = entity_view('node', $event_occasions, 'teaser');
+      $event_occasions_by_year_month[$year][$month] = drupal_render($event_occasions_by_year_month[$year][$month]);
+    }
+  }
+  return $event_occasions_by_year_month;
+}
+
+
+function ubn_events_event_series_event_occasions_rendered($event_series_tid, $limit = null) {
+  // EFQ do not support releations so have to perform two queries
+  // Fetch all event nids for event series term
+
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'event')
+    ->condition('n.status', NODE_PUBLISHED);
+  $query->join('field_data_field_event_series', 'fes', 'n.nid = fes.entity_id');
+
+  $result = $query
+    ->condition('fes.entity_type', 'node')
+    ->condition('fes.bundle', 'event')
+    ->condition('fes.field_event_series_tid', $event_series_tid)
+    ->execute();
+
+  $event_nids = $result->fetchCol(0);
+  if (!empty($event_nids)) {
+    $query = ubn_events_current_event_occasions_efq()
+      ->fieldCondition('field_event', 'target_id', $event_nids, 'IN');
+
+    if (!empty($limit)) {
+      $query->range(0, $limit);
+    }
+
+    $results = $query->execute();
+    if (!empty($results['node'])) {
+      $event_occasions = entity_load('node', array_keys($results['node']));
+      $event_series_event_occasions = entity_view('node', $event_occasions, 'teaser');
+      return drupal_render($event_series_event_occasions);
+    }
+  }
+  return '';
+}
+
+function ubn_events_current_event_occasions_efq() {
+  // "All day" events are scheduled at midnight in local timezone
+  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
+  $query = new EntityFieldQuery();
+  return $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'event_occasion')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
+    ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');
+}
+
+/**
+ * Implements hook_slate_twig_alter().
+ */
+function ubn_events_slate_twig_alter($twig) {
+  $path = libraries_get_path('calendar-links');
+
+  // Could probably autoload, but meh, keep things simple
+  require_once $path . '/src/Generator.php';
+  require_once $path . '/src/Generators/Google.php';
+  require_once $path . '/src/Generators/Ics.php';
+  require_once $path . '/src/Generators/WebOutlook.php';
+  require_once $path . '/src/Generators/Yahoo.php';
+  require_once $path . '/src/Exceptions/InvalidLink.php';
+  require_once $path . '/src/Link.php';
+
+  $path = drupal_get_path('module', 'ubn_events');
+  require_once $path . '/CalendarLinkTwigExtension.php';
+
+  $twig->addExtension(new Drupal\ubn_events\Twig\CalendarLinkTwigExtension());
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ubn_events_ctools_plugin_directory($owner, $plugin_type) {
+  if (in_array($plugin_type, array('content_types'))) {
+    return "plugins/$plugin_type";
+  }
+}
+
+//TODO: Move these to ubn_general or other feature?
+// since general view mode and not specific to this feature
+/**
+ * Implements hook_entity_info_alter().
+ */
+function ubn_events_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['ubn_teaser_small'] = array(
+    'label' => t('UBN small teaser'),
+    'custom settings' => FALSE,
+  );
+}
+
+/* "All day" events are scheduled at midnight in local timezone */
+function ubn_events_site_tz_midnight_in_utc() {
+    $utc = new DateTimeZone('UTC');
+    // Convert site's midnight of today to UTC
+    $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+    $site_tz_midnight_in_utc = new DateTime('now', $site_tz);
+    // Set to midnight in local timezone
+    $site_tz_midnight_in_utc->setTime(0, 0);
+    // Convert to UTC
+    $site_tz_midnight_in_utc->setTimeZone($utc);
+    return $site_tz_midnight_in_utc;
+}
+
+
+/* Helpers: */
+
+function ubn_events_is_all_day($from, $to) {
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $from->setTimezone($site_tz);
+  $to->setTimezone($site_tz);
+  return $from->format('H:i') == '00:00' &&
+    $from->format('Y-m-d H:i') == $to->format('Y-m-d H:i');
+}
+
+function ubn_events_format_event_time($field, $end_time = TRUE) {
+  $raw = $field->raw();
+
+  $from = new DateObject($raw['value'], $raw['timezone_db']);
+  $to = new DateObject($raw['value2'], $raw['timezone_db']);
+
+  $site_tz = new DateTimeZone(date_default_timezone(FALSE));
+  $from->setTimezone($site_tz);
+  $to->setTimezone($site_tz);
+
+  $from_date = date_format_date($from, 'custom', 'l j F');
+  if (ubn_events_is_all_day($from, $to)) {
+    return $from_date;
+  }
+  else {
+    $from_formatted = t(
+      '!date, at !time',
+      array(
+        '!date' => $from_date,
+        '!time' => $from->format('H:i'),
+      )
+    );
+
+    if (!$end_time) {
+      return $from_formatted;
+    }
+
+    // Same dates
+    if ($from->format('Y-m-d') == $to->format('Y-m-d')) {
+      // Same time
+      if ($from->format('H:i') == $to->format('H:i')) {
+        return $from_formatted;
+      }
+      else {
+        // Different time, append end time
+        return $from_formatted . ' - ' . $to->format('H:i');
+      }
+    }
+    else {
+      // Different dates (and times)
+      return $from_formatted . ' - ' . t(
+        '!date, at !time',
+        array(
+          '!date' => date_format_date($to, 'custom', 'l j F'),
+          '!time' => $to->format('H:i'),
+        )
+      );
+    }
+  }
+}

@@ -65,8 +65,8 @@ function ubn_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'event_occation' => array(
-      'name' => t('Event occation'),
+    'event_occasion' => array(
+      'name' => t('Event occasion'),
       'base' => 'node_content',
       'description' => '',
       'has_title' => '1',
