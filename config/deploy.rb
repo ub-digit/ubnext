@@ -8,6 +8,7 @@ set :repo_url, 'https://github.com/ub-digit/ubnext.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
+
 set :branch, 'release-2020.05.003'
 
 # Default deploy_to directory is /var/www/my_app
@@ -49,6 +50,18 @@ set :npm_flags, '--silent --no-spin'
 set :npm_prune_flags, ''
 
 namespace :deploy do
+  before "git:check", :alert_deploying_to_stage do
+    on roles(:all) do |host|
+      colors = SSHKit::Color.new($stdout)
+      message = "You are about to deploy to #{fetch(:stage)}"
+      if fetch(:stage) == :production
+        info colors.colorize("\e[5m#{message}!\e[0m", :red)
+      else
+        # info message
+      end
+    end
+  end
+
   before :starting, :set_command_map_paths do
     SSHKit.config.command_map[:drush] = "#{shared_path.join("drush")}"
   end

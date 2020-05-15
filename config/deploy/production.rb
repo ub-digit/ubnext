@@ -26,28 +26,11 @@ server 'beta.ub.gu.se', user: 'drupal-deploy', roles: %w{app},
 set :deploy_to, '/var/www/drupal/production'
 
 # Set release tag
-set :branch, 'release-2020.05.002'
-
-
+#ask :branch, proc { fetch(:branch) }.call
+ask :branch, ''
 
 # Drupal deploy
 set :drupal_data_permit_write, false
-
-namespace :deploy do
-  before :starting, :set_command_map_paths do
-    puts "You are about to deploy tag '#{fetch(:branch)}' to the production site, do you wish to proceed? (y/n)"
-    ask(:confirmation)
-    answer = fetch(:confirmation)
-    if answer == 'y'
-      #proceed with deploy as user apparently would like to...
-      puts "Proceeding with deploy of tag '#{fetch(:branch)}' to production"
-    else
-      puts 'Aborting deploy!'
-      #exiting deploy for all answers but 'y'
-      exit
-    end
-  end
-end
 
 # Custom SSH Options
 # ==================
