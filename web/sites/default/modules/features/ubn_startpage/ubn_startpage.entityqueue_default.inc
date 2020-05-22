@@ -21,10 +21,12 @@ function ubn_startpage_entityqueue_default_queues() {
   $queue->settings = array(
     'target_bundles' => array(
       'blurb' => 'blurb',
+      'event' => 'event',
+      'story' => 'story',
     ),
     'min_size' => '0',
     'max_size' => '0',
-    'act_as_queue' => 0,
+    'act_as_queue' => 1,
   );
   $export['front_page_blurbs'] = $queue;
 

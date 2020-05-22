@@ -616,13 +616,13 @@ function ubn_content_types_strongarm() {
           'weight' => '-5',
         ),
         'path' => array(
-          'weight' => '8',
-        ),
-        'redirect' => array(
           'weight' => '9',
         ),
-        'xmlsitemap' => array(
+        'redirect' => array(
           'weight' => '10',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '11',
         ),
         'language' => array(
           'weight' => '9',

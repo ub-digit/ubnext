@@ -1,10 +1,10 @@
 {# slate
-  name = Blurb: View mode 'UBN Blurb'
+  name = Event: View mode 'UBN Blurb'
   models[entity] = entity:node
-  view_mode[node][blurb] = ubn_blurb
+  view_mode[node][event] = ubn_blurb
 #}
 {% extends "blurb-base.html.twig" %}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
-{% block url %}{{ url(entity.field_link.url.value, { 'absolute': true }) }}{% endblock %}
+{% block url %}{{ url(entity.url.value, { 'absolute': true }) }}{% endblock %}
 {% block image %}{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}{% endblock %}
 {% block header %}{{ entity.title.value }}{% endblock %}

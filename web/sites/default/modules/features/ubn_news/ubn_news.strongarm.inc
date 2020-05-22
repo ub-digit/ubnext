@@ -102,13 +102,13 @@ function ubn_news_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '5',
+          'weight' => '6',
         ),
         'redirect' => array(
-          'weight' => '4',
+          'weight' => '5',
         ),
         'xmlsitemap' => array(
-          'weight' => '3',
+          'weight' => '4',
         ),
       ),
       'display' => array(),

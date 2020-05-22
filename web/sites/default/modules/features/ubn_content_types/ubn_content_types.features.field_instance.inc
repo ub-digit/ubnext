@@ -2484,7 +2484,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -2553,7 +2553,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -2603,7 +2603,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -2646,7 +2646,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'computed_field',
       'settings' => array(),
       'type' => 'computed',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -2691,7 +2691,7 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -2736,7 +2736,62 @@ function ubn_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 3,
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_image_atom'.
+  $field_instances['node-event-field_image_atom'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'atom_reference',
+        'settings' => array(
+          'link' => 0,
+          'override' => 0,
+        ),
+        'type' => 'title',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'ubn_search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_image_atom',
+    'label' => 'Blurb image',
+    'required' => 0,
+    'settings' => array(
+      'allow_override' => 0,
+      'entity_translation_sync' => FALSE,
+      'referencable_types' => array(
+        'file' => 0,
+        'image' => 'image',
+        'video' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'atom_reference',
+      'settings' => array(
+        'context' => 'sdl_editor_representation',
+      ),
+      'type' => 'atom_reference_textfield',
+      'weight' => 1,
     ),
   );
 
@@ -2789,7 +2844,7 @@ function ubn_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -4869,6 +4924,7 @@ function ubn_content_types_field_default_field_instances() {
   t('Anonymous allowed');
   t('Audience');
   t('Authors');
+  t('Blurb image');
   t('Body');
   t('Call to action');
   t('Canceled');

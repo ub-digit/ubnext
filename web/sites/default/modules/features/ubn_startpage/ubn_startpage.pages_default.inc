@@ -293,7 +293,7 @@ function ubn_startpage_default_page_manager_pages() {
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
-  $pages['front'] = $page;
+  $pages[''] = $page;
 
   return $pages;
 
