@@ -46,7 +46,7 @@ function features_populate($info, $module_name) {
  */
 function _features_populate($pipe, &$export, $module_name = '', $reset = FALSE) {
   // Ensure that the export will be created in the english language.
-  _features_set_export_language();
+  $language = _features_export_language();
 
   if ($reset) {
     drupal_static_reset(__FUNCTION__);
@@ -92,6 +92,7 @@ function _features_populate($pipe, &$export, $module_name = '', $reset = FALSE) 
       }
     }
   }
+  _features_export_language($language);
   return $export;
 }
 
@@ -314,7 +315,7 @@ function features_export_render($export, $module_name, $reset = FALSE) {
   $code = array_filter($code);
   foreach ($code as $filename => $contents) {
     if ($filename != '_files') {
-      $code[$filename] = "<?php\n/**\n * @file\n * {$module_name}.{$filename}.inc\n */\n\n". implode("\n\n", $contents) ."\n";
+      $code[$filename] = "<?php\n\n/**\n * @file\n * {$module_name}.{$filename}.inc\n */\n\n". implode("\n\n", $contents) ."\n";
     }
   }
 
@@ -331,8 +332,8 @@ function features_export_render($export, $module_name, $reset = FALSE) {
   $code['info'] = features_export_info($export);
 
   // Used to create or manipulate the generated .module for features.inc.
-  $modulefile_features_inc = "<?php\n/**\n * @file\n * Code for the {$export['name']} feature.\n */\n\ninclude_once '{$module_name}.features.inc';\n";
-  $modulefile_blank = "<?php\n/**\n * @file\n * Drupal needs this blank file.\n */\n";
+  $modulefile_features_inc = "<?php\n\n/**\n * @file\n * Code for the {$export['name']} feature.\n */\n\ninclude_once '{$module_name}.features.inc';\n";
+  $modulefile_blank = "<?php\n\n/**\n * @file\n * Drupal needs this blank file.\n */\n";
 
   // Prepare the module
   // If module exists, let it be and include it in the files
@@ -843,6 +844,13 @@ function features_get_default($component, $module_name = NULL, $alter = TRUE, $r
 
 /**
  * Get a map of components to their providing modules.
+ *
+ * @param string $component
+ * @param string $attribute
+ * @param callable $callback
+ * @param bool $reset
+ *
+ * @return array|bool
  */
 function features_get_default_map($component, $attribute = NULL, $callback = NULL, $reset = FALSE) {
   $map = &drupal_static(__FUNCTION__, array());
@@ -892,7 +900,7 @@ function features_get_default_map($component, $attribute = NULL, $callback = NUL
  */
 function features_get_component_states($features = array(), $rebuild_only = TRUE, $reset = FALSE) {
   // Ensure that the export will be created in the English language.
-  _features_set_export_language();
+  $language = _features_export_language();
 
   if ($reset) {
     drupal_static_reset(__FUNCTION__);
@@ -904,7 +912,7 @@ function features_get_component_states($features = array(), $rebuild_only = TRUE
 
   // Retrieve only rebuildable components if requested.
   features_include();
-  $components = array_keys(features_get_components());
+  $components = array_keys(features_get_components(NULL, NULL, $reset));
   if ($rebuild_only) {
     foreach ($components as $k => $component) {
       if (!features_hook($component, 'features_rebuild')) {
@@ -987,6 +995,9 @@ function features_get_component_states($features = array(), $rebuild_only = TRUE
   foreach ($return as $k => $v) {
     $return[$k] = array_intersect_key($return[$k], array_flip($components));
   }
+
+  _features_export_language($language);
+
   return $return;
 }
 
@@ -1077,13 +1088,6 @@ function _features_is_assoc($array) {
  *   returns a copy of the object or array with recursion removed
  */
 function features_remove_recursion($o) {
-  static $replace;
-  if (!isset($replace)) {
-    $replace = create_function(
-      '$m',
-      '$r="\x00{$m[1]}ecursion_features";return \'s:\'.strlen($r.$m[2]).\':"\'.$r.$m[2].\'";\';'
-    );
-  }
   if (is_array($o) || is_object($o)) {
     $re = '#(r|R):([0-9]+);#';
     $serialize = serialize($o);
@@ -1093,7 +1097,7 @@ function features_remove_recursion($o) {
         $chunk = substr($serialize, $last, $pos - $last);
         if (preg_match($re, $chunk)) {
           $length = strlen($chunk);
-          $chunk = preg_replace_callback($re, $replace, $chunk);
+          $chunk = preg_replace_callback($re, '_features_remove_recursion', $chunk);
           $serialize = substr($serialize, 0, $last) . $chunk . substr($serialize, $last + ($pos - $last));
           $pos += strlen($chunk) - $length;
         }
@@ -1103,11 +1107,19 @@ function features_remove_recursion($o) {
         $last += 4 + $length;
         $pos = $last;
       }
-      $serialize = substr($serialize, 0, $last) . preg_replace_callback($re, $replace, substr($serialize, $last));
+      $serialize = substr($serialize, 0, $last) . preg_replace_callback($re, '_features_remove_recursion', substr($serialize, $last));
       $o = unserialize($serialize);
     }
   }
   return $o;
+}
+
+/**
+ * Callback function for preg_replace_callback() to remove recursion.
+ */
+function _features_remove_recursion($m) {
+  $r = "\x00{$m[1]}ecursion_features";
+  return 's:' . strlen($r . $m[2]) . ':"' . $r . $m[2] . '";';
 }
 
 /**
