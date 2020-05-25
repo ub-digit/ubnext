@@ -58,7 +58,7 @@ function ubn_page_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_404';
-  $strongarm->value = 'node/188055';
+  $strongarm->value = 'error-404';
   $export['site_404'] = $strongarm;
 
   return $export;
