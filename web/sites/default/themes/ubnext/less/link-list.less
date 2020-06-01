@@ -3,26 +3,25 @@
 @inner-wrapper-min-height: 160px;
 //@inner-wrapper-min-height-extended: 190px;
 
-.blurb-wrapper-link{
+.blurb-wrapper-link {
   display: inline-block;
-  &:focus{
-    .blurb-wrapper{
-      &.show-focus-outlines{
-     // outline: 1px solid #012d50;
+  &:focus {
+    .blurb-wrapper {
+      &.show-focus-outlines {
+        // outline: 1px solid #012d50;
         outline: 5px solid #333;
-      }  
+      }
     }
-    .story-promoted-text-wrapper{
-      h2{
+    .story-promoted-text-wrapper {
+      h2 {
         text-decoration: underline;
       }
     }
-    
   }
 }
 
-.short-cut-override{
-  &:focus{
+.short-cut-override {
+  &:focus {
     .shortcut-widget-body-link {
       background-color: #014174!important;
       border-color: #012d50!important;
@@ -55,7 +54,7 @@
 .ubn-panel-links {
   &.shortcut-widget {
     @media (max-width: @screen-sm) {
-       margin-bottom: 15px;
+      margin-bottom: 15px;
     }
     .ubn-panel-links-body {
       ul {
@@ -80,16 +79,16 @@
         ul {
           li {
             &:nth-child(n + 5) {
-            margin-bottom: 30px;
-            @media (max-width: @screen-sm) {
-               margin-bottom: 10px;
-            }
-            height: auto;
-            visibility: visible;
-            opacity: 1;
-            transition: opacity .25s ease-in-out;
-            -moz-transition: opacity .25s ease-in-out;
-            -webkit-transition: opacity .25s ease-in-out;
+              margin-bottom: 30px;
+              @media (max-width: @screen-sm) {
+                margin-bottom: 10px;
+              }
+              height: auto;
+              visibility: visible;
+              opacity: 1;
+              transition: opacity .25s ease-in-out;
+              -moz-transition: opacity .25s ease-in-out;
+              -webkit-transition: opacity .25s ease-in-out;
             }
           }
         }
@@ -109,7 +108,7 @@
     }
     .ubn-panel-links-body {
       ul {
-        li { 
+        li {
           .ubn-panel-links-body-link  {
             cursor:pointer;
             &:hover {
@@ -135,13 +134,13 @@
             color: @gray-lighter;
             cursor: pointer;
             pointer-events: none;
-            @media (max-width: @screen-sm) { 
+            @media (max-width: @screen-sm) {
             }
           }
           margin-bottom:30px;
           .make-sm-column(3);
           .make-xs-column(6);
-          @media (max-width: @screen-sm) { 
+          @media (max-width: @screen-sm) {
             margin-bottom: 10px;
             padding-right: 5px;
             &::after {
@@ -160,20 +159,20 @@
               }
             }
           }
-          @media (min-width: @screen-sm) and (max-width: @screen-md) { 
+          @media (min-width: @screen-sm) and (max-width: @screen-md) {
             &::after {
               right: 30px;
               bottom: 10px;
             }
           }
           .shortcut-widget-body-link {
-            span{
+            span {
               text-decoration: none;
             }
             background: @brand-primary;
             border-radius: 4px;
             height: 90px !important;
-            @media (max-width: @screen-sm) { 
+            @media (max-width: @screen-sm) {
               height: 76px !important;
             }
 
@@ -193,7 +192,7 @@
             color:@gray-lighter;
             padding:0;
 
-            @media (min-width: @screen-sm) and (max-width: @screen-md) { 
+            @media (min-width: @screen-sm) and (max-width: @screen-md) {
               max-width: 70%;
               font-size: 13px;
               line-height:16px;
@@ -209,7 +208,6 @@
               margin-left: 10px;
               margin-bottom: 10px;
             }
-            
           }
 
           a {
@@ -226,8 +224,8 @@
               line-height:20px;
               color:@gray-lighter;
               padding:0;
-              
-              @media (min-width: @screen-sm) and (max-width: @screen-md) { 
+
+              @media (min-width: @screen-sm) and (max-width: @screen-md) {
                 max-width: 70%;
                 font-size: 13px;
                 line-height:16px;
@@ -269,8 +267,8 @@
 
   margin-bottom: 30px;
 
-  @media (max-width: @screen-sm-max) { 
-  //  margin-bottom: 0;
+  @media (max-width: @screen-sm-max) {
+    //  margin-bottom: 0;
   }
 
 
@@ -387,12 +385,12 @@
   }
 }
 
-  //&.extended {
+//&.extended {
   //  min-height: @boxes-min-height-extended;
   //  .ubn-panel-links-inner-wrapper {
-  //    min-height: @inner-wrapper-min-height-extended;
+    //    min-height: @inner-wrapper-min-height-extended;
   //  }
-  //}
+//}
 
 
 /* (Partly) Collapsible behaviour */
