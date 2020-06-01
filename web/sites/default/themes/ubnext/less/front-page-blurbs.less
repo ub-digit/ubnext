@@ -1,7 +1,5 @@
 .main-cms {
-  .blurbs-header {
-    margin-bottom:20px;
-  }
+
   .blurb-primary {
     position: relative;
     a {
@@ -32,33 +30,24 @@
   }
 
   .blurb {
-    &:hover {
-      cursor: pointer;
-      h2 {
-        text-decoration: underline;
-      }
-    }
     .blurb-wrapper {
       height:100%;
       position: relative;
-      &.active {
+      &.active, &:hover {
         cursor: pointer;
-        a {
+        .blurb-header {
           text-decoration: underline;
         }
       }
     }
 
     .blurb-arrow {
-      position: absolute;
       color: #fff;
-      bottom: 33px;
-      right: 45px;
       font-size: 22px;
+      margin-left: 10px;
       @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-        bottom: 20px;
-        right: 35px;
         font-size: 18px;
+        margin-left: 5px;
       }
     }
     .blurb-header {
@@ -66,41 +55,34 @@
     }
 
     .blurb-text-wrapper {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
       height: 100%;
       width: 100%;
       position: absolute;
-      bottom: 0px;
+      top: 0px;
       left: 0px;
       pointer-events: none;
-      .blurb-text {
-        width: 100%;
-        padding-left: 30px;
-        padding-right: 90px;
-        position: absolute;
-        bottom: 30px;
+      padding: 5%;
+
+      h2 {
+        font-size: 22px;
+        font-weight: bold;
+        line-height: 28px;
+        margin-bottom: 0px!important;
+        padding: 0px;
+        font-family: "Open Sans", Arial, sans-serif;
+        color:  #fff;
         @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-          padding-left: 20px;
-          padding-right: 55px;
-          bottom: 20px;
+          font-size: 18px;
+          line-height: 22px;
         }
-        h2 {
-          font-size: 22px;
-          font-weight: bold;
-          line-height: 28px;
-          margin-bottom: 0px!important;
+
+        a {
           padding: 0px;
           font-family: "Open Sans", Arial, sans-serif;
           color:  #fff;
-          @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-            font-size: 18px;
-            line-height: 22px;
-          }
-
-          a {
-            padding: 0px;
-            font-family: "Open Sans", Arial, sans-serif;
-            color:  #fff;
-          }
         }
       }
     }
