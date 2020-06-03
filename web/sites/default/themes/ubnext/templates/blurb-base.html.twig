@@ -2,13 +2,31 @@
   <a href="{% block url %}{% endblock %}" class="blurb-wrapper-link">
     <div class="blurb-wrapper">
       {% block image %}{% endblock %}
-      <div class="blurb-text-wrapper">
-        <h2 class="blurb-header list primary">
-          {% block header %}
-            {{ entity.title.value }}
-          {% endblock %}
-        </h2>
-        <i class="blurb-arrow fa fa-arrow-right"></i>
+      <div class="blurb-content-wrapper">
+        {% set _event_date = block('event_date') %}
+        {% if not _event_date is empty %}
+          <div class="blurb-event-date">
+            <div class="blurb-event-date-day">
+              {{ format_date(_event_date|trim, 'custom', 'd') }}
+            </div>
+            <div class="blurb-event-date-month">
+              {{ format_date(_event_date|trim, 'custom', 'M') }}
+            </div>
+          </div>
+        {% endif %}
+        <div class="blurb-text-wrapper">
+          <div class="blurb-type">
+            {% block type %}{% endblock %}
+          </div>
+          <div class="blurb-header-wrapper">
+            <h2 class="blurb-header list primary">
+              {% block header %}
+                {{ entity.title.value }}
+              {% endblock %}
+            </h2>
+            <i class="blurb-arrow fa fa-arrow-right"></i>
+          </div>
+        </div>
       </div>
     </div>
   </a>

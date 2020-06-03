@@ -144,6 +144,15 @@ function ubn_events_current_events($current_date) {
   return $result->fetchCol(0);
 }
 
+/*
+function ubn_events_current_non_cancelled_events_occasions($current_date) {
+  $query = db_select('node', 'node_event_occasion')
+    ->fields('node_event_occasion', array('nid'));
+    ->condition('type', 'event_occasion')
+    ->condition('status', NODE_PUBLISHED)
+}
+*/
+
 function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));
   $event_occasions_by_year_month = array();
@@ -215,6 +224,30 @@ function ubn_events_current_event_occasions_efq() {
     ->propertyCondition('status', NODE_PUBLISHED)
     ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
     ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');
+}
+
+function ubn_events_current_non_cancelled_event_occasions($event, $limit = NULL) {
+  $query = ubn_events_current_event_occasions_efq()
+    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
+    ->fieldCondition('field_canceled', 'value', '0');
+
+  if (!empty($limit)) {
+    $query->range(0, $limit);
+  }
+
+  $event_occasions = array();
+  $results = $query->execute();
+
+  if (!empty($results['node'])) {
+    $event_occasions = entity_load('node', array_keys($results['node']));
+  }
+
+  return $event_occasions;
+}
+
+function ubn_events_next_event_occasion($event) {
+  $event_occasions = ubn_events_current_non_cancelled_event_occasions($event, 1);
+  return !empty($event_occasions) ? entity_metadata_wrapper('node', array_pop($event_occasions)) : NULL;
 }
 
 /**

@@ -31,7 +31,7 @@
 
   .blurb {
     .blurb-wrapper {
-      height:100%;
+      height: 100%;
       position: relative;
       &.active, &:hover {
         cursor: pointer;
@@ -50,13 +50,10 @@
         margin-left: 5px;
       }
     }
-    .blurb-header {
-      margin-bottom: 10px;
-    }
 
-    .blurb-text-wrapper {
+    .blurb-content-wrapper {
       display: flex;
-      align-items: flex-end;
+      flex-direction: column-reverse;
       justify-content: space-between;
       height: 100%;
       width: 100%;
@@ -66,23 +63,60 @@
       pointer-events: none;
       padding: 5%;
 
-      h2 {
-        font-size: 22px;
-        font-weight: bold;
-        line-height: 28px;
-        margin-bottom: 0px!important;
-        padding: 0px;
-        font-family: "Open Sans", Arial, sans-serif;
-        color:  #fff;
-        @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-          font-size: 18px;
-          line-height: 22px;
+      .blurb-event-date {
+        order: 2;
+        align-self: flex-end;
+        background-color: #fff;
+        color: #111;
+        padding: 7px 12px 12px;
+        border-radius: 7px;
+
+        .blurb-event-date-day {
+          font-size: 42px;
+          line-height: 42px;
+          font-weight: bold;
+          text-align: center;
         }
 
-        a {
-          padding: 0px;
-          font-family: "Open Sans", Arial, sans-serif;
-          color:  #fff;
+        .blurb-event-date-month {
+          font-size: @font-size-small;
+          line-height: @font-size-small * 1.1;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+
+      .blurb-text-wrapper {
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        .blurb-type {
+          color: #ddd;
+        }
+        .blurb-header-wrapper {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-end;
+
+          .blurb-header {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 28px;
+            padding: 0px;
+            font-family: "Open Sans", Arial, sans-serif;
+            color:  #fff;
+            @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
+              font-size: 18px;
+              line-height: 22px;
+            }
+
+            a {
+              padding: 0px;
+              font-family: "Open Sans", Arial, sans-serif;
+              color:  #fff;
+            }
+          }
         }
       }
     }
