@@ -7,5 +7,5 @@
 {% import "macros/atom_styles.html.twig" as atom_styles %}
 {% block url %}{{ url(entity.url.value, { 'absolute': true }) }}{% endblock %}
 {% block image %}{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}{% endblock %}
-{% block type %}{{ t('Story') }}{% endblock %}
+{% block type %}{{ t('News') }}{% endblock %}
 {% block header %}{{ entity.title.value }}{% endblock %}
