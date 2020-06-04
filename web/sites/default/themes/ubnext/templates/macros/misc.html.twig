@@ -50,7 +50,7 @@
       %}
       {%
         set body = not section.field_event_series is empty and event_occasions is empty ?
-          t('There are currently no upcoming events for %event_series.', { '%event_series': section.field_event_series.name } ) :
+          t('There are currently no upcoming events for !event_series.', { '!event_series': section.field_event_series.name } ) :
           section.field_body.value
       %}
       {% if not (section.field_title.value is empty and body is empty) %}
