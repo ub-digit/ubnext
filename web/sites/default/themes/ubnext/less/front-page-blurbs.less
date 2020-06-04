@@ -1,34 +1,78 @@
-.main-cms {
+@blurb-event-date-padding-top: 7px;
+@blurb-event-date-padding: 12px;
+@blurb-event-date-border-radius: 7px;
+@blurb-event-date-day-font-size: 42px;
+@blurb-event-date-month-font-size: @font-size-small;
 
-  .blurb-primary {
-    position: relative;
-    a {
-      color: #fff;
-      text-decoration: none;
+@blurb-header-font-size: 22px;
+@blurb-header-line-height: 28px;
+
+@blurb-arrow-font-size: 22px;
+
+
+.blurb-medium {
+  .blurb-wrapper {
+    .blurb-arrow {
+      font-size: @blurb-arrow-font-size;
+      margin-left: 10px;
     }
-    .blurb-primary-teaser {
-      background-color: @gray-dark;
-      padding: 20px;
-      @media (min-width: @screen-sm-min) {
-        position: absolute;
-        text-shadow: 0 0 2px rgba(0,0,0,.6),0 0 7px rgba(0,0,0,.8),0 0 40px rgba(0,0,0,.5);
-        width: 50%;
-        left: 30px;
-        bottom: 30px;
-        background: none;
-        padding: 0;
-        h2 {
-          line-height: 1.1em;
+    .blurb-content-wrapper {
+      .blurb-text-wrapper {
+        .blurb-header-wrapper  {
+          .blurb-header {
+            font-size: @blurb-header-font-size;
+            line-height: @blurb-header-line-height;
+          }
         }
       }
-      @media (min-width: @screen-md-min) {
-        left: 50px;
-        bottom: 50px;
-        font-size: 1.2em;
+      .blurb-event-date {
+        padding: @blurb-event-date-padding-top @blurb-event-date-padding @blurb-event-date-padding;
+        border-radius: @blurb-event-date-border-radius;
+        .blurb-event-date-day {
+          font-size: @blurb-event-date-day-font-size;
+          line-height: @blurb-event-date-day-font-size;
+        }
+        .blurb-event-date-month {
+          font-size: @blurb-event-date-month-font-size;
+          line-height: @blurb-event-date-month-font-size * 1.1;
+        }
       }
     }
   }
+}
 
+.blurb-small {
+  .blurb-wrapper {
+    .blurb-arrow {
+      font-size: @blurb-arrow-font-size * 0.8;
+      margin-left: 5px;
+    }
+    .blurb-content-wrapper {
+      .blurb-text-wrapper {
+        .blurb-header-wrapper  {
+          .blurb-header {
+            font-size: @blurb-header-font-size * 0.8;
+            line-height: @blurb-header-line-height * 0.8;
+          }
+        }
+      }
+      .blurb-event-date {
+        padding: @blurb-event-date-padding-top * 0.8 @blurb-event-date-padding * 0.8 @blurb-event-date-padding * 0.8;
+        border-radius: @blurb-event-date-border-radius * 0.8;
+        .blurb-event-date-day {
+          font-size: @blurb-event-date-day-font-size * 0.8;
+          line-height: @blurb-event-date-day-font-size * 0.8;
+        }
+        .blurb-event-date-month {
+          font-size: @blurb-event-date-month-font-size * 0.8;
+          line-height: @blurb-event-date-month-font-size * 1.1 * 0.8;
+        }
+      }
+    }
+  }
+}
+
+.main-cms {
   .blurb {
     .blurb-wrapper {
       height: 100%;
@@ -43,12 +87,6 @@
 
     .blurb-arrow {
       color: #fff;
-      font-size: 22px;
-      margin-left: 10px;
-      @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-        font-size: 18px;
-        margin-left: 5px;
-      }
     }
 
     .blurb-content-wrapper {
@@ -61,26 +99,20 @@
       top: 0px;
       left: 0px;
       pointer-events: none;
-      padding: 5%;
+      padding: 6%;
 
       .blurb-event-date {
         order: 2;
         align-self: flex-end;
         background-color: #fff;
         color: #111;
-        padding: 7px 12px 12px;
-        border-radius: 7px;
 
         .blurb-event-date-day {
-          font-size: 42px;
-          line-height: 42px;
           font-weight: bold;
           text-align: center;
         }
 
         .blurb-event-date-month {
-          font-size: @font-size-small;
-          line-height: @font-size-small * 1.1;
           font-weight: bold;
           text-align: center;
         }
@@ -100,16 +132,10 @@
           align-items: flex-end;
 
           .blurb-header {
-            font-size: 22px;
             font-weight: bold;
-            line-height: 28px;
             padding: 0px;
             font-family: "Open Sans", Arial, sans-serif;
             color:  #fff;
-            @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
-              font-size: 18px;
-              line-height: 22px;
-            }
 
             a {
               padding: 0px;
@@ -152,6 +178,24 @@
       height: 100%;
       top: 0px;
       left: 0;
+    }
+
+    &.blurb-primary {
+      .blurb-medium();
+      @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
+        .blurb-small();
+      }
+    }
+    &.blurb-secondary {
+      .blurb-small();
+      @media (max-width: @screen-xs-max) {
+        .blurb-medium();
+      }
+    }
+    @media (max-width: (@screen-xs-max / 2)) {
+      &.blurb-secondary, &.blurb-primary {
+        .blurb-small();
+      }
     }
   }
 }
