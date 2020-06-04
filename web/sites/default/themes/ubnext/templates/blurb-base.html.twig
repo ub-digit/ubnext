@@ -2,14 +2,14 @@
   <div class="blurb-wrapper">
     {% block image %}{% endblock %}
     <div class="blurb-content-wrapper">
-      {% set _event_date = block('event_date') %}
+      {% set _event_date = block('event_date')|trim %}
       {% if not _event_date is empty %}
         <div class="blurb-event-date">
           <div class="blurb-event-date-day">
-            {{ format_date(_event_date|trim, 'custom', 'd') }}
+            {{ format_date(_event_date, 'custom', 'd') }}
           </div>
           <div class="blurb-event-date-month">
-            {{ format_date(_event_date|trim, 'custom', 'M') }}
+            {{ format_date(_event_date, 'custom', 'M') }}
           </div>
         </div>
       {% endif %}

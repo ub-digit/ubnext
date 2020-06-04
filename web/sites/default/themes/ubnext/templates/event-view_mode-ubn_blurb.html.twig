@@ -5,10 +5,11 @@
 #}
 {% extends "blurb-base.html.twig" %}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
-{% block url %}{{ url(entity.url.value, { 'absolute': true }) }}{% endblock %}
+{% set next_event_occasion = ubn_events_next_event_occasion(entity) %}
+
+{% block url %}{{ url(next_event_occasion is defined ? next_event_occasion.url.value : entity.url.value, { 'absolute': true }) }}{% endblock %}
 {% block image %}{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}{% endblock %}
 
-{% set next_event_occasion = ubn_events_next_event_occasion(entity) %}
 {% if next_event_occasion is defined %}
   {% block event_date %}
     {{ next_event_occasion.field_scheduled_time.value.value }}
