@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_news.views_default.inc

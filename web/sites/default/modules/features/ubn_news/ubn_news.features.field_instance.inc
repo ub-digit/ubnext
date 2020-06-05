@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_news.features.field_instance.inc
@@ -169,57 +170,6 @@ function ubn_news_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-story-field_promote_to_frontpage'.
-  $field_instances['node-story-field_promote_to_frontpage'] = array(
-    'bundle' => 'story',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'The two most current storys marked with promote to frontpage will show up with image. ',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'ubn_search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_promote_to_frontpage',
-    'label' => 'Promote to frontpage with image',
-    'required' => 0,
-    'settings' => array(
-      'entity_translation_sync' => FALSE,
-      'ubn_property_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 1,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 7,
-    ),
-  );
-
   // Exported field_instance: 'node-story-title_field'.
   $field_instances['node-story-title_field'] = array(
     'bundle' => 'story',
@@ -275,8 +225,6 @@ function ubn_news_field_default_field_instances() {
   t('Blurb image');
   t('Content');
   t('Lead');
-  t('Promote to frontpage with image');
-  t('The two most current storys marked with promote to frontpage will show up with image. ');
   t('Title');
 
   return $field_instances;

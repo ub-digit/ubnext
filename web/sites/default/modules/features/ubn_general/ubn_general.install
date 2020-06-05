@@ -1593,6 +1593,10 @@ function ubn_general_update_7262() {
   array_map('features_revert_module', array('ubn_content_types', 'ubn_news', 'ubn_startpage'));
 }
 
+function ubn_general_update_7263() {
+  field_delete_field('field_promote_to_frontpage');
+}
+
 
 //TODO: Disable rdf module?
 // Enable entity translation for library

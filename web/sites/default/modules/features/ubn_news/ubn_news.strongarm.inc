@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_news.strongarm.inc
@@ -102,13 +103,13 @@ function ubn_news_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '6',
-        ),
-        'redirect' => array(
           'weight' => '5',
         ),
-        'xmlsitemap' => array(
+        'redirect' => array(
           'weight' => '4',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '3',
         ),
       ),
       'display' => array(),
@@ -204,7 +205,7 @@ function ubn_news_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'xmlsitemap_settings_node_story';
   $strongarm->value = array(
-    'status' => '0',
+    'status' => '1',
     'priority' => '0.5',
   );
   $export['xmlsitemap_settings_node_story'] = $strongarm;
