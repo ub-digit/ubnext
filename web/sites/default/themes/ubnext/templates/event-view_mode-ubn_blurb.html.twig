@@ -5,7 +5,7 @@
 #}
 {% extends "blurb-base.html.twig" %}
 {% import "macros/atom_styles.html.twig" as atom_styles %}
-{% set next_event_occasion = ubn_events_next_event_occasion(entity) %}
+{% set next_event_occasion = ubn_events_next_or_last_event_occasion(entity) %}
 
 {% block url %}{{ url(next_event_occasion is defined ? next_event_occasion.url.value : entity.url.value, { 'absolute': true }) }}{% endblock %}
 {% block image %}{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}{% endblock %}
