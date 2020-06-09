@@ -15,5 +15,5 @@
     {{ next_event_occasion.field_scheduled_time.value.value }}
   {% endblock %}
 {% endif %}
-{% block type %}{{ entity.field_event_type.name|default(t('Event')) }}{% endblock %}
+{% block type %}{{ entity.field_event_type.name|default(t('Event', {}, {context: 'ubn_blurb:event'})) }}{% endblock %}
 {% block header %}{{ entity.title.value }}{% endblock %}
