@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_content_types.linkit_profiles.inc

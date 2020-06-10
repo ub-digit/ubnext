@@ -1,7 +1,7 @@
 name = UBN Library
 core = 7.x
 package = UBNext
-version = 7.x-0.4
+version = 7.x-0.5
 dependencies[] = addressfield
 dependencies[] = atom_reference
 dependencies[] = ctools
@@ -70,3 +70,4 @@ features[variable][] = pathauto_node_library_en_pattern
 features[variable][] = pathauto_node_library_pattern
 features[variable][] = pathauto_node_library_sv_pattern
 features[variable][] = pathauto_node_library_und_pattern
+features[variable][] = xmlsitemap_settings_node_library

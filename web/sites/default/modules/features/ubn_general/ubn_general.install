@@ -1597,6 +1597,24 @@ function ubn_general_update_7263() {
   field_delete_field('field_promote_to_frontpage');
 }
 
+function ubn_general_update_7264() {
+  module_enable(array('xmlsitemap_node', 'xmlsitemap_menu', 'xmlsitemap_i18n'));
+  array_map('features_revert_module', array('ubn_content_types', 'ubn_general'));
+
+  foreach(array('en', 'sv') as $langcode) {
+    $sitemap = new stdClass();
+    $sitemap->smid = NULL;
+    $sitemap->context = array(
+      'language' => $langcode
+    );
+    xmlsitemap_sitemap_save($sitemap);
+  }
+  // Regenerate the sitemap XML files.
+  module_load_include('generate.inc', 'xmlsitemap');
+  xmlsitemap_run_unprogressive_batch('xmlsitemap_regenerate_batch');
+}
+
+
 
 //TODO: Disable rdf module?
 // Enable entity translation for library

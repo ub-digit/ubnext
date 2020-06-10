@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_content_types.strongarm.inc
@@ -616,13 +617,13 @@ function ubn_content_types_strongarm() {
           'weight' => '-5',
         ),
         'path' => array(
-          'weight' => '9',
+          'weight' => '8',
         ),
         'redirect' => array(
-          'weight' => '10',
+          'weight' => '9',
         ),
         'xmlsitemap' => array(
-          'weight' => '11',
+          'weight' => '10',
         ),
         'language' => array(
           'weight' => '9',
@@ -1562,16 +1563,6 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'xmlsitemap_settings_node_contact';
-  $strongarm->value = array(
-    'status' => '0',
-    'priority' => '0.5',
-  );
-  $export['xmlsitemap_settings_node_contact'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'xmlsitemap_settings_node_database';
   $strongarm->value = array(
     'status' => '1',
@@ -1582,42 +1573,12 @@ function ubn_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'xmlsitemap_settings_node_embedded_page';
-  $strongarm->value = array(
-    'status' => '0',
-    'priority' => '0.5',
-  );
-  $export['xmlsitemap_settings_node_embedded_page'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'xmlsitemap_settings_node_event';
-  $strongarm->value = array(
-    'status' => '0',
-    'priority' => '0.5',
-  );
-  $export['xmlsitemap_settings_node_event'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'xmlsitemap_settings_node_event_occasion';
-  $strongarm->value = array(
-    'status' => '0',
-    'priority' => '0.5',
-  );
-  $export['xmlsitemap_settings_node_event_occasion'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'xmlsitemap_settings_node_page';
   $strongarm->value = array(
     'status' => '1',
     'priority' => '0.5',
   );
-  $export['xmlsitemap_settings_node_page'] = $strongarm;
+  $export['xmlsitemap_settings_node_event_occasion'] = $strongarm;
 
   return $export;
 }
