@@ -48,22 +48,28 @@
   flex-direction: row;
   align-items: baseline;
   line-height: 1.6;
+  font-size: @font-size-small;
   .fa {
     flex-basis: 1em;
     display: inline-block;
     margin-right: 0.214em;
     text-align: center;
-    font-size: @font-size-h4;
   }
 }
 
 .event-occasion-head-info {
-    .event-occasion-info-item:last-child {
-      border-bottom: 1px solid @ub-grey;
-      margin-bottom: @ubn-events-border-padding;
-      padding-bottom: @ubn-events-border-padding;
+    .event-occasion-info-item {
+      font-size: @font-size-base;
+      &:last-child {
+        border-bottom: 1px solid @ub-grey;
+        margin-bottom: @ubn-events-border-padding;
+        padding-bottom: @ubn-events-border-padding;
+      }
     }
-}
+    .fa {
+      font-size: @font-size-h4;
+    }
+  }
 
 .more-event-occasions h2 {
   font-family: @font-family-sans-serif;
