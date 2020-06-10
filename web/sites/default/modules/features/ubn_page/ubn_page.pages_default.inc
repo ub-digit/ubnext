@@ -1906,7 +1906,7 @@ function ubn_page_default_page_manager_pages() {
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $page->default_handlers[$handler->name] = $handler;
-  $pages[''] = $page;
+  $pages['error_404'] = $page;
 
   return $pages;
 

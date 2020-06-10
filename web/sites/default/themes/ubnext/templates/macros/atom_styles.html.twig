@@ -15,17 +15,13 @@
   <div class="img-responsive-wrapper">
     {% if not atom is empty %}
       {{ scald_render(atom.value, 'blurb')|raw }}
+      <div class="image-gradient-overlay"></div>
     {% else %}
       {{ _self._placeholder_image_style(placeholder, 'blurb_extra_small', placeholder_alt, placeholder_title) }}
       <div class="image-gradient-overlay image-placeholder"></div>
     {% endif %}
-    {% if not atom is empty %}
-      <div class="image-gradient-overlay"></div>
-    {% endif %}
   </div>
-
 {% endmacro %}
-
 
 {% macro _placeholder_image_style(filename, style_name, alt, title) %}
   {% set placeholder_uri = 'public://unmanaged_files/' ~ filename %}

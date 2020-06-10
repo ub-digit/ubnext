@@ -43,9 +43,19 @@ function ubn_startpage_front_page_blurbs_content_type_render($subtype, $conf, $p
   $block->title = '';
   $block->content  = '';
   if (!empty($blurbs)) {
-    $renderable = entity_view('node', $blurbs, 'ubn_blurb');
-    $blurbs = drupal_render($renderable);
-    $block->content = slate_render('front-page-blurbs', array('blurbs' => $blurbs));
+
+    $rendered_blurbs = array();
+    foreach($blurbs as $blurb) {
+      $renderable = entity_view('node', array($blurb), 'ubn_blurb');
+      $rendered_blurbs[] = drupal_render($renderable);
+    }
+
+    $block->content = slate_render(
+      'front-page-blurbs',
+      array(
+        'blurbs' => $rendered_blurbs,
+      )
+    );
   }
 
   return $block;

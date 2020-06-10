@@ -56,16 +56,15 @@ function ubn_news_panes_latest_news_widget_content_type_render($subtype, $conf, 
     $link_list_rendered = slate_render('ubn-news-panes-latest-news-widget-link-list', array('link_list' => $link_list));
   }
 
-
   $content = slate_render('ubn-news-panes-latest-news-widget', array(
     'image_stories' => drupal_render($image_stories_renderable),
     'stories' => drupal_render($stories_renderable),
     'link_list' => trim($link_list_rendered),
   ));
-  
+
   $block = new stdClass();
   $block->title = t('Current events and news');
   $block->content = $content;
-  //dsm($content);
+
   return $block;
 }

@@ -151,6 +151,11 @@ function slate_is_cacheable($allow_caching = NULL, $initialize_context = FALSE) 
     array_push($allow_caching_static, $allow_caching);
   }
   else if (isset($allow_caching)) {
+    // If set to FALSE, should not also invalidate
+    // caching for all parent contexts in stack!?!?
+    // Probably did not think about that
+    // TODO: Fix (not a problem right now though since don't have
+    // conditional caching at stack depth > 1)
     end($allow_caching_static);
     $i = key($allow_caching_static);
     $allow_caching_static[$i] = $allow_caching;

@@ -144,6 +144,15 @@ function ubn_events_current_events($current_date) {
   return $result->fetchCol(0);
 }
 
+/*
+function ubn_events_current_non_cancelled_events_occasions($current_date) {
+  $query = db_select('node', 'node_event_occasion')
+    ->fields('node_event_occasion', array('nid'));
+    ->condition('type', 'event_occasion')
+    ->condition('status', NODE_PUBLISHED)
+}
+*/
+
 function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));
   $event_occasions_by_year_month = array();
@@ -205,16 +214,72 @@ function ubn_events_event_series_event_occasions_rendered($event_series_tid, $li
   return '';
 }
 
-function ubn_events_current_event_occasions_efq() {
-  // "All day" events are scheduled at midnight in local timezone
-  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
+
+function ubn_events_event_occasions_efq() {
   $query = new EntityFieldQuery();
   return $query
     ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'event_occasion')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=')
     ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');
+}
+
+function ubn_events_current_event_occasions_efq() {
+  // "All day" events are scheduled at midnight in local timezone
+  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
+  return ubn_events_event_occasions_efq()
+    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=');
+}
+
+function ubn_events_current_non_cancelled_event_occasions($event, $limit = NULL) {
+  return ubn_events_current_event_occasions_efq()
+    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
+    ->fieldCondition('field_canceled', 'value', '0');
+}
+
+// Load helper
+function _ubn_events_efq_node_load($query, $limit = NULL, $wrapped = FALSE) {
+  if (!empty($limit)) {
+    $query->range(0, $limit);
+  }
+  $entities = array();
+  $results = $query->execute();
+  if (!empty($results['node'])) {
+    $entities = entity_load('node', array_keys($results['node']));
+  }
+  if ($wrapped) {
+    foreach (array_keys($entities) as $id) {
+      $entities[$id] = entity_metadata_wrapper('node', $entities[$id]);
+    }
+  }
+
+  return $entities;
+}
+
+function ubn_events_next_or_last_event_occasion($event) {
+  $query = ubn_events_current_event_occasions_efq()
+    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
+    ->fieldCondition('field_canceled', 'value', '0');
+  $event_occasions = _ubn_events_efq_node_load($query, 1, TRUE);
+
+  if (!empty($event_occasions)) {
+    return array_pop($event_occasions);
+  }
+
+  // If no current, get last (most recent) event occasion
+  $query = ubn_events_event_occasions_efq()
+    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
+    ->fieldCondition('field_canceled', 'value', '0');
+
+  $query->order = array();
+  // Change sort order so that the most recent is first
+  $query->fieldOrderBy('field_scheduled_time', 'value', 'DESC');
+  $event_occasions = _ubn_events_efq_node_load($query, 1, TRUE);
+  if (!empty($event_occasions)) {
+    return array_pop($event_occasions);
+  }
+
+  return NULL;
 }
 
 /**

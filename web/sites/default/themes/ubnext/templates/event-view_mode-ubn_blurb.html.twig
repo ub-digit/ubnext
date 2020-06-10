@@ -1,0 +1,19 @@
+{# slate
+  name = Event: View mode 'UBN Blurb'
+  models[entity] = entity:node
+  view_mode[node][event] = ubn_blurb
+#}
+{% extends "blurb-base.html.twig" %}
+{% import "macros/atom_styles.html.twig" as atom_styles %}
+{% set next_event_occasion = ubn_events_next_or_last_event_occasion(entity) %}
+
+{% block url %}{{ url(next_event_occasion is defined ? next_event_occasion.url.value : entity.url.value, { 'absolute': true }) }}{% endblock %}
+{% block image %}{{ atom_styles.blurb(entity.field_image_atom, 'news-item-placeholder.png') }}{% endblock %}
+
+{% if next_event_occasion is defined %}
+  {% block event_date %}
+    {{ next_event_occasion.field_scheduled_time.value.value }}
+  {% endblock %}
+{% endif %}
+{% block type %}{{ entity.field_event_type.name|default(t('Event', {}, {context: 'ubn_blurb:event'})) }}{% endblock %}
+{% block header %}{{ entity.title.value }}{% endblock %}
