@@ -4,7 +4,7 @@
 #}
 <div class="row">
   <div class="col-sm-10 col-md-8 col-lg-6 col-lg-offset-3 col-sm-offset-1 col-md-offset-2">
-    <div class="event-occasion-categories panel-separator">
+    <div class="event-occasion-categories">
       {% set event = event_occasion.field_event %}
       <ul class="list-unstyled">
         {% if not event.field_event_series.name.value is empty %}
@@ -21,6 +21,5 @@
         {% endif %}
       </ul>
     </div>
-    <div class="divider"></div>
   </div>
 </div>
