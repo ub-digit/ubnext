@@ -1597,6 +1597,12 @@ function ubn_general_update_7263() {
   field_delete_field('field_promote_to_frontpage');
 }
 
+function ubn_general_update_7264() {
+  $modules = array('xmlsitemap', 'xmlsitemap_node');
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+  module_enable(array('ubn_sitemap'));
+}
 
 //TODO: Disable rdf module?
 // Enable entity translation for library
