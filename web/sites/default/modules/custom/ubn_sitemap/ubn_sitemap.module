@@ -114,119 +114,129 @@ function _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, $proper
 }
 
 function ubn_sitemap_xmlsitemap() {
-  /**
-   *  Entities
-  **/
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', array('story', 'page', 'event_occasion', 'database', 'library', 'navigation_landing'), 'IN')
-    ->propertyCondition('status', NODE_PUBLISHED)
-    ->execute();
-  $entities = entity_load('node', array_keys($result['node']));
+  drupal_add_http_header('Content-Type', 'text/xml');
+  $cache_key = 'ubn_sitemap:sitemap.xml';
+  $cache_bin = 'cache_page';
+  $cache = cache_get($cache_key, $cache_bin);
+  $cache = NULL;
+  $xml = '';
 
-  $languages = language_list();
-  $default_lang = language_default('language');
+  if ($cache) {
+    $xml = $cache->data;
+  }
+  else {
+    /**
+     *  Entities
+     **/
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', array('story', 'page', 'event_occasion', 'database', 'library', 'navigation_landing'), 'IN')
+      ->propertyCondition('status', NODE_PUBLISHED)
+      ->execute();
+    $entities = entity_load('node', array_keys($result['node']));
 
-  $doc = new DOMDocument('1.0', 'UTF-8');
-  $root = $doc->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+    $languages = language_list();
+    $default_lang = language_default('language');
 
-  $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-  $root->setAttributeNS(
-    'http://www.w3.org/2001/XMLSchema-instance',
-    'xsi:schemaLocation',
-    'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'
-  );
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    $root = $doc->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
-  $root->setAttributeNS(
-    'http://www.w3.org/2000/xmlns/',
-    'xmlns:xhtml',
-    'http://www.w3.org/1999/xhtml'
-  );
+    $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+    $root->setAttributeNS(
+      'http://www.w3.org/2001/XMLSchema-instance',
+      'xsi:schemaLocation',
+      'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'
+    );
 
-  //Schema for xhtml?
+    $root->setAttributeNS(
+      'http://www.w3.org/2000/xmlns/',
+      'xmlns:xhtml',
+      'http://www.w3.org/1999/xhtml'
+    );
 
-  $doc->appendChild($root);
+    //Schema for xhtml?
 
-  foreach ($entities as $entity) {
-    $handler = entity_translation_get_handler('node', $entity);
-    $handler->initPathScheme(); //??
-    $translations = $handler->getTranslations();
-    $info = entity_uri('node', $entity);
+    $doc->appendChild($root);
 
-    $language_urls = array();
+    foreach ($entities as $entity) {
+      $handler = entity_translation_get_handler('node', $entity);
+      $handler->initPathScheme(); //??
+      $translations = $handler->getTranslations();
+      $info = entity_uri('node', $entity);
 
-    foreach (array_keys($translations->data) as $langcode) {
-      // Kolla status for oversatting!!
-      $options = array('absolute' => TRUE);
-      $options['language'] = $languages[$langcode !== LANGUAGE_NONE ? $langcode : $default_lang];
-      // Can be removed:
-      $handler->setActiveLanguage($langcode);
-      $language_path = url($info['path'], $options + $info['options']);
-      $language_urls[$langcode] = $language_path;
+      $language_urls = array();
+
+      foreach (array_keys($translations->data) as $langcode) {
+        // Kolla status for oversatting!!
+        $options = array('absolute' => TRUE);
+        $options['language'] = $languages[$langcode !== LANGUAGE_NONE ? $langcode : $default_lang];
+        // Can be removed:
+        $handler->setActiveLanguage($langcode);
+        $language_path = url($info['path'], $options + $info['options']);
+        $language_urls[$langcode] = $language_path;
+      }
+
+      $default_url = isset($language_urls[$default_lang]) ? $language_urls[$default_lang] : (
+        isset($language_urls[LANGUAGE_NONE]) ? $language_urls[LANGUAGE_NONE] : current($language_urls)
+      );
+      unset($language_urls[LANGUAGE_NONE]);
+
+      _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, array(
+        'lastmod' => format_date($entity->changed, 'custom', 'Y-m-d'),
+        'priority' => '0.5'
+      ));
     }
 
-    $default_url = isset($language_urls[$default_lang]) ? $language_urls[$default_lang] : (
-      isset($language_urls[LANGUAGE_NONE]) ? $language_urls[LANGUAGE_NONE] : current($language_urls)
+    /**
+     * Custom
+     **/
+
+    // Panel pages
+    $urls = array(
+      array(
+        'language_urls' => array(
+          'sv' => 'nyheter',
+          'en' => 'news',
+        ),
+        'changefreq' => 'daily',
+        'priority' => 0.5,
+      ),
+      array(
+        'language_urls' => array(
+          'sv' => 'databaser/sok',
+          'en' => 'databases/search',
+        ),
+        'changefreq' => 'monthly',
+        'priority' => 0.5,
+      ),
     );
-    unset($language_urls[LANGUAGE_NONE]);
-
-    _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, array(
-      'lastmod' => format_date($entity->changed, 'custom', 'Y-m-d'),
-      'priority' => '0.5'
-    ));
-  }
-
-  /**
-   * Custom
-  **/
-
-  // Panel pages
-  $urls = array(
-    array(
-      'language_urls' => array(
-        'sv' => 'nyheter',
-        'en' => 'news',
-      ),
-      'default_url' => '',
-      'lastmod' => '',
-      'changefreq' => 'daily',
-      'priority' => 0.5,
-    ),
-    array(
-      'language_urls' => array(
-        'sv' => 'databaser/sok',
-        'en' => 'databases/search',
-      ),
-      'default_url' => '',
-      'lastmod' => '',
-      'changefreq' => 'monthly',
-      'priority' => 0.5,
-    ),
-  );
 
 
-  foreach ($urls as $url) {
-    foreach($url['language_urls'] as $langcode => $path) {
-      $url['language_urls'][$langcode] = url(
-        $path,
-        array(
-          'language' => $languages[$langcode],
-          'absolute' => TRUE,
-          'alias' => TRUE
-        )
+    foreach ($urls as $url) {
+      foreach($url['language_urls'] as $langcode => $path) {
+        $url['language_urls'][$langcode] = url(
+          $path,
+          array(
+            'language' => $languages[$langcode],
+            'absolute' => TRUE,
+            'alias' => TRUE
+          )
+        );
+      }
+      $url['default_url'] = $url['language_urls'][$default_lang];
+      _ubn_sitemap_add_url(
+        $doc,
+        $root,
+        $url['language_urls'],
+        $url['default_url'],
+        array_intersect_key($url, array('lastmod' => null, 'changefreq' => null, 'priority' => null))
       );
     }
-    $url['default_url'] = $url['language_urls'][$default_lang];
-    _ubn_sitemap_add_url(
-      $doc,
-      $root,
-      $url['language_urls'],
-      $url['default_url'],
-      array_intersect_key($url, array('lastmod' => null, 'changefreq' => null, 'priority' => null))
-    );
+    $xml = $doc->saveXML();
+    cache_set($cache_key, $xml, $cache_bin, CACHE_TEMPORARY);
   }
-  drupal_add_http_header('Content-Type', 'text/xml');
-  print $doc->saveXML();
+
+  print $xml;
   exit;
 }
