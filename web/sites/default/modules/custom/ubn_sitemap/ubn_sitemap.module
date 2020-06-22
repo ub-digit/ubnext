@@ -114,7 +114,7 @@ function _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, $proper
 }
 
 function ubn_sitemap_xmlsitemap() {
-  drupal_add_http_header('Content-Type', 'text/xml');
+  //drupal_add_http_header('Content-Type', 'text/xml');
   $cache_key = 'ubn_sitemap:sitemap.xml';
   $cache_bin = 'cache_page';
   $cache = cache_get($cache_key, $cache_bin);
@@ -167,8 +167,10 @@ function ubn_sitemap_xmlsitemap() {
 
       $language_urls = array();
 
-      foreach (array_keys($translations->data) as $langcode) {
-        // Kolla status for oversatting!!
+      foreach ($translations->data as $langcode => $translation) {
+        if (!$translation['status']) {
+          continue;
+        }
         $options = array('absolute' => TRUE);
         $options['language'] = $languages[$langcode !== LANGUAGE_NONE ? $langcode : $default_lang];
         // Can be removed:
@@ -236,6 +238,8 @@ function ubn_sitemap_xmlsitemap() {
     $xml = $doc->saveXML();
     cache_set($cache_key, $xml, $cache_bin, CACHE_TEMPORARY);
   }
+
+  return ' ';
 
   print $xml;
   exit;
