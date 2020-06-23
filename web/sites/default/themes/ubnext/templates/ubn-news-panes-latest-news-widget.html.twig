@@ -1,15 +1,10 @@
 {# slate
   name = UBN News panes: Latest news widget
   models[stories] = item
-  models[link_list] = item
  
 #}
 {% import "macros/misc.html.twig" as misc %}
-{% import "macros/panel-links.html.twig" as pane %}
 
-{#{ pane.pane_begin("news-widget") }}
-  {# Body does nothing right now, just an extra wrapper, skip? #}
-  {#{ pane.pane_body_begin() }#}
  
   <div class="col-sm-6 news-widget">
     <div class="latest-stories-widget-stories-wrapper grey-border" style="padding:20px;">
@@ -23,5 +18,3 @@
       </div>
     </div>
   </div>
-  {#{ pane.pane_body_end() }#}
-{#{ pane.pane_end() }#}

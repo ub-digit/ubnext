@@ -1,7 +1,7 @@
 name = UBN Startpage
 core = 7.x
 package = UBNext
-version = 7.x-1.8
+version = 7.x-1.9
 dependencies[] = ctools
 dependencies[] = entityqueue
 dependencies[] = features
