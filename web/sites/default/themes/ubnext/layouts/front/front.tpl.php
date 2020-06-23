@@ -28,6 +28,14 @@
   <?php endif; ?>
 </div>
 
+<?php if (!empty($content['promoted_secondary'])): ?>
+  <div id="promoted_secondary" class="container panel-separator">
+    <div class="row promoted-secondary">
+        <?php print render($content['promoted_secondary']); ?>
+    </div>
+  </div>
+<?php endif ?>
+
 <?php if (!empty ($content['navigation'])) : ?>
   <div class="fullwidth bg-grey">
     <div class="container">
@@ -36,17 +44,8 @@
   </div>
 <?php endif; ?>
 
-<?php if (!empty($content['news'])): ?>
-  <div id="news" class="container panel-separator">
-    <div class="row promoted-news">
-        <?php print render($content['news']); ?>
-    </div>
-  </div>
-<?php endif ?>
-
-
 <?php if (!empty($content['main'])): ?>
-  <div class="fullwidth bg-grey start-page-opening-hours-wrapper">
+  <div class="fullwidth start-page-opening-hours-wrapper">
     <div id="main" class="container panel-separator">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-offset-2">

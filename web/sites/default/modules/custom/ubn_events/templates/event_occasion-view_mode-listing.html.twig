@@ -1,0 +1,10 @@
+{# slate
+  name = Event occasion: View mode 'Listing'
+  models[entity] = entity:node
+  view_mode[node][event_occasion] = listing
+#}
+{% import "macros/ubn-events.html.twig" as ubn_events %}
+
+{{ ubn_events.event_teaser(entity, false) }}
+
+
