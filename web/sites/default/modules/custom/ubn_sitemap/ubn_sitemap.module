@@ -114,7 +114,7 @@ function _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, $proper
 }
 
 function ubn_sitemap_xmlsitemap() {
-  //drupal_add_http_header('Content-Type', 'text/xml');
+  drupal_add_http_header('Content-Type', 'text/xml');
   $cache_key = 'ubn_sitemap:sitemap.xml';
   $cache_bin = 'cache_page';
   $cache = cache_get($cache_key, $cache_bin);
@@ -238,8 +238,6 @@ function ubn_sitemap_xmlsitemap() {
     $xml = $doc->saveXML();
     cache_set($cache_key, $xml, $cache_bin, CACHE_TEMPORARY);
   }
-
-  return ' ';
 
   print $xml;
   exit;
