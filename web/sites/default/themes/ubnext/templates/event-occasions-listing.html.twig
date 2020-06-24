@@ -1,6 +1,8 @@
 {# slate
   name = Upcoming events listing
   models[event_occasions] = item
+  models[calendar_page] = item
+
 #}
 {% import "macros/misc.html.twig" as misc %}
 <div class="col-md-6">
@@ -11,7 +13,7 @@
       {{ event_occasions | raw }}
     </div>
     <div class="more-news-link clearfix">
-      <span>{{ misc.link(t('More events'), 'kalender', 'calendar-link', {  absolute : false}) }}<i class="fa fa-arrow-right"></i></span>
+      <span>{{ misc.link(t('More events'),  calendar_page.url.value, 'calendar-link', {  absolute : false}) }}<i class="fa fa-arrow-right"></i></span>
     </div>
     {% else %}
     <div class="no-more-events">{{ t('There are currently no upcoming events.') }}</div>

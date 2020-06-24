@@ -1604,6 +1604,10 @@ function ubn_general_update_7264() {
   module_enable(array('ubn_sitemap'));
 }
 
+function ubn_general_update_7265() {
+  features_revert_module('ubn_startpage');
+}
+
 //TODO: Disable rdf module?
 // Enable entity translation for library
 /*

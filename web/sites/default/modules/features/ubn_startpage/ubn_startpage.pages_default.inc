@@ -48,6 +48,13 @@ function ubn_startpage_default_page_manager_pages() {
         'uuid' => '56371bfa-65af-430d-8675-cc28b6d78c71',
         'id' => 2,
       ),
+      2 => array(
+        'identifier' => 'Calendar',
+        'keyword' => 'calendar',
+        'name' => 'entity_uuid:node',
+        'uuid' => 'ce579a0e-ea38-4398-a639-daf95923e105',
+        'id' => 3,
+      ),
     ),
     'relationships' => array(),
   );
@@ -225,6 +232,7 @@ function ubn_startpage_default_page_manager_pages() {
     'override_title' => 1,
     'override_title_text' => '',
     'override_title_heading' => 'h2',
+    'context' => 'context_entity_uuid:node_3',
   );
   $pane->cache = array();
   $pane->style = array(
