@@ -184,8 +184,10 @@ function ubn_sitemap_xmlsitemap() {
       );
       unset($language_urls[LANGUAGE_NONE]);
 
+      $changed = isset($entity->workbench_moderation) ? $entity->workbench_moderation['published']->stamp : $entity->changed;
+
       _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, array(
-        'lastmod' => format_date($entity->changed, 'custom', 'Y-m-d'),
+        'lastmod' => format_date($changed, 'custom', 'c'),
         'priority' => '0.5'
       ));
     }
