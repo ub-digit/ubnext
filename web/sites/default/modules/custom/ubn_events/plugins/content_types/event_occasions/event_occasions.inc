@@ -34,11 +34,9 @@ function ubn_events_event_occasions_content_type_render($subtype, $conf, $panel_
   $results = ubn_events_current_event_occasions_efq()
     ->execute();
 
-  if (!empty($results['node'])) {
     $event_occasions = entity_load('node', array_keys($results['node']));
     $event_occasions_by_year_month = ubn_events_event_occasions_by_year_month_rendered($event_occasions);
     $block->content = slate_render('event-occasions', array('event_occasions_by_year_month' => $event_occasions_by_year_month));
-  }
 
   return $block;
 }
