@@ -1,0 +1,246 @@
+<?php
+
+/* Implements hook_menu() */
+function ubn_sitemap_menu() {
+  $items['sitemap.xml'] = array(
+    'page callback' => 'ubn_sitemap_xmlsitemap',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+function _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, $properties) {
+  $url = $doc->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'url');
+
+  $loc = $doc->createElementNS(
+    'http://www.sitemaps.org/schemas/sitemap/0.9',
+    'loc',
+    $default_url
+  );
+  $url->appendChild($loc);
+
+  foreach ($language_urls as $langcode => $_url) {
+    $link = $doc->createElementNS(
+      'http://www.w3.org/1999/xhtml',
+      'xhtml:link'
+    );
+    $link->setAttributeNS(
+      'http://www.w3.org/1999/xhtml',
+      'xhtml:rel',
+      'alternative'
+    );
+    $link->setAttributeNS(
+      'http://www.w3.org/1999/xhtml',
+      'xhtml:href',
+      $_url
+    );
+    $link->setAttributeNS(
+      'http://www.w3.org/1999/xhtml',
+      'xhtml:hreflang',
+      $langcode
+    );
+    $url->appendChild($link);
+  }
+
+  // Default (perhaps not needed)
+  $link = $doc->createElementNS(
+    'http://www.w3.org/1999/xhtml',
+    'xhtml:link'
+  );
+  $link->setAttributeNS(
+    'http://www.w3.org/1999/xhtml',
+    'xhtml:rel',
+    'alternative'
+  );
+  $link->setAttributeNS(
+    'http://www.w3.org/1999/xhtml',
+    'xhtml:href',
+    $default_url
+  );
+  $link->setAttributeNS(
+    'http://www.w3.org/1999/xhtml',
+    'xhtml:hreflang',
+    'x-default'
+  );
+  $url->appendChild($link);
+
+  if (isset($properties['lastmod'])) {
+    //TODO: Not sure about timeszone, but no big deal if slighty off
+    $lastmod = $doc->createElementNS(
+      'http://www.sitemaps.org/schemas/sitemap/0.9',
+      'lastmod',
+      $properties['lastmod']
+    );
+    $url->appendChild($lastmod);
+
+    if (!isset($properties['changefreq'])) {
+      //Quick and dirty change frequency
+      $now = new DateTime();
+      $changed = new DateTime();
+      $changed->setTimestamp($entity->changed);
+      $interval = $changed->diff($now);
+
+      if ($interval->days < 60) {
+        $properties['changefreq'] = 'weekly';
+      }
+      elseif ($interval->days > 600) {
+        $properties['changefreq'] = 'yearly';
+      }
+      else {
+        $properties['changefreq'] = 'monthly';
+      }
+    }
+  }
+
+  if (isset($properties['changefreq'])) {
+    $changefreq = $doc->createElementNS(
+      'http://www.sitemaps.org/schemas/sitemap/0.9',
+      'changefreq',
+      $properties['changefreq']
+    );
+    $url->appendChild($changefreq);
+  }
+
+  if (isset($properties['priority'])) {
+    $priority = $doc->createElementNS(
+      'http://www.sitemaps.org/schemas/sitemap/0.9',
+      'priority',
+      $properties['priority']
+    );
+    $url->appendChild($priority);
+  }
+
+  $root->appendChild($url);
+}
+
+function ubn_sitemap_xmlsitemap() {
+  drupal_add_http_header('Content-Type', 'text/xml');
+  $cache_key = 'ubn_sitemap:sitemap.xml';
+  $cache_bin = 'cache_page';
+  $cache = cache_get($cache_key, $cache_bin);
+  $cache = NULL;
+  $xml = '';
+
+  if ($cache) {
+    $xml = $cache->data;
+  }
+  else {
+    /**
+     *  Entities
+     **/
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', array('story', 'page', 'event_occasion', 'database', 'library', 'navigation_landing'), 'IN')
+      ->propertyCondition('status', NODE_PUBLISHED)
+      ->execute();
+    $entities = entity_load('node', array_keys($result['node']));
+
+    $languages = language_list();
+    $default_lang = language_default('language');
+
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    $root = $doc->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+
+    $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+    $root->setAttributeNS(
+      'http://www.w3.org/2001/XMLSchema-instance',
+      'xsi:schemaLocation',
+      'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'
+    );
+
+    $root->setAttributeNS(
+      'http://www.w3.org/2000/xmlns/',
+      'xmlns:xhtml',
+      'http://www.w3.org/1999/xhtml'
+    );
+
+    //Schema for xhtml?
+
+    $doc->appendChild($root);
+
+    foreach ($entities as $entity) {
+      $handler = entity_translation_get_handler('node', $entity);
+      $handler->initPathScheme(); //??
+      $translations = $handler->getTranslations();
+      $info = entity_uri('node', $entity);
+
+      $language_urls = array();
+
+      foreach ($translations->data as $langcode => $translation) {
+        if (!$translation['status']) {
+          continue;
+        }
+        $options = array('absolute' => TRUE);
+        $options['language'] = $languages[$langcode !== LANGUAGE_NONE ? $langcode : $default_lang];
+        // Can be removed:
+        $handler->setActiveLanguage($langcode);
+        $language_path = url($info['path'], $options + $info['options']);
+        $language_urls[$langcode] = $language_path;
+      }
+
+      $default_url = isset($language_urls[$default_lang]) ? $language_urls[$default_lang] : (
+        isset($language_urls[LANGUAGE_NONE]) ? $language_urls[LANGUAGE_NONE] : current($language_urls)
+      );
+      unset($language_urls[LANGUAGE_NONE]);
+
+      $changed = isset($entity->workbench_moderation) ? $entity->workbench_moderation['published']->stamp : $entity->changed;
+
+      _ubn_sitemap_add_url($doc, $root, $language_urls, $default_url, array(
+        'lastmod' => format_date($changed, 'custom', 'c'),
+        'priority' => '0.5'
+      ));
+    }
+
+    /**
+     * Custom
+     **/
+
+    // Panel pages
+    $urls = array(
+      array(
+        'language_urls' => array(
+          'sv' => 'nyheter',
+          'en' => 'news',
+        ),
+        'changefreq' => 'daily',
+        'priority' => 0.5,
+      ),
+      array(
+        'language_urls' => array(
+          'sv' => 'databaser/sok',
+          'en' => 'databases/search',
+        ),
+        'changefreq' => 'monthly',
+        'priority' => 0.5,
+      ),
+    );
+
+
+    foreach ($urls as $url) {
+      foreach($url['language_urls'] as $langcode => $path) {
+        $url['language_urls'][$langcode] = url(
+          $path,
+          array(
+            'language' => $languages[$langcode],
+            'absolute' => TRUE,
+            'alias' => TRUE
+          )
+        );
+      }
+      $url['default_url'] = $url['language_urls'][$default_lang];
+      _ubn_sitemap_add_url(
+        $doc,
+        $root,
+        $url['language_urls'],
+        $url['default_url'],
+        array_intersect_key($url, array('lastmod' => null, 'changefreq' => null, 'priority' => null))
+      );
+    }
+    $xml = $doc->saveXML();
+    cache_set($cache_key, $xml, $cache_bin, CACHE_TEMPORARY);
+  }
+
+  print $xml;
+  exit;
+}

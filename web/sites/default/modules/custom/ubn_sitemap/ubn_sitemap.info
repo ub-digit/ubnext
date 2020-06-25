@@ -1,0 +1,4 @@
+name = UBN Sitemap
+description = Because XML Sitemap sucks
+core = 7.x
+package = UBNext

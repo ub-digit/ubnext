@@ -3,6 +3,7 @@
   models[event_occasions_by_year_month] = item
 #}
 <div class="event-occasions row">
+  {% if event_occasions_by_year_month|length > 0 %}
   {% for year, event_occasions_by_month in event_occasions_by_year_month %}
     {% if (loop.index - 1) %}
       <div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2">
@@ -20,4 +21,7 @@
     </div>
     {% endfor %}
   {% endfor %}
+  {% else %}
+    <div class="no-more-events">{{ t('There are currently no upcoming events.') }}</div>
+  {% endif %}
 <div>

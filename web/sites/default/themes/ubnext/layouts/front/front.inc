@@ -14,8 +14,8 @@ $plugin = array(
     'services' => t('Services'),
     'navigation' => t('Navigation'),
     'promoted_top' => t('Promoted top'),
-    'news' => t('News'),
     'promoted' => t('Promoted'),
+    'promoted_secondary' => t('Promoted secondary'),
     'main' => t('Main'),
   ),
 );
