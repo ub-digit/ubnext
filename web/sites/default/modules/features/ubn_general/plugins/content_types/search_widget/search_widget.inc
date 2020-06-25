@@ -63,7 +63,6 @@ function ubn_general_search_widget_content_type_settings($form, &$form_state) {
     '#default_value' => !empty($conf['dark_theme']) ? $conf['dark_theme'] : TRUE,
   );*/
   return $form;
-  
 }
 
 /**
@@ -81,7 +80,7 @@ function ubn_general_search_widget_content_type_settings_submit($form, &$form_st
 }
 
 /**
- * 
+ *
  *
  * Render callback.
  */
@@ -117,12 +116,12 @@ function ubn_general_search_widget_content_type_render($subtype, $conf, $panel_a
   if (variable_get('ubn_search_widget_fid')) {
     $file = file_load(variable_get('ubn_search_widget_fid'));
   }
-  
+
   if ($file) {
     $file_uri = file_create_url($file->uri);
   }
   else {
-    $file_uri = ""; 
+    $file_uri = "";
   }
 
   $block->content = slate_render('search-widget',

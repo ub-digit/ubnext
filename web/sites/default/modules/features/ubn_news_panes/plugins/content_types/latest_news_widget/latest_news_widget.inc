@@ -32,7 +32,7 @@ function ubn_news_panes_latest_news_widget_content_type_render($subtype, $conf, 
     ->propertyCondition('status', 1) // is publishd
     ->propertyOrderBy('created', 'DESC') // TODO: order by publication date not created?
     ->addTag('ENTITY_TRANSLATION')
-    ->range(0, variable_get('default_stories_main'))
+    ->range(0, variable_get('default_stories_main', 5))
     ->execute();
 
   $stories = array();
@@ -47,7 +47,7 @@ function ubn_news_panes_latest_news_widget_content_type_render($subtype, $conf, 
   ));
 
   $block = new stdClass();
-  $block->title = t('Current events and news');
+  $block->title = t('Latest news');
   $block->content = $content;
 
   return $block;

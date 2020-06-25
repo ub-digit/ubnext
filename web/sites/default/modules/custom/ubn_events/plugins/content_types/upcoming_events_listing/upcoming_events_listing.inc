@@ -23,21 +23,21 @@ function ubn_events_upcoming_events_listing_content_type_settings($form, &$form_
 }
 
 
-/*variable_get('default_event_occasions_main')*
+/*
  * Render callback.
  */
 function ubn_events_upcoming_events_listing_content_type_render($subtype, $conf, $panel_args, $context) {
   global $language_content;
 
   $block = new stdClass();
-  //$block->title = t('More event occasions');
+  $block->title = t('Upcoming events');
   $block->title = '';
   $block->content = '';
 
 
   $calendar_wrapper = entity_metadata_wrapper('node', $context->data);
   $query = ubn_events_current_event_occasions_efq();
-  $query->range(0, variable_get('default_event_occasions_main'));
+  $query->range(0, variable_get('default_event_occasions_main', 5));
   $results = $query->execute();
   $event_occasions = entity_load('node', array_keys($results['node']));
   $renderable = entity_view('node', $event_occasions, 'listing');
