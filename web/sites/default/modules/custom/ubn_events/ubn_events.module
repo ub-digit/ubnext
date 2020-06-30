@@ -11,6 +11,26 @@ function ubn_events_form_event_occasion_node_form_alter(&$form, &$form_state) {
   $form['title_field']['#access'] = FALSE;
 }
 
+/* Implements hook_menu_link_alter */
+/*
+function ubn_events_menu_link_alter(&$items) {
+}
+*/
+
+/* Implements hook_menu_alter */
+/*
+function ubn_events_menu_alter(&$items) {
+}
+*/
+
+function ubn_events_url_outbound_alter(&$path, &$options, $original_path) {
+  if (preg_match('|^node/\d+/translate(/.*)?|', $path)) {
+    if (isset($_GET['destination'])) {
+      $options['query']['destination'] = $_GET['destination'];
+    }
+  }
+}
+
 /* TODO hook_node_presave probably works to */
 function ubn_events_entity_presave($entity, $entity_type) {
   if ($entity_type === 'node' && $entity->type === 'event_occasion') {
