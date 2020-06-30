@@ -1,0 +1,54 @@
+
+@media print{
+  /* hide the header*/
+  .header-cms{
+    display: none;
+  }
+  /* hide the navigation*/
+  .nav-cms{
+      display: none;
+  }
+  /* hide the footer*/
+  .footer-cms{
+    display: none;
+  }	
+  /* hides the href attribute after the link text*/
+  a[href]:after { 
+    content: none !important;
+  }
+  /* hide elements with this class (used in single news page) */
+  .hide-in-print{
+    display: none;
+  }
+  /* hide the 'add to calendar' link*/
+  .event-occasion-add-to-calendar-link{
+    display: none;
+  }
+  /* force page break in the all libraries view*/
+  .printing-page-break{
+    page-break-before: always;
+  }
+  /* hides the contact form*/
+  .section-contacts{
+    display: none;
+  }
+
+  #front-page-blurbs{
+    page-break-before: always;
+  }
+
+  .blurb{
+    page-break-after: avoid;
+    page-break-before: avoid;
+    height: 500px!important;
+  }
+
+  .story-promoted{
+    height: 500px!important;
+  }
+
+  .ubn-map-sm{
+    page-break-inside: avoid;
+  }
+
+}
