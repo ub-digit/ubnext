@@ -8,7 +8,7 @@
 {% import "macros/misc.html.twig" as misc %}
 
 <li id="{{ id }}" data-term-group-id="{{ groupId }}" class="term term-collapsible">
-  <a class="term-name collapsed icon-to-the-right" role="button" data-toggle="collapse" href="#{{ id }}-description" aria-owns="#{{ id }}-description" aria-expanded="false" aria-controls="term-{{ id }}-description">{{ entity.name.value }}</a> <i class="fa fa-dynamic fa-chevron-down" aria-hidden="true"></i>
+  <a class="term-name collapsed icon-to-the-right" role="button" data-toggle="collapse" href="#{{ id }}-description" aria-owns="#{{ id }}-description" aria-expanded="false" aria-pressed="false" aria-controls="term-{{ id }}-description">{{ entity.name.value }}</a> <i class="fa fa-dynamic fa-chevron-down" aria-hidden="true"></i>
   <div id="{{ id }}-description" class="collapse term-description">
   <div>
     {{ entity.description.value | raw }}
