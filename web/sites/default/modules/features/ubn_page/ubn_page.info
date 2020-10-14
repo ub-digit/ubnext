@@ -1,7 +1,7 @@
 name = UBN Page
 core = 7.x
 package = UBNext
-version = 7.x-0.27
+version = 7.x-0.28
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = gmap_tools_slate
