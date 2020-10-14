@@ -25,12 +25,39 @@ if (typeof Drupal.jsAC != 'undefined') {
    */
   Drupal.jsAC = function ($input, db) {
     if ($input.data('search-api-autocomplete-search')) {
+      $input.attr('aria-controls', 'autocomplete');
       $input.attr('role', 'combobox');
       $input.parent().attr('role', 'search');
     }
     oldJsAC.call(this, $input, db);
   };
   Drupal.jsAC.prototype = oldJsAC.prototype;
+
+  /**
+   * HACK
+   */
+  Drupal.jsAC = (function(original) {
+    function jsAC() {
+      original.apply(this, arguments)
+      // Overwrite/extend methods
+      let oldPopulatePopup = this.populatePopup;
+      this.populatePopup = function() {
+        oldPopulatePopup.apply(this, arguments);
+        if (this.popup) {
+          $(this.popup).attr('role', 'listbox');
+          $(this.input).attr('aria-expanded', 'true');
+        }
+      }
+      let oldHidePopup = this.hidePopup;
+      this.hidePopup = function () {
+        oldHidePopup.apply(this, arguments);
+        $(this.input).attr('aria-expanded', 'false');
+      }
+    }
+    jsAC.prototype = original.prototype; // Reset/assign prototype
+    jsAC.constructor = jsAC; // Fix constructor propertry
+    return jsAC;
+  })(Drupal.jsAC);
 
   /**
    * Handler for the "keyup" event.
