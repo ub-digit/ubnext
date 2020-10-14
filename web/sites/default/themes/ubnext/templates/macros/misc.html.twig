@@ -88,5 +88,5 @@
 
 {% macro link(text, url, class, options) %}
   {% set url = url(url, { 'absolute' : true }|merge(options|default([]))) %}
-  <a{%if not class is empty %} class="{{ class }}"{% endif %} href="{{ url }}">{{ text }}</a>
+  <a{%if not class is empty %} class="{{ class }}"{% endif %} {%if not options.aria_label is empty %} aria-label="{{options.aria_label|trim}}" {% endif %}href="{{ url }}">{{ text }}</a>
 {% endmacro %}

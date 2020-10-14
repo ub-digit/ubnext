@@ -11,7 +11,7 @@
   <span class="term-name">{{ entity.name.value }}</span>, {{ t('see') }}
   <span class="term-synonym-terms">
     {% spaceless %}
-    {% for term in term_synonym_terms %}{% set id = drupal_clean_css_identifier(term.name_field) %}{{ loop.index > 1 ? (not loop.last ? ', ' : ' ' ~ t('or') ~ ' ') }}<a href="#{{ id }}">{{ term.name }}</a>{% endfor %}
+    {% for term in term_synonym_terms %}{% set id = drupal_clean_css_identifier(term.name_field) %}{{ loop.index > 1 ? (not loop.last ? ', ' : ' ' ~ t('or') ~ ' ') }}<a href="#{{ id }}" aria-label="{{ t('go to') }} {{ term.name }}">{{ term.name }}</a>{% endfor %}
     {% endspaceless %}
   </span>
 </li>
