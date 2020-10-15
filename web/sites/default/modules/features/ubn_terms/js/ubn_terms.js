@@ -131,10 +131,38 @@
         $clear_btn.trigger('click');
         var hash_target = decodeURIComponent(e.currentTarget.hash);
         Drupal.ubnext.scrollTo($(hash_target, context), function() {
-          // this is where to open the term
-          $(hash_target, context).find('.term-name').trigger('click');
+          // Only trigger click if not already expanded
+          $(hash_target, context).find('.term-name.collapsed').trigger('click');
         });
       });
+
+      // Emulate button behavior (could use selector ('[role="button"]').not(button)
+      // in selector  and apply for site-wide  buttons instead)
+      //var $expandable_terms = $('[role="button"]', context).not('button');
+      var $expandable_terms = $('.term-name', context);
+
+      $expandable_terms.on('click', function(e) {
+        var $button = $(this);
+        $button.attr('aria-pressed', $button.attr('aria-pressed') === 'true' ? 'false' : 'true');
+      });
+
+      $expandable_terms.on('keydown', function(e) {
+        if (e.keyCode === 32) {
+          e.preventDefault();
+        }
+        else if (event.keyCode === 13) {
+          e.preventDefault();
+          $(this).trigger('click');
+        }
+      });
+
+      $expandable_terms.on('keyup', function(e) {
+        if (e.keyCode === 32) {
+          e.preventDefault();
+          $(this).trigger('click');
+        }
+      });
+
     }
   };
 })(jQuery);
