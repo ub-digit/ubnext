@@ -30,10 +30,10 @@ namespace :drupal do
   task :install_drush do
     on release_roles :app do
       within shared_path do
-        execute :curl, '-fsSL -o drush https://github.com/drush-ops/drush/releases/download/8.4.5/drush.phar'
-        execute :chmod, '+x drush'
+        execute :curl, '-fsSL -o drush.phar https://github.com/drush-ops/drush/releases/download/8.4.5/drush.phar'
+        execute :chmod, '+x drush.phar'
         # TODO: FIX THIS ABOMINATION, RIGHT NOW HAVE NO IDEA
-        SSHKit.config.command_map[:drush] = "#{shared_path.join("drush")}"
+        SSHKit.config.command_map[:drush] = "#{shared_path.join("drush.phar")}"
         #execute :composer, 'require drush/drush:7.*'
       end
     end
