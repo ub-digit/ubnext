@@ -1609,14 +1609,6 @@ function ubn_general_update_7265() {
 }
 
 function ubn_general_update_7266() {
-  module_enable(array('search_api_et_solr'));
-  foreach (search_api_index_load_multiple(FALSE) as $index) {
-    $index->reindex();
-    search_api_index_items($index);
-  }
-}
-
-function ubn_general_update_7267() {
   features_revert_module('ubn_page');
 }
 
