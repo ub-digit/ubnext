@@ -17,10 +17,10 @@ function ubn_library_feeds_feeds_source_default() {
   $feeds_source->feed_nid = 0;
   $feeds_source->config = array(
     'UBNOpeningHoursFeedsFetcher' => array(
-      'source' => 'http://130.241.35.161:3014/locations',
+      'source' => 'http://openhours.ub.gu.se/locations',
     ),
   );
-  $feeds_source->source = 'http://130.241.35.161:3014/locations';
+  $feeds_source->source = 'http://openhours.ub.gu.se/locations';
   $export['libraries_opening_hours'] = $feeds_source;
 
   $feeds_source = new stdClass();
@@ -30,10 +30,10 @@ function ubn_library_feeds_feeds_source_default() {
   $feeds_source->feed_nid = 0;
   $feeds_source->config = array(
     'UBNOpeningHoursFeedsFetcher' => array(
-      'source' => 'http://130.241.35.161:3014/locations',
+      'source' => 'http://openhours.ub.gu.se/locations',
     ),
   );
-  $feeds_source->source = 'http://130.241.35.161:3014/locations';
+  $feeds_source->source = 'http://openhours.ub.gu.se/locations';
   $export['libraries_opening_hours_field_collection'] = $feeds_source;
 
   return $export;
