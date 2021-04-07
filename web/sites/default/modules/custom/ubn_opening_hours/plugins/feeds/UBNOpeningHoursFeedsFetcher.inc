@@ -100,7 +100,7 @@ class UBNOpeningHoursFeedsFetcher extends FeedsFetcher {
     $form['source'] = array(
       '#type' => 'textfield',
       '#title' => t('Endpoint url'),
-      '#default_value' => !empty($source_config['source']) ? $source_config['source'] : 'http://130.241.35.161:3014/locations',
+      '#default_value' => !empty($source_config['source']) ? $source_config['source'] : 'http://openhours.ub.gu.se/locations',
       '#maxlength' => NULL,
       '#required' => TRUE,
     );
