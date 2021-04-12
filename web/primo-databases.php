@@ -104,6 +104,8 @@ $output_filename = '46GUB-' . date('Y-m-d-H-i-s') . '.xml';
 $output_filepath = "/tmp/$output_filename";
 file_put_contents($output_filepath, $xml);
 
+/*
+// misc/typo3/drupal-security/PharExtensionInterceptor.php screws things up
 try {
   $archive = new PharData("$output_filepath.tar");
   $archive->addFile($output_filepath, $output_filename);
@@ -114,6 +116,10 @@ try {
 catch (Exception $e) {
   die("Something went wrong: " . $e);
 }
+*/
+
+exec("tar -czf $output_filepath.tar.gz -C /tmp $output_filename");
+$filepath_compressed = "/tmp/$output_filename.tar.gz";
 
 $exit_code = null;
 $output = array();
