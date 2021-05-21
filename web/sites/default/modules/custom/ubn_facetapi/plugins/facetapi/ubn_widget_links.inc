@@ -53,7 +53,7 @@ class UBNFacetapiWidgetLinks extends FacetapiWidgetLinks {
         //'container_attributes' => array('class' => 'ubn-facetapi-active-header-item'),
         //Link options? rename?
         'options' => array(
-          'attributes' => array('class' => 'ubn-facetapi-active-header-item-link', 'rel' => 'nofollow'), //id?
+          'attributes' => array('class' => 'ubn-facetapi-active-header-item-link', 'rel' => 'nofollow', 'title' => t('Close filter')), //id?
           'html' => $active_item['#html'],
           'query' => $active_item['#query'],
         ),

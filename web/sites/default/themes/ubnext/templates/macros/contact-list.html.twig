@@ -10,7 +10,7 @@
               <div class="section-contacts-contact-head ubn-collapse-head collapsed row" data-target="#{{ contact_id }}" data-toggle="collapse" aria-expanded="false">
                 <div class="col-xs-12">
                   <h3><i class="fa fa-comment"></i> <div>{{ contact_instance.field_title.value|default(t('Contact @contact', {'@contact': contact.title_field.value})) }}</div></h3>
-                  <a class="ubn-collapse-head-toggle-btn collapsed" role="button" data-toggle="collapse" href="#{{ contact_id }}" aria-expanded="false">
+                  <a class="ubn-collapse-head-toggle-btn collapsed" role="button" data-toggle="collapse" href="#{{ contact_id }}" aria-expanded="false" title="{{ t('Open/close form') }}">
                   <i class="fa fa-plus" aria-hidden="true"></i>
                   </a>
                 </div>

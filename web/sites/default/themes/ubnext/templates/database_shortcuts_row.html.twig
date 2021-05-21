@@ -4,4 +4,4 @@
 #}
 
 {% import "macros/database-url.html.twig" as helper %}
-<a href="{{ helper.getPreferedUrl(database.field_database_urls) }}">{{database.title}}</a>
+<a href="{{ helper.getPreferedUrl(database.field_database_urls) }}" title="{{ t('Directly to') }} {{database.title}}">{{database.title}}</a>

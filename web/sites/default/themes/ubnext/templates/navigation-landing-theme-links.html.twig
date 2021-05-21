@@ -97,13 +97,15 @@
     </ul>
   </div>
   {% set isPrimary = false %}
-  <div class="row">
-    <ul class="ubn-theme-links secondary list-unstyled clearfix">
-      {% for link in children %}
-        {% if loop.index > page.field_field_number_of_primary.value %}
-          {{ _self.theme_link(link['link']['title'], link['link']['link_path'], link['link']['localized_options']['attributes']['title'], loop.index - page.field_field_number_of_primary.value, page,false, isPrimary, onecol)}}
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
+  {% if children|length > page.field_field_number_of_primary.value %}
+    <div class="row">
+      <ul class="ubn-theme-links secondary list-unstyled clearfix">
+        {% for link in children %}
+          {% if loop.index > page.field_field_number_of_primary.value %}
+            {{ _self.theme_link(link['link']['title'], link['link']['link_path'], link['link']['localized_options']['attributes']['title'], loop.index - page.field_field_number_of_primary.value, page,false, isPrimary, onecol)}}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 {% endif %}
