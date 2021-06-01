@@ -151,10 +151,12 @@ function ubnext_pager_link($variables) {
     }
     elseif (is_numeric($text)) {
       $attributes['title'] = t('Go to page @number', array('@number' => $text));
-    }elseif(!isset($attributes['title'])) {
+    }
+    elseif (!isset($attributes['title'])) {
       if (strpos($text, 'fa-chevron-left') !== false) {
         $attributes['title'] = t('previous page');
-      }elseif(strpos($text, 'fa-chevron-right')){
+      }
+      elseif (strpos($text, 'fa-chevron-right')){
         $attributes['title'] = t('next page');
       }
     }
