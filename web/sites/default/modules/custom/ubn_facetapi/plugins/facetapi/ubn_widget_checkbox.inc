@@ -40,7 +40,7 @@ class UBNFacetapiWidgetCheckbox extends FacetapiWidget {
         'active' => $checkbox_item['#active'],
         'path' => $checkbox_item['#path'],
         'options' => array(
-          'attributes' => array('class' => 'ubn-facetapi-checkbox-item-link', 'rel' => 'nofollow'), //id?
+          'attributes' => array('class' => 'ubn-facetapi-checkbox-item-link', 'rel' => 'nofollow', 'title' => t('Show freely accessible')), //id?
           'html' => $checkbox_item['#html'],
           'query' => $checkbox_item['#query'],
         ),
