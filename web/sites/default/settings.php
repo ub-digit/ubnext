@@ -32,6 +32,9 @@ $conf['i18n_variables'] = array(
   'aria_label_logotype',
 );
 
+// Prevent drupal from scanning certain folders when looking for theme and template files.
+$conf['file_scan_ignore_directories'] = array( 'node_modules',  'bower_components');
+
 if (
   isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
   strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
