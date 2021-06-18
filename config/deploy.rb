@@ -9,7 +9,7 @@ set :repo_url, 'https://github.com/ub-digit/ubnext.git'
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
-set :branch, 'ubnext-1229-printing-css'
+set :branch, 'upload-field-add-allowed-filetype-extensions'
 
 # Default deploy_to directory is /var/www/my_app
 # set :deploy_to, '/var/www/drupal/staging'
