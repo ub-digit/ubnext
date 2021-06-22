@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_content_types.features.field_instance.inc
@@ -3860,16 +3861,17 @@ function ubn_content_types_field_default_field_instances() {
     'entity_type' => 'scald_atom',
     'field_name' => 'scald_file',
     'label' => 'File',
-    'required' => TRUE,
+    'required' => 1,
     'settings' => array(
       'description_field' => 0,
       'entity_translation_sync' => FALSE,
       'file_directory' => 'atoms/files',
-      'file_extensions' => 'ppt pptx xls xlsx doc docx odt pdf txt csv odg sxw ods rtf zip rar gz 7z tar',
+      'file_extensions' => 'ppt pptx xls xlsx doc docx odt pdf txt csv odg sxw ods rtf zip rar gz 7z tar ens enl enz csl ris',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'file',
       'settings' => array(
         'progress_indicator' => 'throbber',
