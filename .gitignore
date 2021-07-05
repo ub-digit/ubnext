@@ -25,5 +25,5 @@ web/sites/default/themes/ubnext/css/ubnext.css
 # Ignore paths that contain user-generated content.
 # !sites/*/files
 web/sites/*/files/*
-!web/sites/*/files/unmanaged_files
+# !web/sites/*/files/unmanaged_files
 web/sites/*/private

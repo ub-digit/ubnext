@@ -265,33 +265,33 @@ namespace :deploy do
     end
   end
 
-  before :publishing, :drupal_deploy_chown_files_directory do
-    # TODO: long/poor name
-    # TODO: document why we do this (for cleanup to work)
-    on release_roles :app do
-      drupal_deploy_prepare_script('drupal-chown-server-user-files-directory.sh', shared_path)
-      execute :sudo, shared_path.join('drupal-chown-server-user-files-directory.sh')
-    end
-  end
+#  before :publishing, :drupal_deploy_chown_files_directory do
+#    # TODO: long/poor name
+#    # TODO: document why we do this (for cleanup to work)
+#    on release_roles :app do
+#      drupal_deploy_prepare_script('drupal-chown-server-user-files-directory.sh', shared_path)
+#      execute :sudo, shared_path.join('drupal-chown-server-user-files-directory.sh')
+#    end
+#  end
 
-  after :updating, :copy_files_directory do
-    on release_roles :app do
-      last_release = capture(:ls, '-xr', releases_path).split.fetch(1, nil)
-      next unless last_release
-      last_release_path = releases_path.join(last_release)
-
-      path = fetch(:files_path)
-      source = last_release_path.join(path)
-      target = release_path.join(path)
-
-      if test "[ -d #{source} ]"
-        execute :cp, '-RLT --preserve=all', source, target
-        execute :sudo, shared_path.join('drupal-chown-files-directory.sh')
-      else
-        warn "#{source} is not a directory that can be copied (target: #{target})"
-      end
-    end
-  end
+#  after :updating, :copy_files_directory do
+#    on release_roles :app do
+#      last_release = capture(:ls, '-xr', releases_path).split.fetch(1, nil)
+#      next unless last_release
+#      last_release_path = releases_path.join(last_release)
+#
+#      path = fetch(:files_path)
+#      source = last_release_path.join(path)
+#      target = release_path.join(path)
+#
+#      if test "[ -d #{source} ]"
+#        execute :cp, '-RLT --preserve=all', source, target
+#        execute :sudo, shared_path.join('drupal-chown-files-directory.sh')
+#      else
+#        warn "#{source} is not a directory that can be copied (target: #{target})"
+#      end
+#    end
+#  end
 
   after :publishing, :set_files_directory_permissions do
     on release_roles :app do
