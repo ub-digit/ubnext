@@ -23,6 +23,9 @@ server 'beta-lab.ub.gu.se', user: 'drupal-deploy', roles: %w{app},
 
 set :deploy_to, '/var/www/drupal/lab'
 
+set :files_user, 'drupal-deploy' # primary(:app).user works?
+set :files_group, 'drupal-deploy'
+
 # Custom SSH Options
 # ==================
 # You may pass any option but keep in mind that net/ssh understands a
