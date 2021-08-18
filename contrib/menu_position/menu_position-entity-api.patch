@@ -1,0 +1,860 @@
+diff --git a/menu_position.admin.inc b/menu_position.admin.inc
+index 6cefda9..13e41d8 100644
+--- a/menu_position.admin.inc
++++ b/menu_position.admin.inc
+@@ -102,26 +102,6 @@ function _menu_position_form_menu_edit_item_alter(&$form, &$form_state) {
+ }
+ 
+ /**
+- * Implements hook_menu_link_update().
+- */
+-function _menu_position_menu_link_update($link) {
+-  $rules = db_query('SELECT rid, plid FROM {menu_position_rules} WHERE mlid = :mlid ORDER BY weight, rid', array(':mlid' => $link['mlid']));
+-  foreach ($rules as $rule) {
+-    // Check if the user has altered the parent menu item.
+-    if ($link['plid'] != $rule->plid) {
+-      // Update the rule with the new parent.
+-      db_update('menu_position_rules')
+-        ->fields(array(
+-          'menu_name' => $link['menu_name'],
+-          'plid' => $link['plid'],
+-          ))
+-        ->condition('rid', $rule->rid)
+-        ->execute();
+-    }
+-  }
+-}
+-
+-/**
+  * Process menu and menu item add/edit form submissions for menu_position links.
+  */
+ function menu_position_edit_item_submit($form, &$form_state) {
+@@ -341,7 +321,6 @@ function menu_position_rule_form($form, &$form_state) {
+   // Set the default values.
+   $rid          = !empty($form_state['#menu-position-rule']['rid']) ? $form_state['#menu-position-rule']['rid'] : '';
+   $admin_title  = !empty($form_state['#menu-position-rule']['admin_title']) ? $form_state['#menu-position-rule']['admin_title'] : '';
+-  $machine_name = !empty($form_state['#menu-position-rule']['machine_name']) ? $form_state['#menu-position-rule']['machine_name'] : '';
+   $menu_name    = !empty($form_state['#menu-position-rule']['menu_name']) ? $form_state['#menu-position-rule']['menu_name'] : '';
+   $plid         = !empty($form_state['#menu-position-rule']['plid']) ? $form_state['#menu-position-rule']['plid'] : NULL;
+   $mlid         = !empty($form_state['#menu-position-rule']['mlid']) ? $form_state['#menu-position-rule']['mlid'] : NULL;
+@@ -357,18 +336,6 @@ function menu_position_rule_form($form, &$form_state) {
+     '#description' => t('This title will be used administratively to identify this rule.'),
+     '#required' => TRUE,
+   );
+-  $form['machine_name'] = array(
+-    '#type' => 'machine_name',
+-    '#default_value' => $machine_name,
+-    '#title' => t('Machine name'),
+-    '#required' => TRUE,
+-    '#size' => 15,
+-    '#maxlength' => 255,
+-    '#machine_name' => array(
+-      'exists' => 'menu_position_machine_name_exists',
+-      'source' => array('admin_title'),
+-    ),
+-  );
+   // Parent menu item.
+   if ($mlid) {
+     $options = menu_parent_options(menu_get_menus(), menu_link_load($mlid));
+@@ -410,20 +377,11 @@ function menu_position_rule_form($form, &$form_state) {
+   }
+ 
+   // Add conditions.
+-  foreach (menu_position_get_plugins() as $plugin) {
+-    // Load the required include file.
+-    if (!empty($plugin['file'])) {
+-      $file = pathinfo($plugin['file']);
+-      // Allow plugins to be in a sub-directory.
+-      if ($file['dirname']) {
+-        $file['filename'] = $file['dirname'] . '/' . $file['filename'];
+-      }
+-      module_load_include($file['extension'], $plugin['module'], $file['filename']);
+-    }
++  foreach (array_keys(menu_position_get_plugins()) as $plugin) {
++    $callback = menu_position_get_form_callback($plugin);
+     // Call form callback to add additional form elements.
+-    $function = $plugin['form_callback'];
+-    if (function_exists($function)) {
+-      $function($form, $form_state);
++    if (!empty($callback)) {
++      $callback($form, $form_state);
+     }
+   }
+ 
+@@ -435,18 +393,6 @@ function menu_position_rule_form($form, &$form_state) {
+ }
+ 
+ /**
+- * Helper function to check if a given machine name already exists.
+- */
+-function menu_position_machine_name_exists($machine_name) {
+-  $result = db_select('menu_position_rules', 'menu_position_rules')
+-    ->fields('menu_position_rules')
+-    ->condition('machine_name', $machine_name)
+-    ->execute();
+-  $num_of_results = $result->rowCount();
+-  return ($num_of_results == 1) ? TRUE : FALSE;
+-}
+-
+-/**
+  * Validates the form for menu_position_rule_form().
+  */
+ function menu_position_rule_form_validate($form, &$form_state) {
+@@ -472,189 +418,25 @@ function menu_position_rule_form_submit($form, &$form_state) {
+     'conditions'  => isset($form_state['values']['conditions']) ? $form_state['values']['conditions'] : array(),
+     'menu_name'   => $menu_name,
+     'plid'        => $plid,
+-    'machine_name' => $form_state['values']['machine_name'],
+   );
+   // Add the rule to the database.
+   if ($form_state['values']['rid'] == '') {
+-    menu_position_add_rule($rule);
+     drupal_set_message(t('Rule has been added.'));
+   }
+   // Update an exisiting rule.
+   else {
+     $rule['rid'] = $form_state['values']['rid'];
+-    menu_position_edit_rule($rule);
++    //TODO: this is a mess
++    $existing_rule = entity_load_unchanged('menu_position_rule', $rule['rid']);
++    $rule = $rule + get_object_vars($existing_rule);
+     drupal_set_message(t('Rule has been modified.'));
+   }
++  menu_position_rule_save((object) $rule);
+ 
+   $form_state['redirect'] = 'admin/structure/menu-position';
+ }
+ 
+ /**
+- * Adds a menu position rule.
+- *
+- * @param array $rule
+- *   An associate array defining the new rule to be created. Must contain the
+- *   following keys:
+- *   - admin_title: The administrative title of the rule.
+- *   - conditions: An associative array whose keys are the machine names of the
+- *     plugins actively configured in the rule. The value of each array element
+- *     is array containing the necessary variables for that plugin.
+- *   - menu_name: The machine name of the menu where this rule is positioned.
+- *   - plid: The mlid of the parent menu link specified in the rule.
+- */
+-function menu_position_add_rule(array $rule) {
+-  $fields = array(
+-    'admin_title' => $rule['admin_title'],
+-    'conditions'  => serialize($rule['conditions']),
+-    'menu_name'   => $rule['menu_name'],
+-    'plid'        => $rule['plid'],
+-    'machine_name' => $rule['machine_name'],
+-  );
+-  $rid = db_insert('menu_position_rules')
+-    ->fields($fields)
+-    ->execute();
+-
+-  $mlid = menu_position_add_menu_link($rid, $rule['plid'], $rule['admin_title']);
+-
+-  // Now add the mlid back to the rule.
+-  db_update('menu_position_rules')
+-    ->fields(array('mlid' => $mlid))
+-    ->condition('rid', $rid)
+-    ->execute();
+-}
+-
+-/**
+- * Adds a menu position rule.
+- *
+- * @param int $rid
+- *   ID of the rule needing a menu link.
+- * @param int $plid
+- *   The mlid of the parent menu link specified in the rule.
+- * @param string $admin_title
+- *   The administrative title of the rule.
+- *
+- * @return int
+- *   The mlid of the rule's new menu link.
+- */
+-function menu_position_add_menu_link($rid, $plid, $admin_title) {
+-  // Add a menu link to handle matching pages. Passing NULL as the mlid will
+-  // cause menu_link_save() to add a new menu link.
+-  return menu_position_edit_menu_link($rid, NULL, $plid, $admin_title);
+-}
+-
+-/**
+- * Retrieves a menu position rule from the database.
+- *
+- * @param int $rid
+- *   The ID of the requested rule.
+- *
+- * @return array
+- *   An associative array for the requested rule.
+- */
+-function menu_position_read_rule($rid) {
+-  $rule = db_query('SELECT * FROM {menu_position_rules} WHERE rid = :rid', array(':rid' => $rid))->fetchAssoc();
+-  $rule['conditions'] = unserialize($rule['conditions']);
+-  return $rule;
+-}
+-
+-/**
+- * Retrieves a menu position rule from the database.
+- *
+- * @return array
+- *   An associative array for all rules with keys equal to the rid of each rule.
+- */
+-function menu_position_read_rules() {
+-  $query = db_query('SELECT * FROM {menu_position_rules} ORDER BY weight, rid');
+-  $rules = array();
+-  foreach ($query as $rule) {
+-    $rule->conditions = unserialize($rule->conditions);
+-    $rules[$rule->rid] = $rule;
+-  }
+-  return $rules;
+-}
+-
+-/**
+- * Edits a menu position rule.
+- *
+- * @param array $rule
+- *   An associate array defining the rule to be edited. Must contain the
+- *   following keys:
+- *   - rid: The rule ID.
+- *   - admin_title: The administrative title of the rule.
+- *   - conditions: An associative array whose keys are the machine names of the
+- *     plugins actively configured in the rule. The value of each array element
+- *     is array containing the necessary variables for that plugin.
+- *   - menu_name: The machine name of the menu where this rule is positioned.
+- *   - plid: The mlid of the parent menu link specified in the rule.
+- */
+-function menu_position_edit_rule(array $rule) {
+-  $fields = array(
+-    'admin_title' => $rule['admin_title'],
+-    'conditions'  => serialize($rule['conditions']),
+-    'menu_name'   => $rule['menu_name'],
+-    'plid'        => $rule['plid'],
+-    'machine_name' => $rule['machine_name'],
+-  );
+-  // Update the rule.
+-  db_update('menu_position_rules')
+-    ->condition('rid', $rule['rid'])
+-    ->fields($fields)
+-    ->execute();
+-  // Update the link.
+-  $mlid = db_query('SELECT mlid FROM {menu_position_rules} WHERE rid = :rid', array(':rid' => $rule['rid']))->fetchField();
+-  menu_position_edit_menu_link($rule['rid'], $mlid, $rule['plid'], $rule['admin_title']);
+-}
+-
+-/**
+- * Adds a menu position rule.
+- *
+- * @param int $rid
+- *   ID of the rule needing a menu link.
+- * @param int $mlid
+- *   The mlid of the menu link used in the rule.
+- * @param int $plid
+- *   The mlid of the parent menu link specified in the rule.
+- * @param string $admin_title
+- *   The administrative title of the rule.
+- *
+- * @return int
+- *   The mlid of the rule's new menu link.
+- */
+-function menu_position_edit_menu_link($rid, $mlid, $plid, $admin_title) {
+-  // Add a menu link to handle matching pages.
+-  $item = array(
+-    'link_path' => 'menu-position/' . $rid,
+-    'link_title' => $admin_title . ' (menu position rule)',
+-    'mlid' => $mlid,
+-    'plid' => $plid,
+-    'hidden' => 1,
+-    'module' => 'menu_position',
+-    'options' => array(
+-      'alter' => TRUE,
+-      'attributes' => array('class' => array('menu-position-link')),
+-    ),
+-  );
+-  // If this is an existing menu link, get the existing weight.
+-  if ($item['mlid']) {
+-    $existing_item = db_query("SELECT plid, weight FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item['mlid']))->fetchAssoc();
+-    $item['weight'] = ($existing_item['plid'] == $plid) ? $existing_item['weight'] : 0;
+-    // If the rule has a new parent, update the old parent.
+-    if ($existing_item['plid'] != $item['plid']) {
+-      $old_parent = menu_link_load($existing_item['plid']);
+-      if ($old_parent !== FALSE) {
+-        $old_parent['options']['alter'] = FALSE;
+-        menu_link_save($old_parent);
+-      }
+-    }
+-  }
+-  // Update the new parent.
+-  $parent = menu_link_load($item['plid']);
+-  $parent['options']['alter'] = TRUE;
+-  menu_link_save($parent);
+-  return menu_link_save($item);
+-}
+-
+-/**
+  * Menu callback: confirms deletion of rule.
+  */
+ function menu_position_delete_rule_form($form, &$form_state, $rid = 0) {
+@@ -682,12 +464,3 @@ function menu_position_delete_rule_form_submit($form, &$form_state) {
+   $form_state['redirect'] = 'admin/structure/menu-position';
+ }
+ 
+-/**
+- * Deletes a menu position rule.
+- */
+-function menu_position_delete_rule($rid) {
+-  db_delete('menu_position_rules')
+-    ->condition('rid', $rid)
+-    ->execute();
+-  menu_link_delete(NULL, 'menu-position/' . $rid);
+-}
+diff --git a/menu_position.info b/menu_position.info
+index 01bcf0a..652fdc6 100644
+--- a/menu_position.info
++++ b/menu_position.info
+@@ -8,5 +8,6 @@ files[] = menu_position.module
+ files[] = menu_position.admin.inc
+ files[] = menu_position.install
+ files[] = menu_position.node_type.inc
++files[] = menu_position_rule.controller.inc
+ 
+ configure = admin/structure/menu-position
+diff --git a/menu_position.install b/menu_position.install
+index 4c92719..9c1b6db 100644
+--- a/menu_position.install
++++ b/menu_position.install
+@@ -59,11 +59,12 @@ function menu_position_schema() {
+         'not null' => FALSE,
+         'default' => 0,
+       ),
+-      'machine_name' => array(
+-        'description' => 'The machine name.',
+-        'type' => 'varchar',
+-        'length' => 255,
+-        'default' => NULL,
++      'uuid' => array(
++        'type' => 'char',
++        'length' => 36,
++        'not null' => TRUE,
++        'default' => '',
++        'description' => 'The Universally Unique Identifier.',
+       ),
+     ),
+     'indexes' => array(
+@@ -72,7 +73,7 @@ function menu_position_schema() {
+     ),
+     'primary key' => array('rid'),
+     'unique keys' => array(
+-      'machine_name' => array('machine_name'),
++      'uuid' => array('uuid'), //???
+     ),
+   );
+ 
+@@ -148,6 +149,18 @@ function menu_position_update_7103() {
+ }
+ 
+ /**
++ * Removing the machine_name field and adding uuid field.
++ */
++function menu_position_update_7104() {
++  db_drop_field('menu_position_rules', 'machine_name');
++  if(!db_field_exists('menu_position_rules', 'uuid')) {
++    $schema = drupal_get_schema('menu_position_rules');
++    db_add_field('menu_position_rules', 'uuid', $schema['fields']['uuid']);
++    uuid_sync_all();
++  }
++}
++
++/**
+  * Implements hook_enable().
+  *
+  * When the module is disabled, the menu links it owns are deleted. When
+diff --git a/menu_position.module b/menu_position.module
+index 4da561e..79d8c82 100644
+--- a/menu_position.module
++++ b/menu_position.module
+@@ -5,21 +5,248 @@
+  */
+ 
+ /**
+- * Implements hook_features_api().
++ * Implements hook_entity_info().
+  */
+-function menu_position_features_api() {
+-  return array(
+-    'menu_position' => array(
+-      'name' => 'Menu position',
+-      'default_hook' => 'menu_position_default_menu_positions',
+-      'default_file' => FEATURES_DEFAULTS_INCLUDED_COMMON,
+-      'feature_source' => TRUE,
+-      'file' => drupal_get_path('module', 'menu_position') . '/menu_position.features.inc',
++function menu_position_entity_info() {
++  $info['menu_position_rule'] = array(
++    'label' => t('Menu position rule'),
++    'controller class' => 'MenuPositionRuleController',
++    'base table' => 'menu_position_rules',
++    'module' => 'menu_position',
++    'uri callback' => 'menu_position_rule_uri',
++    'label callback' => 'menu_position_rule_label',
++    'fieldable' => FALSE,
++    'entity keys' => array(
++      'id' => 'rid',
++      'label' => 'title',
++      'bundle' => '',
++    ),
++    'view modes' => array(
+     ),
++    //'load hook' => 'menu_position_rule_load',
++  );
++  return $info;
++}
++
++function menu_position_menu_position_rule_insert($rule) {
++  $mlid = menu_position_save_menu_link($rule->rid, NULL, $rule->plid, $rule->admin_title);
++  db_update('menu_position_rules')
++    ->fields(array('mlid' => $mlid))
++    ->condition('rid', $rule->rid)
++    ->execute();
++  $rule->mlid = $mlid;
++}
++
++function menu_position_menu_position_rule_update($rule) {
++  if(empty($rule->mlid)) {
++    //TODO: Repair or fail?
++    // throw new Exception(t('Missing mlid and plid for rule @rid', array('@rid' => $rule->rid)));
++    return menu_position_menu_position_rule_insert($rule);
++  }
++  if(
++    $rule->admin_title != $rule->original->admin_title ||
++    $rule->plid != $rule->original->plid
++  ) {
++    //Don't allow changing of mlid
++    //TODO: handle this?
++    if(isset($rule->original->mlid)) {
++      $rule->mlid = $rule->original->mlid;
++    }
++    menu_position_save_menu_link($rule->rid, $rule->mlid, $rule->plid, $rule->admin_title);
++  }
++}
++
++//TODO: refactor module to get rid of plid?
++
++//TODO: Load a menu item without running _menu_link_translate
++// and without joining against the menu_router table
++function menu_position_menu_link_load($mlid) {
++  $query = db_select('menu_links', 'ml');
++  $query->fields('ml');
++  $query->condition('ml.mlid', $mlid);
++  $item = $query->execute()->fetchAssoc();
++  //TODO: proper fix
++  if(!empty($item)) {
++    $item['options'] = unserialize($item['options']);
++  }
++  return $item;
++}
++
++//TODO: documentation
++/**
++ * Saves a menu position rule menu link
++ *
++ * @param int $rid
++ *   ID of the rule needing a menu link.
++ * @param int $mlid
++ *   The mlid of the menu link used in the rule.
++ * @param int $plid
++ *   The mlid of the parent menu link specified in the rule.
++ * @param string $admin_title
++ *   The administrative title of the rule.
++ *
++ * @return int
++ *   The mlid of the rule's new menu link.
++ */
++function menu_position_save_menu_link($rid, $mlid, $plid, $admin_title) {
++  // Add a menu link to handle matching pages.
++  $parent_item = menu_position_menu_link_load($plid);
++  if(empty($parent_item)) {
++    throw new Exception(t('Invalid parent menu link item'));
++  }
++  $item = array(
++    'menu_name' => $parent_item['menu_name'],
++    'link_path' => 'menu-position/' . $rid,
++    'link_title' => $admin_title . ' (menu position rule)',
++    'mlid' => $mlid,
++    'plid' => $plid,
++    'hidden' => 1,
++    'module' => 'menu_position',
++    'options' => array(
++      'alter' => TRUE,
++      'attributes' => array('class' => array('menu-position-link')),
++    ),
++  );
++  if (!empty($item['mlid'])) {
++    $existing_item = menu_position_menu_link_load($item['mlid']);
++    if(empty($existing_item)) {
++      throw new Exception(t('Invalid menu item (mlid: @mlid)', array('@mlid' => $item['mlid'])));
++    }
++    //TODO: safe to use menu_link_load?
++    //$existing_item = menu_link_load($mlid);
++    $item += !empty($existing_item) ? $existing_item : array();
++    // If the rule has a new parent, update the old parent.
++    if(!empty($existing_item) && $existing_item['plid'] != $item['plid']) {
++      $old_parent_item = menu_position_menu_link_load($existing_item['plid']);
++      if(!empty($old_parent_item)) {
++        $old_parent_item['options']['alter'] = FALSE;
++        menu_link_save($old_parent_item);
++      }
++    }
++  }
++
++  // Update the parent, but only if parent is new or has changed
++  if(empty($mlid) || !empty($existing_item) && $existing_item['plid'] != $item['plid']) {
++    $parent_item['options']['alter'] = TRUE;
++    menu_link_save($parent_item);
++  }
++  return menu_link_save($item);
++}
++
++
++
++//TODO: delete
++/**
++ * Deletes a menu position rule.
++ */
++function menu_position_delete_rule($rid) {
++  db_delete('menu_position_rules')
++    ->condition('rid', $rid)
++    ->execute();
++  menu_link_delete(NULL, 'menu-position/' . $rid);
++}
++
++//TODO: remove/replace
++/**
++ * Retrieves a menu position rule from the database.
++ *
++ * @param int $rid
++ *   The ID of the requested rule.
++ *
++ * @return array
++ *   An associative array for the requested rule.
++ */
++function menu_position_read_rule($rid) {
++  $rule = db_query('SELECT * FROM {menu_position_rules} WHERE rid = :rid', array(':rid' => $rid))->fetchAssoc();
++  $rule['conditions'] = unserialize($rule['conditions']);
++  return $rule;
++}
++
++//TODO: remove/replace
++/**
++ * Retrieves a menu position rule from the database.
++ *
++ * @return array
++ *   An associative array for all rules with keys equal to the rid of each rule.
++ */
++function menu_position_read_rules() {
++  $query = db_query('SELECT * FROM {menu_position_rules} ORDER BY weight, rid');
++  $rules = array();
++  foreach ($query as $rule) {
++    $rule->conditions = unserialize($rule->conditions);
++    $rules[$rule->rid] = $rule;
++  }
++  return $rules;
++}
++
++//TODO: update documentation
++/**
++ * Saves a menu position rule.
++ *
++ * @param array $rule
++ *   An associate array defining the new rule to be created. Must contain the
++ *   following keys:
++ *   - admin_title: The administrative title of the rule.
++ *   - conditions: An associative array whose keys are the machine names of the
++ *     plugins actively configured in the rule. The value of each array element
++ *     is array containing the necessary variables for that plugin.
++ *   - menu_name: The machine name of the menu where this rule is positioned.
++ *   - plid: The mlid of the parent menu link specified in the rule.
++ */
++function menu_position_rule_save($rule) {
++  return entity_save('menu_position_rule', $rule);
++}
++
++function menu_position_rule_delete($rid) {
++  return entity_delete('menu_position_rule', $rid);
++}
++
++function menu_position_rule_delete_multiple($rids) {
++  return entity_delete_multiple('menu_position_rule', $rids);
++}
++
++function menu_position_rule_load(array $rids) {
++  return entity_load('menu_position_rule', $rids);
++}
++
++/**
++ * Helper function for hook_menu_link_update().
++ */
++function _menu_position_menu_link_update($link) {
++  $rules = db_query('SELECT rid, plid FROM {menu_position_rules} WHERE mlid = :mlid ORDER BY weight, rid', array(':mlid' => $link['mlid']));
++  foreach ($rules as $rule) {
++    // Check if the user has altered the parent menu item.
++    if ($link['plid'] != $rule->plid) {
++      // Update the rule with the new parent.
++      db_update('menu_position_rules')
++        ->fields(array(
++          'menu_name' => $link['menu_name'],
++          'plid' => $link['plid'],
++          ))
++        ->condition('rid', $rule->rid)
++        ->execute();
++    }
++  }
++}
++
++/**
++ * Entity uri callback.
++ */
++function menu_position_rule_uri($rule) {
++  return array(
++    'path' => 'admin/structure/menu-position/edit/' . $rule->rid,
+   );
+ }
+ 
+ /**
++ * Entity label callback.
++ */
++function menu_position_rule_label($rule) {
++  $rule = (object) $rule;
++  return $rule->admin_title;
++}
++
++/**
+  * Implements hook_panels_pane_content_alter().
+  *
+  * Panels are rendered before hook_page_delivery_callback_alter() is called, so
+@@ -243,7 +470,6 @@ function menu_position_menu_link_alter(&$item) {
+  * Implements hook_menu_link_update().
+  */
+ function menu_position_menu_link_update($link) {
+-  module_load_include('inc', 'menu_position', 'menu_position.admin');
+   _menu_position_menu_link_update($link);
+ }
+ 
+@@ -333,9 +559,29 @@ function menu_position_evaluate_rules($context = array(), $use_cache = FALSE) {
+     return $cache[$cache_key];
+   }
+ 
+-  // Retrieve the rules from the database. For speed, we don't call
+-  // menu_position_read_rules() and unserialize the conditions only if needed.
+-  $rules = db_query('SELECT * FROM {menu_position_rules} WHERE enabled = :enabled ORDER BY weight, rid', array(':enabled' => 1));
++  //This actually shaves of more than a few milliseconds if cache hit
++  //and since this code is run for almost all requests it's probably a good idea
++  //to make ugly micro-optimizations such as this one
++  //TODO: flush this cache on save/update etc
++  $rules_cache = cache_get('menu_position_enabled_rules');
++  if(empty($rules_cache)) {
++    $query = new EntityFieldQuery();
++    $query
++      ->entityCondition('entity_type', 'menu_position_rule')
++      ->propertyCondition('enabled', 1)
++      ->propertyOrderBy('weight', 'ASC');
++    $result = $query->execute();
++    if(!empty($result['menu_position_rule'])) {
++      $rules = entity_load('menu_position_rule', array_keys($result['menu_position_rule']));
++    }
++    else {
++      $rules = array();
++    }
++    cache_set('menu_position_enabled_rules', $rules);
++  }
++  else {
++    $rules = $rules_cache->data;
++  }
+ 
+   // Retrieve the list of menus the path is already in.
+   $menu_names = db_query('SELECT menu_name FROM {menu_links} WHERE link_path = :path', array(':path' => $context['path']))->fetchCol();
+@@ -343,7 +589,7 @@ function menu_position_evaluate_rules($context = array(), $use_cache = FALSE) {
+   // Flag that we still need to set the breadcrumb.
+   $set_breadcrumb = TRUE;
+ 
+-  // Examine each rule and check its conditions.
++  // Examine each rule and check its conditions.z
+   foreach ($rules as $rule) {
+ 
+     if (in_array($rule->menu_name, $menu_names, TRUE)) {
+@@ -355,7 +601,6 @@ function menu_position_evaluate_rules($context = array(), $use_cache = FALSE) {
+       // A rule with no conditions always matches.
+       $rule_matches = TRUE;
+       // Go through each condition, ANDing each result.
+-      $rule->conditions = unserialize($rule->conditions);
+       foreach ($rule->conditions as $plugin => $variables) {
+         // Add the current rule and node to the callback's variables.
+         $variables['rule'] = $rule;
+@@ -392,7 +637,6 @@ function menu_position_evaluate_rules($context = array(), $use_cache = FALSE) {
+       $menu_names[] = $rule->menu_name;
+     }
+   }
+-
+   return $cache[$cache_key];
+ }
+ 
+@@ -533,6 +777,25 @@ function menu_position_translated_menu_link_alter(&$item, &$map) {
+   }
+ }
+ 
++function menu_position_load_plugins($plugin_keys = array()) {
++  $plugins = menu_position_get_plugins();
++  if(!empty($plugin_keys)) {
++    $plugins = array_intersect_key($plugins, array_flip($plugin_keys));
++  }
++  foreach($plugins as $plugin_key => $plugin_info) {
++    // Load the specified include file.
++    if (!empty($plugin_info['file'])) {
++      $file = pathinfo($plugin_info['file']);
++      // Allow plugins to be in a sub-directory.
++      if ($file['dirname']) {
++        $file['filename'] = $file['dirname'] . '/' . $file['filename'];
++      }
++      module_load_include($file['extension'], $plugin_info['module'], $file['filename']);
++    }
++  }
++  return $plugins;
++}
++
+ /**
+  * Retrieves a list of information about every rule plugin.
+  */
+@@ -550,17 +813,33 @@ function menu_position_get_plugins() {
+             'file' => '',
+             'form_callback' => $module . '_menu_position_rule_' . $name . '_form',
+             'condition_callback' => $module . '_menu_position_condition_' . $name,
++            'uuid_load_callback' => $module . '_menu_position_condition_' . $name . '_uuid_load',
++            'uuid_presave_callback' => $module . '_menu_position_condition_' . $name . '_uuid_presave',
+           );
+         }
+       }
+     }
+   }
+-
+   return $plugins;
+ }
+ 
+ /**
+- * Loads the include file containing a condition's callback function definition.
++ * Loads the include file containing a condition's form function definition
++ * and returns the callback function name if found.
++ *
++ * @param string $plugin
++ *   The name of the plugin.
++ *
++ * @return string/bool
++ *   The name of the callback function, or FALSE if it could not be found.
++ */
++function menu_position_get_form_callback($plugin) {
++  return _menu_position_get_plugin_callback($plugin, 'form_callback');
++}
++
++/**
++ * Loads the include file containing a condition's callback function definition
++ * and returns the callback function name if found.
+  *
+  * @param string $plugin
+  *   The name of the plugin.
+@@ -569,19 +848,54 @@ function menu_position_get_plugins() {
+  *   The name of the callback function, or FALSE if it could not be found.
+  */
+ function menu_position_get_condition_callback($plugin) {
+-  $plugins = menu_position_get_plugins();
+-  $callback = !empty($plugins[$plugin]['condition_callback']) ? $plugins[$plugin]['condition_callback'] : FALSE;
++  return _menu_position_get_plugin_callback($plugin, 'condition_callback');
++}
++
++/**
++ * Loads the include file containing a condition's uuid load callback
++ * function definition and returns the callback function name if found.
++ *
++ * @param string $plugin
++ *   The name of the plugin.
++ *
++ * @return string/bool
++ *   The name of the callback function, or FALSE if it could not be found.
++ */
++function menu_position_get_uuid_load_callback($plugin) {
++  return _menu_position_get_plugin_callback($plugin, 'uuid_load_callback');
++}
++
++/**
++ * Loads the include file containing a condition's uuid presave callback
++ * function definition and returns the callback function name if found.
++ *
++ * @param string $plugin
++ *   The name of the plugin.
++ *
++ * @return string/bool
++ *   The name of the callback function, or FALSE if it could not be found.
++ */
++function menu_position_get_uuid_presave_callback($plugin) {
++  return _menu_position_get_plugin_callback($plugin, 'uuid_presave_callback');
++}
++
++/**
++ * Helper function for getting plugin callbacks.
++ *
++ * @param string $plugin
++ *   The name of the plugin.
++ *
++ * * @param string $callback_key
++ *   The key name of the callback.
++ *
++ * @return string/bool
++ *   The name of the callback function, or FALSE if it could not be found.
++ */
++function _menu_position_get_plugin_callback($plugin, $callback_key) {
++  $plugins = menu_position_load_plugins(array($plugin));
++  $callback = !empty($plugins[$plugin][$callback_key]) ? $plugins[$plugin][$callback_key] : FALSE;
+ 
+   if ($callback && !function_exists($callback)) {
+-    // Load the specified include file.
+-    if (!empty($plugins[$plugin]['file'])) {
+-      $file = pathinfo($plugins[$plugin]['file']);
+-      // Allow plugins to be in a sub-directory.
+-      if ($file['dirname']) {
+-        $file['filename'] = $file['dirname'] . '/' . $file['filename'];
+-      }
+-      module_load_include($file['extension'], $plugins[$plugin]['module'], $file['filename']);
+-    }
+     // Note if the callback still cannot be found.
+     if (!function_exists($callback)) {
+       $callback = FALSE;
+@@ -591,6 +905,8 @@ function menu_position_get_condition_callback($plugin) {
+   return $callback;
+ }
+ 
++
++
+ /**
+  * Return a menu link for the given node.
+  *
+diff --git a/plugins/menu_position.content_type.inc b/plugins/menu_position.content_type.inc
+index d1690e9..b4a7bf8 100644
+--- a/plugins/menu_position.content_type.inc
++++ b/plugins/menu_position.content_type.inc
+@@ -65,6 +65,7 @@ function menu_position_menu_position_rule_content_type_form_submit(&$form, &$for
+   // The user has added our plugin's form elements as a condition for the rule.
+   if (!empty($form_state['values']['content_type'])) {
+     // Remove any 0 valued options.
++    // array_filter?
+     foreach ($form_state['values']['content_type'] as $key => $value) {
+       if ($value === 0) {
+         unset($form_state['values']['content_type'][$key]);
+diff --git a/plugins/menu_position.user_page.inc b/plugins/menu_position.user_page.inc
+index e982027..575bc88 100644
+--- a/plugins/menu_position.user_page.inc
++++ b/plugins/menu_position.user_page.inc
+@@ -30,7 +30,7 @@ function menu_position_menu_position_condition_user_page($variables) {
+     return FALSE;
+   }
+ 
+-  if (!empty($args[2]) && ($args[2] == 'add' || $args[2] == 'edit')) {
++  if (!empty($args[2])) {
+     // Short circuit if we are on the add or edit page.
+     return FALSE;
+   }

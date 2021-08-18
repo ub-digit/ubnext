@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Expose actions and triggers to features.
+ */
+
+/**
+ * Implements hook_features_api().
+ */
+function features_actions_triggers_features_api() {
+  return array(
+    'features_actions_triggers_actions' => array(
+      'name' => t('Actions'),
+      'feature_source' => TRUE,
+      'default_hook' => 'features_actions_triggers_export_actions_default',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED_COMMON,
+      'file' => drupal_get_path('module', 'features_actions_triggers') . '/features_actions_triggers_actions.features.inc',
+    ),
+    'features_actions_triggers_triggers' => array(
+      'name' => t('Triggers'),
+      'feature_source' => TRUE,
+      'default_hook' => 'features_actions_triggers_export_triggers_default',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED_COMMON,
+      'file' => drupal_get_path('module', 'features_actions_triggers') . '/features_actions_triggers_triggers.features.inc',
+    ),
+  );
+}

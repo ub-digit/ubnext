@@ -1,0 +1,158 @@
+diff --git a/includes/scald.views_default.inc b/includes/scald.views_default.inc
+index 628b564..fd1fc51 100644
+--- a/includes/scald.views_default.inc
++++ b/includes/scald.views_default.inc
+@@ -142,6 +142,11 @@ function scald_views_default_views() {
+   $handler->display->display_options['fields']['representation']['table'] = 'scald_atoms';
+   $handler->display->display_options['fields']['representation']['field'] = 'representation';
+   $handler->display->display_options['fields']['representation']['element_label_colon'] = FALSE;
++  $handler->display->display_options['fields']['representation']['context'] = 'library';
++  /* Field: Atom: Actions */
++  $handler->display->display_options['fields']['actions']['id'] = 'actions';
++  $handler->display->display_options['fields']['actions']['table'] = 'scald_atoms';
++  $handler->display->display_options['fields']['actions']['field'] = 'actions';
+   /* Sort criterion: Atom: Scald ID */
+   $handler->display->display_options['sorts']['sid']['id'] = 'sid';
+   $handler->display->display_options['sorts']['sid']['table'] = 'scald_atoms';
+diff --git a/modules/library/scald_dnd_library/scald_dnd_library.module b/modules/library/scald_dnd_library/scald_dnd_library.module
+index dae3a1a..f3c8afc 100644
+--- a/modules/library/scald_dnd_library/scald_dnd_library.module
++++ b/modules/library/scald_dnd_library/scald_dnd_library.module
+@@ -150,7 +150,7 @@ function scald_dnd_library_scald_contexts() {
+       ),
+     ),
+     'sdl_library_item' => array(
+-      'title' => t('Library item'),
++      'title' => t('DND Library item'),
+       'description' => t('The Library Rep'),
+       'render_language' => 'XHTML',
+       'parseable'       => FALSE,
+@@ -215,6 +215,11 @@ function theme_sdl_library_item($variables) {
+   // Force all links to open in a new window
+   foreach ($links as $action => $link) {
+     $links[$action]['attributes']['target'] = '_blank';
++    // The 'edit' action supports CTools Modal.
++    if ($action == 'edit' || $action == 'delete') {
++      $links[$action]['attributes']['class'] = array('ctools-use-modal', 'ctools-modal-custom-style');
++      $links[$action]['href'] .= '/nojs';
++    }
+   }
+   // The Insert link. Use the "_" prefix to avoid collision with possible
+   // "insert" action.
+@@ -350,6 +355,7 @@ function scald_dnd_library_views_api() {
+ function scald_dnd_library_image_default_styles() {
+   $presets = array();
+   $presets['library'] = array(
++    'label' => 'Scald DND Library',
+     'effects' => array(
+       array(
+         'name' => 'image_scale',
+diff --git a/scald.module b/scald.module
+index 5682f7d..9275f10 100644
+--- a/scald.module
++++ b/scald.module
+@@ -1531,9 +1531,37 @@ function _scald_system_contexts() {
+       'parseable'       => TRUE,
+       'formats'         => array(),
+     ),
++    'library'    => array(
++      'title' => t('Library'),
++      'description'     => t('Built-in Context for a compact teaser view of an atom in the atoms library view.'),
++      'render_language' => 'XHTML',
++      'parseable'       => TRUE,
++      'formats'         => array(),
++    ),
+   );
+ }
+ 
++/**
++ * Implements hook_image_default_styles().
++ */
++function scald_image_default_styles() {
++  $styles = array();
++  $styles['scald_library_atom'] = array(
++    'label' => 'Scald Library',
++    'effects' => array(
++      array(
++        'name' => 'image_scale',
++        'data' => array(
++          'width' => '96',
++          'height' => '',
++          'upscale' => 0,
++        ),
++        'weight' => '0',
++      ),
++    ),
++  );
++  return $styles;
++}
+ 
+ /*******************************************************************************
+  * SCALD HOOK IMPLEMENTATIONS
+@@ -1639,6 +1667,20 @@ function scald_scald_render($atom, $context, $options = array()) {
+       $output = theme('scald_render_error', array('context' => $context, 'message' => t('Atom deleted!'), 'atom' => $atom));
+       break;
+ 
++    case 'library':
++      if (!empty($atom->rendered->thumbnail_transcoded_url)) {
++        $thumbnail_url = $atom->rendered->thumbnail_transcoded_url;
++      }
++      else {
++        if(file_valid_uri($atom->thumbnail_source)) {
++          $thumbnail_url = image_style_url('scald_library_atom', $atom->thumbnail_source);
++        }
++        else {
++          $thumbnail_url = file_create_url($atom->thumbnail_source);
++        }
++      }
++      $output = theme('scald_library_atom', array('atom' => $atom, 'thumbnail_url' => $thumbnail_url));
++      break;
+     default:
+       // If this is a custom context created through the UI, we use a special
+       // render.
+@@ -2441,6 +2483,9 @@ function scald_theme($existing, $type, $theme, $path) {
+     'scald_render_error' => array(
+       'arguments' => array('type' => NULL, 'message' => NULL, 'atom' => NULL),
+     ),
++    'scald_library_atom' => array(
++      'arguments' => array('atom' => NULL, 'thumbnail_url' => NULL),
++    ),
+   );
+ }
+ 
+@@ -2469,6 +2514,17 @@ function theme_scald_render_error($vars) {
+ }
+ 
+ /**
++ * Renders a scald library atom representation.
++ */
++function theme_scald_library_atom($vars) {
++  return theme('image', array(
++    'path' => $vars['thumbnail_url'],
++    'alt' => $vars['atom']->title,
++    'title' => $vars['atom']->title,
++  ));
++}
++
++/**
+  * Processes variables for scald-atom.tpl.php
+  *
+  * The $variables array contains the following arguments:
+@@ -2623,16 +2679,8 @@ function scald_atom_user_build_actions_links($atom, $query = NULL) {
+       $links[$action] = array(
+         'title' => $actions[$action]['title'],
+         'href' => 'atom/' . $atom->sid . ($action == 'view' ? '' : "/$action"),
++        'attributes' => array(),
+       );
+-
+-      // The 'edit' action supports CTools Modal.
+-      if ($action == 'edit' || $action == 'delete') {
+-        $links[$action]['attributes'] = array(
+-          'class' => array('ctools-use-modal', 'ctools-modal-custom-style'),
+-        );
+-        $links[$action]['href'] .= '/nojs';
+-      }
+-
+       if ($query) {
+         $links[$action]['query'] = $query;
+       }

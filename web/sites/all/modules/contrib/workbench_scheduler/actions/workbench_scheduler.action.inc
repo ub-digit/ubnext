@@ -149,18 +149,25 @@ function workbench_scheduler_schedules_action_submit($form, &$form_state) {
  * @param array $context
  */
 function workbench_scheduler_schedules_action(&$entity, $context = array()) {
+  
+  // Only save schedules for content that supports them.
+  $types_moderated = workbench_moderation_moderate_node_types();
+  $is_moderated = (in_array($entity->type, $types_moderated)) ? TRUE : FALSE;
+  $schedules = workbench_scheduler_load_type_schedules($entity->type);
 
-  $entity->workbench_schedule->sid = $context['workbench_scheduler_sid'];
+  if ($is_moderated && !empty($schedules)) {
+    $entity->workbench_schedule->sid = $context['workbench_scheduler_sid'];
 
-  if (isset($context['workbench_scheduler_start_date'])) {
-    $entity->workbench_schedule->start_date = strtotime($context['workbench_scheduler_start_date']);
+    if (isset($context['workbench_scheduler_start_date'])) {
+      $entity->workbench_schedule->start_date = strtotime($context['workbench_scheduler_start_date']);
+    }
+
+    if (isset($context['workbench_scheduler_end_date'])) {
+      $entity->workbench_schedule->end_date = strtotime($context['workbench_scheduler_end_date']);
+    }
+
+    // Change vid to latest.
+    $live_revision = workbench_moderation_node_current_load($entity);
+    $entity->vid = $live_revision->vid;
   }
-
-  if (isset($context['workbench_scheduler_end_date'])) {
-    $entity->workbench_schedule->end_date = strtotime($context['workbench_scheduler_end_date']);
-  }
-
-  // Change vid to latest.
-  $live_revision = workbench_moderation_node_current_load($entity);
-  $entity->vid = $live_revision->vid;
 }

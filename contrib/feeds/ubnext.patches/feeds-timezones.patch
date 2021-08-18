@@ -1,0 +1,35 @@
+diff --git a/web/sites/all/modules/contrib/feeds/plugins/FeedsParser.inc b/web/sites/all/modules/contrib/feeds/plugins/FeedsParser.inc
+index 1e1d329..6e0e69f 100644
+--- a/web/sites/all/modules/contrib/feeds/plugins/FeedsParser.inc
++++ b/web/sites/all/modules/contrib/feeds/plugins/FeedsParser.inc
+@@ -706,16 +706,13 @@ class FeedsDateTime extends DateTime {
+     // Create and set time zone separately, PHP 5.2.6 does not respect time zone
+     // argument in __construct().
+     parent::__construct($time);
+-    $tz = $tz ? $tz : new DateTimeZone("UTC");
+-    $this->setTimeZone($tz);
+ 
+-    // Verify that timezone has not been specified as an offset.
+-    if (!preg_match('/[a-zA-Z]/', $this->getTimezone()->getName())) {
+-      $this->setTimezone(new DateTimeZone("UTC"));
+-    }
++    // Set granularity.
++    $this->setGranularityFromTime($time);
+ 
+-    // Finally set granularity.
+-    $this->setGranularityFromTime($time, $tz);
++    // Set timezone.
++    $tz = $tz ? $tz : new DateTimeZone("UTC");
++    $this->setTimeZone($tz);
+   }
+ 
+   /**
+@@ -811,7 +808,7 @@ class FeedsDateTime extends DateTime {
+    * Protected function to find the granularity given by the arguments to the
+    * constructor.
+    */
+-  protected function setGranularityFromTime($time, $tz) {
++  protected function setGranularityFromTime($time, $tz = NULL) {
+     $this->granularity = array();
+     $temp = date_parse($time);
+     // This PHP method currently doesn't have resolution down to seconds, so if

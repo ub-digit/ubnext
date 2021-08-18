@@ -1,0 +1,100 @@
+diff --git a/includes/slate.admin.inc b/includes/slate.admin.inc
+index 50ee6e6..6ac1081 100644
+--- a/includes/slate.admin.inc
++++ b/includes/slate.admin.inc
+@@ -19,6 +19,8 @@ function slate_list_page($form, &$form_state) {
+ 
+   $rows = array();
+ 
++  uasort($slates, '_slate_sort_by_name');
++
+   foreach ($slates as $slate => $slate_info) {
+     $row = array();
+ 
+@@ -60,3 +62,10 @@ function slate_settings_page($form, &$form_state) {
+ 
+   return system_settings_form($form);
+ }
++
++/**
++ * Sort slates by name.
++ */
++function _slate_sort_by_name($left, $right) {
++  return strnatcmp($left['name'], $right['name']);
++}
+diff --git a/plugins/slate_model/entity.class.php b/plugins/slate_model/entity.class.php
+index 5299e6f..841fb43 100644
+--- a/plugins/slate_model/entity.class.php
++++ b/plugins/slate_model/entity.class.php
+@@ -83,6 +83,12 @@ class SlateModelPluginEntityWrapper extends EntityDrupalWrapper {
+    */
+   public function __isset($name) {
+     if (parent::__isset($name)) {
++      $info = $this->get($name)->info();
++
++      if (!empty($info['computed'])) {
++        return TRUE;
++      }
++
+       $value = $this->get($name)->value();
+ 
+       return isset($value);
+diff --git a/slate.module b/slate.module
+index 9485d56..aefcc09 100644
+--- a/slate.module
++++ b/slate.module
+@@ -383,6 +383,10 @@ function slate_entity_info_alter(&$info) {
+     }
+ 
+     foreach ($slate_info['view_mode'] as $type => $bundles) {
++      if (empty($info[$type])) {
++        continue;
++      }
++
+       if (!isset($view_callback[$type])) {
+         $view_callback[$type] = isset($info[$type]['view callback']) ? $info[$type]['view callback'] : 'entity_view';
+       }
+@@ -391,6 +395,31 @@ function slate_entity_info_alter(&$info) {
+       $info[$type]['view callback'] = 'slate_entity_view_callback';
+       $info[$type]['entity view callback'] = $view_callback[$type];
+ 
++      // add slate info to all bundles if '*' is used.
++      if (!empty($bundles['*'])) {
++        $view_mode = $bundles['*'];
++
++        foreach (array_keys($info[$type]['bundles']) as $bundle) {
++          // skip bundles that already has an slate defined.
++          if (!empty($info[$type]['bundles'][$bundle]['slate'][$view_mode])) {
++            continue;
++          }
++
++          // add slate info to bundle.
++          $info[$type]['bundles'][$bundle]['slate'][$view_mode] = $slate;
++
++          if (!empty($info[$type]['view modes'][$view_mode])) {
++            continue;
++          }
++
++          $info[$type]['view modes'][$view_mode] = array(
++            'label' => $view_mode, // @todo make nice case. do it. do it now.
++            'custom settings' => FALSE,
++          );
++        }
++      }
++
++      // add slate info to specific bundles.
+       foreach ($bundles as $bundle => $view_mode) {
+         if (empty($info[$type]['bundles'][$bundle])) {
+           continue;
+@@ -442,8 +471,10 @@ function slate_entity_view_callback($entities, $view_mode = 'full', $langcode =
+     }
+ 
+     $build[$key] = array(
+-      '#markup' => slate_render($slates[$view_mode], array($bundle => $entity))
++      '#markup' => slate_render($slates[$view_mode], array('entity' => $entity))
+     );
++
++    drupal_alter(array('slate_' . $entity_type . '_view', 'slate_entity_view'), $build, $view_mode, $entity_type);
+   }
+ 
+   return array($entity_type => $build);

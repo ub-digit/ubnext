@@ -1,0 +1,101 @@
+diff --git a/entity_translation_i18n_menu/entity_translation_i18n_menu.module b/entity_translation_i18n_menu/entity_translation_i18n_menu.module
+index 572f0e0..13bbaa0 100644
+--- a/entity_translation_i18n_menu/entity_translation_i18n_menu.module
++++ b/entity_translation_i18n_menu/entity_translation_i18n_menu.module
+@@ -185,8 +185,96 @@ function entity_translation_i18n_menu_form(&$form, &$form_state) {
+           $form['menu']['link']['tset']['#disabled'] = TRUE;
+         }
+       }
++      $options = entity_translation_i18n_menu_parent_options(
++        menu_get_menus(),
++        $source_menu['mlid'] ? $source_menu : $node->type,
++        $langcode,
++        $node->type
++      );
++      $form['menu']['link']['parent']['#options'] = $options;
++    }
++  }
++}
++
++
++/**
++ * Return a list of menu items that are valid possible parents for the given menu item.
++ * Based on manu_parent_options() but with the difference that menu items will be
++ * localized with respect to form language.
++ * @param $menus
++ *   An array of menu names and titles, such as from menu_get_menus().
++ * @param $item
++ *   The menu item or the node type for which to generate a list of parents.
++ *   If $item['mlid'] == 0 then the complete tree is returned.
++ * @param $langcode
++ *   Language code of the language for menu localization
++ * @param $type
++ *   The node type for which to generate a list of parents.
++ *   If $item itself is a node type then $type is ignored.
++ * @return
++ *   An array of menu link titles keyed on the a string containing the menu name
++ *   and mlid. The list excludes the given item and its children.
++ *
++ */
++function entity_translation_i18n_menu_parent_options($menus, $item, $langcode, $type = '') {
++  $available_menus = array();
++  if (!is_array($item)) {
++    // If $item is not an array then it is a node type.
++    // Use it as $type and prepare a dummy menu item for _menu_get_options().
++    $type = $item;
++    $item = array('mlid' => 0);
++  }
++  if (empty($type)) {
++    // If no node type is set, use all menus given to this function.
++    $available_menus = $menus;
++  }
++  else {
++    // If a node type is set, use all available menus for this type.
++    $type_menus = variable_get('menu_options_' . $type, array('main-menu' => 'main-menu'));
++    foreach ($type_menus as $menu) {
++      $available_menus[$menu] = $menu;
++    }
++  }
++
++  return _entity_translation_i18n_menu_get_options($menus, $available_menus, $item, $langcode);
++}
++
++/**
++ * Helper function to "unset" the i18n_menu flag so that menu items can be re-translated
++ */
++function _entity_translation_i18_menu_unprocess_tree($tree) {
++  foreach ($tree as &$item) {
++    $item['link']['i18n_menu'] = FALSE;
++    if (!empty($item['below'])) {
++      $item['below'] = _entity_translation_i18_menu_unprocess_tree($item['below']);
++    }
++  }
++  return $tree;
++}
++
++/**
++ * Helper function to get the items of the given menu.
++ */
++function _entity_translation_i18n_menu_get_options($menus, $available_menus, $item, $langcode) {
++  // If the item has children, there is an added limit to the depth of valid parents.
++  if (isset($item['parent_depth_limit'])) {
++    $limit = $item['parent_depth_limit'];
++  }
++  else {
++    $limit = _menu_parent_depth_limit($item);
++  }
++
++  $options = array();
++  foreach ($menus as $menu_name => $title) {
++    if (isset($available_menus[$menu_name])) {
++      $tree = menu_tree_all_data($menu_name, NULL);
++      $tree = _entity_translation_i18_menu_unprocess_tree($tree);
++      $tree = i18n_menu_localize_tree($tree, $langcode);
++      $options[$menu_name . ':0'] = '<' . $title . '>';
++      _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
+     }
+   }
++  return $options;
+ }
+ 
+ /**

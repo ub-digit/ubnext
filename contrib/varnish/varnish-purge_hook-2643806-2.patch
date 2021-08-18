@@ -1,0 +1,12 @@
+diff --git a/varnish.module b/varnish.module
+index 8342e0c..89ed366 100644
+--- a/varnish.module
++++ b/varnish.module
+@@ -185,6 +185,7 @@ function varnish_purge($host, $pattern) {
+       // module where we remove a ban type.
+       watchdog('varnish', 'Varnish ban type is out of range.', array(), WATCHDOG_ERROR);
+   }
++  module_invoke_all('varnish_purge', $host, $pattern);
+ }
+ 
+ /**

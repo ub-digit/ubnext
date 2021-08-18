@@ -1,0 +1,13 @@
+diff --git a/entity_menu_links.module b/entity_menu_links.module
+index 348998f..754ab47 100644
+--- a/entity_menu_links.module
++++ b/entity_menu_links.module
+@@ -217,7 +217,7 @@ function entity_menu_links_parent_properties() {
+  */
+ function entity_menu_links_linked_entity($menu_link, $universalised = FALSE) {
+   static $linked_entities = array();
+-  $cid = ($universalised ? 'uuid' : 'id') . $menu_link->mlid;
++  $cid = $universalised ? $menu_link->uuid : $menu_link->mlid;
+ 
+   if (isset($linked_entities[$cid])) {
+     return $linked_entities[$cid];

@@ -1,0 +1,29 @@
+<?php
+
+function menu_position_schema_alter(&$schema = array()) {
+  $schema['menu_position_rules']['fields']['uuid'] = array(
+    'type' => 'char',
+    'length' => 36,
+    'not null' => FALSE,
+    'default' => NULL,
+    'description' => 'The Universally Unique Identifier.',
+  );
+  $schema['menu_position_rules']['unique keys']['uuid'] = array('uuid'); //TODO: Pointless?
+}
+
+function menu_position_uuid_install() {
+  if(!db_field_exists('menu_position_rules', 'uuid')) {
+    //TODO: verify
+    $schema = drupal_get_schema('menu_position_rules');
+    //TODO: unique contraint + more than one rule = problems? Allow null? Yes!?
+    db_add_field('menu_position_rules', 'uuid', $schema['fields']['uuid']);
+    db_add_unique_key('menu_position_rules', 'uuid', array('uuid'));
+    uuid_sync_all();
+  }
+  //TODO: provide uuid_entity_features hook allowing enabled per default!
+}
+
+function menu_position_uuid_uninstall() {
+  db_drop_field('menu_position_rules', 'uuid');
+ //db_drop_unique_key('menu_position_rules', 'uuid');
+}

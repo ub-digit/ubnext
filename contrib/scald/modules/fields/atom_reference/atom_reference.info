@@ -1,0 +1,12 @@
+name = Atom Reference
+package = Scald
+core = 7.x
+
+dependencies[] = field
+dependencies[] = scald
+dependencies[] = dnd
+
+files[] = atom_reference.test
+; Migrate handler
+files[] = atom_reference.migrate.inc
+

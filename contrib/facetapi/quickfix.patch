@@ -1,0 +1,13 @@
+diff --git a/plugins/facetapi/url_processor_standard.inc b/plugins/facetapi/url_processor_standard.inc
+index 7f29960..13cc876 100644
+--- a/plugins/facetapi/url_processor_standard.inc
++++ b/plugins/facetapi/url_processor_standard.inc
+@@ -91,6 +91,8 @@ class FacetapiUrlProcessorStandard extends FacetapiUrlProcessor {
+    * Implements FacetapiUrlProcessor::setBreadcrumb().
+    */
+   public function setBreadcrumb() {
++    //TODO: FIX THIS PROPERLY BY SUBCLASSING URL_PROCESSOR (or patch)
++    return;
+     $breadcrumb = drupal_get_breadcrumb();
+ 
+     // Gets search keys and active items form the adapter.

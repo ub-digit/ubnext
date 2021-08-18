@@ -1,0 +1,85 @@
+diff --git a/entity_menu_links.install b/entity_menu_links.install
+index 2bf9e7f..9520fc5 100644
+--- a/entity_menu_links.install
++++ b/entity_menu_links.install
+@@ -53,11 +53,11 @@ function entity_menu_links_install_revisions() {
+     $menu_links_fields = str_replace('external', '[external]', $menu_links_fields);
+   }
+ 
+-  $query = "INSERT INTO {menu_links_revision} ($menu_links_revision_fields) SELECT $menu_links_fields FROM {menu_links} WHERE module = :module";
+-  db_query($query, array(':module' => 'menu'));
++  $query = "INSERT INTO {menu_links_revision} ($menu_links_revision_fields) SELECT $menu_links_fields FROM {menu_links} WHERE module <> :module";
++  db_query($query, array(':module' => 'system'));
+ 
+-  $query = 'UPDATE {menu_links} SET vid = (SELECT vid FROM {menu_links_revision} WHERE {menu_links}.mlid = mlid) WHERE module = :module';
+-  db_query($query, array(':module' => 'menu'));
++  $query = 'UPDATE {menu_links} SET vid = (SELECT vid FROM {menu_links_revision} WHERE {menu_links}.mlid = mlid) WHERE module <> :module';
++  db_query($query, array(':module' => 'system'));
+ }
+ 
+ /**
+diff --git a/entity_menu_links.module b/entity_menu_links.module
+index 4688045..ded4939 100644
+--- a/entity_menu_links.module
++++ b/entity_menu_links.module
+@@ -72,7 +72,7 @@ function entity_menu_links_label($menu_link) {
+  * Implements hook_menu_link_alter().
+  */
+ function entity_menu_links_menu_link_alter(&$menu_link) {
+-  if (isset($menu_link['module']) && $menu_link['module'] == 'menu') {
++  if (isset($menu_link['module']) && $menu_link['module'] !== 'system') {
+     // Ensure defaults are set as hook_menu_link_alter() is invoked before the
+     // defaults are applied.
+     // @see https://www.drupal.org/node/929176
+@@ -97,7 +97,7 @@ function entity_menu_links_menu_link_alter(&$menu_link) {
+  * Implements hook_menu_link_insert().
+  */
+ function entity_menu_links_menu_link_insert($menu_link) {
+-  if ($menu_link['module'] == 'menu') {
++  if ($menu_link['module'] !== 'system') {
+     if (empty($menu_link['uuid'])) {
+       $menu_link['uuid'] = uuid_generate();
+     }
+@@ -120,7 +120,7 @@ function entity_menu_links_menu_link_insert($menu_link) {
+  * Implements hook_menu_link_update().
+  */
+ function entity_menu_links_menu_link_update($menu_link) {
+-  if ($menu_link['module'] == 'menu') {
++  if ($menu_link['module'] !== 'system') {
+     $original = isset($menu_link['original_item']) ? $menu_link['original_item'] : (array) entity_load_unchanged('menu_link', $menu_link['mlid']);
+     $menu_link['uuid'] = empty($original['uuid']) ? uuid_generate() : $original['uuid'];
+     $menu_link['vid'] = entity_menu_links_insert_revision($menu_link);
+@@ -142,7 +142,7 @@ function entity_menu_links_menu_link_update($menu_link) {
+  * Implements hook_menu_link_delete().
+  */
+ function entity_menu_links_menu_link_delete($menu_link) {
+-  if ($menu_link['module'] == 'menu') {
++  if ($menu_link['module'] !== 'system') {
+     db_delete('menu_links_revision')
+       ->condition('mlid', $menu_link['mlid'])
+       ->execute();
+@@ -272,9 +272,9 @@ function entity_menu_links_entity_dependencies($entity, $entity_type) {
+     $menu_links = db_query("
+       SELECT mlid FROM {menu_links}
+       WHERE mlid IN ($plids)
+-      AND module = :module",
++      AND module <> :module",
+       array(
+-        ':module' => 'menu',
++        ':module' => 'system',
+       )
+     )->fetchAllAssoc('mlid');
+ 
+diff --git a/entity_menu_links.services.inc b/entity_menu_links.services.inc
+index 52927d1..e0b634a 100644
+--- a/entity_menu_links.services.inc
++++ b/entity_menu_links.services.inc
+@@ -240,7 +240,7 @@ function entity_menu_links_services_delete($mlid) {
+  **/
+ function entity_menu_links_services_index($page, $fields, $parameters, $page_size) {
+   $info = entity_get_info('menu_link');
+-  $menu_select = db_select($info['base table'], 't')->condition('module', 'menu')->orderBy('mlid', 'DESC');
++  $menu_select = db_select($info['base table'], 't')->condition('module', 'system', '<>')->orderBy('mlid', 'DESC');
+ 
+   services_resource_build_index_query($menu_select, $page, $fields, $parameters, $page_size, 'menu_link');
+ 

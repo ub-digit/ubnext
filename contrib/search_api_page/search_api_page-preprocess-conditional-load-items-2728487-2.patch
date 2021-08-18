@@ -1,0 +1,18 @@
+diff --git a/search_api_page.pages.inc b/search_api_page.pages.inc
+index 8c8bfda..4dc5cd5 100644
+--- a/search_api_page.pages.inc
++++ b/search_api_page.pages.inc
+@@ -265,9 +265,10 @@ function template_preprocess_search_api_page_results(array &$variables) {
+   $results += array(
+     'results' => array(),
+   );
+-
+-  $variables['items'] = array();
+-  if ($results['results']) {
++  $variables += array(
++    'items' => array(),
++  );
++  if ($results['results'] && empty($variables['items'])) {
+     $variables['items'] = $variables['index']->loadItems(array_keys($results['results']));
+   }
+   $variables['result_count'] = $results['result count'];

@@ -1,0 +1,8 @@
+name = Entity Reference feeds
+description = Provides feeds integration for entityreference for mapping directly to properties of referenced entities
+core = 7.x
+package = Feeds
+dependencies[] = feeds
+dependencies[] = entityreference
+dependencies[] = entity
+configure = admin/config/content/entityreference_feeds

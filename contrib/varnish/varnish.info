@@ -1,0 +1,7 @@
+name = Varnish 
+description = "Provides integration with the Varnish HTTP accelerator."
+core = 7.x
+configure = admin/config/development/varnish
+package = Caching
+files[] = varnish.cache.inc
+files[] = varnish.test

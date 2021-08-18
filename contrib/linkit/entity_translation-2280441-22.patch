@@ -1,0 +1,124 @@
+diff --git a/plugins/linkit_search/entity.class.php b/plugins/linkit_search/entity.class.php
+index 853f6f5..fda9991 100644
+--- a/plugins/linkit_search/entity.class.php
++++ b/plugins/linkit_search/entity.class.php
+@@ -202,31 +202,103 @@ class LinkitSearchPluginEntity extends LinkitSearchPlugin {
+    * Implements LinkitSearchPluginInterface::fetchResults().
+    */
+   public function fetchResults($search_string) {
+-    // If the $search_string is not a string, something is wrong and an empty
+-    // array is returned.
++    // Support for the Title module: check for the search string in the entity
++    // property (no translation enabled via the Title module) OR in the
++    // (translatable) field that replaces the label property.
++    //
++    // EFQ does not support OR conditions, so we just run 2 queries. We could
++    // have done this with a query_alter hook as well, but then we would depend
++    // on running on a SQL database, while we now restrict ourselves to pure
++    // EFQ.
++    return array_merge(
++      $this->fetchResultsByPropertyOrLabel($search_string, FALSE),
++      $this->fetchResultsByPropertyOrLabel($search_string, TRUE)
++    );
++  }
++
++  /**
++   * Returns a list of entities that either match by label or by its field
++   * replacement.
++   *
++   * @param string $search_string
++   *   The string to search for.
++   * @param bool $checkByField
++   *   TRUE if to check by the field that replaces the label property,
++   *   FALSE if to check by the entity property for the label.
++   *
++   * @return array
++   *   An array of matching entities.
++   */
++  protected function fetchResultsByPropertyOrLabel($search_string, $checkByField) {
+     $matches = array();
+ 
+-    // Get the EntityFieldQuery instance.
++    // Return no matches if we should check for the field but no field
++    // replacement is done.
++    if ($checkByField && empty($this->entity_info['field replacement'][$this->entity_field_label])) {
++      return $matches;
++    }
++
++    // Bundle handling:
++    // If the entity type does not support bundles we have another quick return
++    // if:
++    //   we should check for the field and no field replacement is done
++    //   OR we should check for the property and field replacement is done.
++    if (!isset($this->entity_key_bundle)) {
++      if ($checkByField === !empty($this->entity_info['field replacement'][$this->entity_field_label])) {
++        return $matches;
++      }
++    }
++    else {
++      // The entity type does support bundles:
++      // Get the bundles to check: those indicated in the config or all.
++      $bundleRestrictions = !empty($this->conf['bundles']) ? array_filter($this->conf['bundles']) : array();
++      $bundleRestrictions = !empty($bundleRestrictions) ? $bundleRestrictions : $this->entity_info['bundles'];
++      // if the function title_field_replacement_enabled() does not exist, the
++      // title module is not enabled and np replacements are done at all.
++      $title_module_enabled = function_exists('title_field_replacement_enabled');
++      // Filter these bundles further based on $checkByField and whether labels
++      // for this bundle are replaced or not.
++      $bundles = array();
++      foreach ($bundleRestrictions as $bundle) {
++        $is_replaced = $title_module_enabled && title_field_replacement_enabled($this->plugin['entity_type'], $bundle, $this->entity_field_label);
++        if ($is_replaced === $checkByField) {
++          $bundles[] = $bundle;
++        }
++      }
++      // Return if the set of bundles to restrict the results to is empty.
++      if (empty($bundles)) {
++        return $matches;
++      }
++    }
++
+     $this->getQueryInstance();
+ 
+-    // Add the search condition to the query object.
+-    $this->query->propertyCondition($this->entity_field_label,
+-            '%' . db_like($search_string) . '%', 'LIKE')
+-        ->addTag('linkit_entity_autocomplete')
+-        ->addTag('linkit_' . $this->plugin['entity_type'] . '_autocomplete');
++    // Filter on bundle if bundles are enabled for this entity type and there
++    // are bundles to exclude.
++    if (!empty($bundles) && count($bundles) < count($this->entity_info['bundles'])) {
++      $this->query->propertyCondition($this->entity_key_bundle, $bundles, 'IN');
++    }
++
++    // Add the search condition.
++    $search_value = '%' . db_like($search_string) . '%';
++    if ($checkByField) {
++      // Search in the field that replaces the label.
++      $field_name = $this->entity_info['field replacement'][$this->entity_field_label]['field']['field_name'];
++      $this->query->fieldCondition($field_name, 'value', $search_value, 'LIKE');
++    }
++    else {
++      // Look in the label property.
++      $this->query->propertyCondition($this->entity_field_label, $search_value, 'LIKE');
++    }
++
++    // Add tags to denote that this is a query from Linkit.
++    $this->query->addTag('linkit_entity_autocomplete')
++      ->addTag('linkit_' . $this->plugin['entity_type'] . '_autocomplete');
+ 
+     // Add access tag for the query.
+     // There is also a runtime access check that uses entity_access().
+     $this->query->addTag($this->plugin['entity_type'] . '_access');
+ 
+-    // Bundle check.
+-    if (isset($this->entity_key_bundle) && isset($this->conf['bundles']) ) {
+-      $bundles = array_filter($this->conf['bundles']);
+-      if ($bundles) {
+-        $this->query->propertyCondition($this->entity_key_bundle, $bundles, 'IN');
+-      }
+-    }
+-
+     // Execute the query.
+     $result = $this->query->execute();
+ 
