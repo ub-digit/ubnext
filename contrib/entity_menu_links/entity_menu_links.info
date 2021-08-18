@@ -1,0 +1,7 @@
+name = Entity menu links
+description = "Converts menu_links to entities."
+core = 7.x
+dependencies[] = entity
+dependencies[] = menu
+dependencies[] = uuid
+files[] = entity_menu_links.controller.inc

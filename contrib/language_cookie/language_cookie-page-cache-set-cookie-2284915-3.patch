@@ -1,0 +1,21 @@
+diff --git a/language_cookie.module b/language_cookie.module
+index 780ae6b..53e8188 100644
+--- a/language_cookie.module
++++ b/language_cookie.module
+@@ -219,6 +219,8 @@ function _language_cookie_get_language() {
+   // first valid language found.
+   $negotiation = variable_get("language_negotiation_$type", array());
+ 
++  $original_q = $_GET['q'];
++  $_GET['q'] = request_path();
+   foreach ($negotiation as $provider_id => $provider) {
+     // Do not consider language providers with a lower priority than the cookie
+     // language provider, nor the cookie provider itself.
+@@ -231,6 +233,7 @@ function _language_cookie_get_language() {
+       return $language;
+     }
+   }
++  $_GET['q'] = $original_q;
+ 
+   // If no other language was found use the default one.
+   $language = language_default();

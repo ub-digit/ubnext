@@ -1,0 +1,267 @@
+diff --git a/token.module b/token.module
+index 424e745..d61de61 100644
+--- a/token.module
++++ b/token.module
+@@ -1033,28 +1033,32 @@ function _token_build_tree($token_type, array $options) {
+  * @param $mlid
+  *   The mlid of the menu item.
+  *
++ * @param $language_code
++ *   The language code of the menu item.
++ *
+  * @return
+  *   A menu link translated for rendering.
+  *
+  * @see menu_link_load()
+  * @see _token_menu_link_translate()
+  */
+-function token_menu_link_load($mlid) {
++function token_menu_link_load($mlid, $language_code = NULL) {
+   $cache = &drupal_static(__FUNCTION__, array());
+ 
+   if (!is_numeric($mlid)) {
+     return FALSE;
+   }
+ 
+-  if (!isset($cache[$mlid])) {
++  $cache_key = $mlid . $language_code;
++  if (!isset($cache[$cache_key])) {
+     $item = db_query("SELECT * FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+     if (!empty($item)) {
+-      _token_menu_link_translate($item);
++      _token_menu_link_translate($item, $language_code);
+     }
+-    $cache[$mlid] = $item;
++    $cache[$cache_key] = $item;
+   }
+ 
+-  return $cache[$mlid];
++  return $cache[$cache_key];
+ }
+ 
+ /**
+@@ -1067,31 +1071,36 @@ function token_menu_link_load($mlid) {
+  * @param $mlid
+  *   The mlid of the book menu item.
+  *
++ * @param $language_code
++ *   The language code of the book menu item.
++ *
+  * @return
+  *   A book menu link translated for rendering.
+  *
+  * @see book_link_load()
+  * @see _token_menu_link_translate()
+  */
+-function token_book_link_load($mlid) {
++function token_book_link_load($mlid, $language_code = NULL) {
+   $cache = &drupal_static(__FUNCTION__, array());
+ 
+   if (!is_numeric($mlid)) {
+     return FALSE;
+   }
+ 
+-  if (!isset($cache[$mlid])) {
++  $cache_key = $mlid . $language_code;
++
++  if (!isset($cache[$cache_key])) {
+     $item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+     if (!empty($item)) {
+-      _token_menu_link_translate($item);
++      _token_menu_link_translate($item, $language_code);
+     }
+-    $cache[$mlid] = $item;
++    $cache[$cache_key] = $item;
+   }
+ 
+-  return $cache[$mlid];
++  return $cache[$cache_key];
+ }
+ 
+-function _token_menu_link_translate(&$item) {
++function _token_menu_link_translate(&$item, $language_code = NULL) {
+   $map = array();
+ 
+   if (!is_array($item['options'])) {
+@@ -1124,6 +1133,22 @@ function _token_menu_link_translate(&$item) {
+ 
+     $item['access'] = TRUE;
+     _menu_item_localize($item, $map, TRUE);
++
++    if(module_exists('i18n_menu')) {
++      _i18n_menu_link_process($item);
++      // We have to resort to different logic here than in
++      // i18n_menu module.
++      // _i18n_menu_link_process returns FALSE for admin pages
++      // including the node edit form but we want to localize links
++      // also for those pages so ignore return value and instead use
++      // $link['i18n_menu'] set by this function
++      if(
++        !empty($item['i18n_menu']) &&
++        _i18n_menu_link_is_localizable($item)
++      ) {
++        _i18n_menu_link_localize($item, $language_code);
++      }
++    }
+   }
+ 
+   // Allow other customizations - e.g. adding a page-specific query string to the
+@@ -1220,23 +1245,25 @@ function token_render_cache_set(&$markup, $elements) {
+   $_SERVER['REQUEST_METHOD'] = $original_method;
+ }
+ 
+-function token_menu_link_load_all_parents($mlid) {
++function token_menu_link_load_all_parents($mlid, $language_code = NULL) {
+   $cache = &drupal_static(__FUNCTION__, array());
+ 
+   if (!is_numeric($mlid)) {
+     return array();
+   }
+ 
+-  if (!isset($cache[$mlid])) {
+-    $cache[$mlid] = array();
++  $cache_key = $mlid . $language_code;
++
++  if (!isset($cache[$cache_key])) {
++    $cache[$cache_key] = array();
+     $plid = db_query("SELECT plid FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
+-    while ($plid && $parent = token_menu_link_load($plid)) {
+-      $cache[$mlid] = array($plid => $parent['title']) + $cache[$mlid];
++    while ($plid && $parent = token_menu_link_load($plid, $language_code)) {
++      $cache[$cache_key] = array($plid => $parent['title']) + $cache[$cache_key];
+       $plid = $parent['plid'];
+     }
+   }
+ 
+-  return $cache[$mlid];
++  return $cache[$cache_key];
+ }
+ 
+ function token_taxonomy_term_load_all_parents($tid) {
+@@ -1265,6 +1292,9 @@ function token_taxonomy_term_load_all_parents($tid) {
+  * @param $node
+  *   A node object.
+  *
++ * @param $language_code
++ *   The language code.
++ *
+  * @return
+  *   A menu link array from token_menu_link_load() or FALSE if a menu link was
+  *   not found.
+@@ -1272,8 +1302,8 @@ function token_taxonomy_term_load_all_parents($tid) {
+  * @see menu_node_prepare()
+  * @see token_menu_link_load()
+  */
+-function token_node_menu_link_load($node) {
+-  $cache = &drupal_static(__FUNCTIon__, array());
++function token_node_menu_link_load($node, $language_code = NULL) {
++  $cache = &drupal_static(__FUNCTION__, array());
+ 
+   if (!isset($cache[$node->nid])) {
+     $mlid = FALSE;
+@@ -1293,5 +1323,5 @@ function token_node_menu_link_load($node) {
+     $cache[$node->nid] = $mlid;
+   }
+ 
+-  return $cache[$node->nid] ? token_menu_link_load($cache[$node->nid]) : FALSE;
++  return $cache[$node->nid] ? token_menu_link_load($cache[$node->nid], $language_code) : FALSE;
+ }
+diff --git a/token.tokens.inc b/token.tokens.inc
+index f584bda..ecd312a 100644
+--- a/token.tokens.inc
++++ b/token.tokens.inc
+@@ -609,7 +609,7 @@ function token_tokens($type, $tokens, array $data = array(), array $options = ar
+ 
+     if (!isset($link['title'])) {
+       // Re-load the link if it was not loaded via token_menu_link_load().
+-      $link = token_menu_link_load($link['mlid']);
++      $link = token_menu_link_load($link['mlid'], $language_code);
+     }
+ 
+     foreach ($tokens as $name => $original) {
+@@ -624,17 +624,17 @@ function token_tokens($type, $tokens, array $data = array(), array $options = ar
+           $replacements[$original] = url($link['href'], $url_options);
+           break;
+         case 'parent':
+-          if (!empty($link['plid']) && $parent = token_menu_link_load($link['plid'])) {
++          if (!empty($link['plid']) && $parent = token_menu_link_load($link['plid'], $language_code)) {
+             $replacements[$original] = $sanitize ? check_plain($parent['title']) : $parent['title'];
+           }
+           break;
+         case 'parents':
+-          if ($parents = token_menu_link_load_all_parents($link['mlid'])) {
++          if ($parents = token_menu_link_load_all_parents($link['mlid'], $language_code)) {
+             $replacements[$original] = token_render_array($parents, $options);
+           }
+           break;
+         case 'root';
+-          if (!empty($link['p1']) && $link['p1'] != $link['mlid'] && $root = token_menu_link_load($link['p1'])) {
++          if (!empty($link['p1']) && $link['p1'] != $link['mlid'] && $root = token_menu_link_load($link['p1'], $language_code)) {
+             $replacements[$original] = $sanitize ? check_plain($root['title']) : $root['title'];
+           }
+           break;
+@@ -642,16 +642,16 @@ function token_tokens($type, $tokens, array $data = array(), array $options = ar
+     }
+ 
+     // Chained token relationships.
+-    if (!empty($link['plid']) && ($source_tokens = token_find_with_prefix($tokens, 'parent')) && $parent = token_menu_link_load($link['plid'])) {
++    if (!empty($link['plid']) && ($source_tokens = token_find_with_prefix($tokens, 'parent')) && $parent = token_menu_link_load($link['plid'], $language_code)) {
+       $replacements += token_generate('menu-link', $source_tokens, array('menu-link' => $parent), $options);
+     }
+     // [menu-link:parents:*] chained tokens.
+     if ($parents_tokens = token_find_with_prefix($tokens, 'parents')) {
+-      if ($parents = token_menu_link_load_all_parents($link['mlid'])) {
++      if ($parents = token_menu_link_load_all_parents($link['mlid'], $language_code)) {
+         $replacements += token_generate('array', $parents_tokens, array('array' => $parents), $options);
+       }
+     }
+-    if (!empty($link['p1']) && $link['p1'] != $link['mlid'] && ($root_tokens = token_find_with_prefix($tokens, 'root')) && $root = token_menu_link_load($link['p1'])) {
++    if (!empty($link['p1']) && $link['p1'] != $link['mlid'] && ($root_tokens = token_find_with_prefix($tokens, 'root')) && $root = token_menu_link_load($link['p1'], $language_code)) {
+       $replacements += token_generate('menu-link', $root_tokens, array('menu-link' => $root), $options);
+     }
+     if ($url_tokens = token_find_with_prefix($tokens, 'url')) {
+@@ -1006,12 +1006,19 @@ function book_tokens($type, $tokens, array $data = array(), array $options = arr
+   $replacements = array();
+   $sanitize = !empty($options['sanitize']);
+ 
++  if (isset($options['language'])) {
++    $language_code = $options['language']->language;
++  }
++  else {
++    $language_code = NULL;
++  }
++
+   // Node tokens.
+   if ($type == 'node' && !empty($data['node'])) {
+     $node = $data['node'];
+ 
+     if (!empty($node->book['mlid'])) {
+-      $link = token_book_link_load($node->book['mlid']);
++      $link = token_book_link_load($node->book['mlid'], $language_code);
+ 
+       foreach ($tokens as $name => $original) {
+         switch ($name) {
+@@ -1104,17 +1111,17 @@ function menu_tokens($type, $tokens, array $data = array(), array $options = arr
+     foreach ($tokens as $name => $original) {
+       switch ($name) {
+         case 'menu-link':
+-          if ($link = token_node_menu_link_load($node)) {
++          if ($link = token_node_menu_link_load($node, $language_code)) {
+             $replacements[$original] = $sanitize ? check_plain($link['title']) : $link['title'];
+           }
+           break;
+       }
++    }
+ 
+-      // Chained token relationships.
+-      if ($menu_tokens = token_find_with_prefix($tokens, 'menu-link')) {
+-        if ($link = token_node_menu_link_load($node)) {
+-          $replacements += token_generate('menu-link', $menu_tokens, array('menu-link' => $link), $options);
+-        }
++    // Chained token relationships.
++    if ($menu_tokens = token_find_with_prefix($tokens, 'menu-link')) {
++      if ($link = token_node_menu_link_load($node, $language_code)) {
++        $replacements += token_generate('menu-link', $menu_tokens, array('menu-link' => $link), $options);
+       }
+     }
+   }

@@ -1,0 +1,4 @@
+name = Google reCAPTCHA
+description = Minimalistic Form API Google reCAPTCHA integration
+core = 7.x
+package = Spam control

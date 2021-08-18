@@ -1,0 +1,202 @@
+<?php
+function grecaptcha_element_info() {
+  return array(
+    'grecaptcha' => array(
+      '#process' => array('grecaptcha_element_process'),
+      '#element_validate' => array('grecaptcha_element_validate'),
+      '#theme' => 'grecaptcha',
+      '#theme_wrappers' => array('form_element'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function grecaptcha_theme() {
+  return array(
+    'grecaptcha' => array(
+      'render element' => 'element',
+    ),
+    /*
+    'grecaptcha_noscript' => array(
+      'variables' => array(
+        'widget' => NULL,
+      ),
+      'template' => 'recaptcha-widget-noscript',
+    ),
+     */
+  );
+}
+
+function theme_grecaptcha($variables) {
+  $element = $variables['element'];
+  return '<div' . drupal_attributes($element['#attributes']) . '></div>';
+}
+
+function grecaptcha_element_process($element, $form_state, $complete_form) {
+
+
+  $element['#attributes'] += array('class' => array());
+  $element['#attributes']['class'][] = 'g-recaptcha';
+
+  global $language_content;
+
+  static $script_added = FALSE;
+
+  if(!$script_added) {
+    $grecaptcha_site_key = variable_get('grecaptcha_site_key', '');
+    drupal_add_js(
+      array(
+        'grecaptcha' => array(
+          'settings' => array(
+            //TODO: split to element settings?
+            'sitekey' => $grecaptcha_site_key,
+            'theme' => variable_get('grecaptcha_theme', 'light'),
+            'type' => variable_get('grecaptcha_type', 'image'),
+            'size' => variable_get('grecaptcha_size', 'normal'),
+            'tabindex' => variable_get('grecaptcha_tabindex', 0),
+            'disable_submit' => variable_get('grecaptcha_disable_submit', TRUE),
+            'compact_breakpoint' => variable_get('grecaptcha_compact_breakpoint', 480),
+          ),
+        ),
+      ),
+      array('type' => 'setting')
+    );
+    drupal_add_js(drupal_get_path('module', 'grecaptcha') . '/grecaptcha.js');
+    //TODO: drupal add js instead
+    /*
+    $data = array(
+      '#tag' => 'script',
+      '#value' => 'var grecaptcha_onload_callback = function() { alert("loaded"); Drupal.grecaptcha_init(); };',
+      '#attributes' => array('type' => 'text/javascript'),
+    );
+    drupal_add_html_head($data, 'grecaptcha_onload_callback');
+    */
+
+    $url = url(
+      'https://www.google.com/recaptcha/api.js',
+      array(
+        'query' => array(
+          'hl' => $language_content->language,
+          'onload' => 'grecaptcha_onload_callback',
+          'render' => 'explicit',
+        ),
+        'absolute' => TRUE
+      )
+    );
+
+    drupal_add_js(
+      '(function($) { $.getScript("' . $url . '"); })(jQuery);',
+      array('type' => 'inline', 'scope' => 'footer')
+    );
+    $script_added = TRUE;
+  }
+
+  //TODO: Enforce id!?
+  if (isset($element['#array_parents'])) {
+    //Assign an html ID.
+    if (!isset($element['#attributes']['id'])) {
+      $element['#attributes']['id'] = $element['#id'];
+    }
+    // Add the 'form-wrapper' class.
+    // ??
+    $element['#attributes']['class'][] = 'form-wrapper';
+  }
+
+  drupal_add_js(
+    array(
+      'grecaptcha' => array(
+        'elements' => array(
+          array('id' => $element['#attributes']['id'])
+        )
+      )
+    ), array('type' => 'setting')
+  );
+
+  /*
+  drupal_add_js(
+    url(
+      'https://www.google.com/recaptcha/api.js',
+      array(
+        'query' => array(
+          'hl' => $language_content->language,
+          'onload' => 'grecaptcha_onload_callback',
+          'render' => 'explicit',
+        ),
+        'absolute' => TRUE
+      )
+    ),
+    array('type' => 'external', 'scope' => 'footer', 'defer' => TRUE),
+  );
+  */
+  /*
+  $data = array(
+    '#tag' => 'script',
+    '#value' => '',
+    '#attributes' => array(
+      'src' => url(
+        'https://www.google.com/recaptcha/api.js',
+        array(
+          'query' => array(
+            'hl' => $language_content->language,
+            'onload' => 'grecaptcha_onload_callback',
+            'render' => 'explicit',
+          ),
+          'absolute' => TRUE
+        )
+      ),
+      'async' => 'async',
+      'defer' => 'defer',
+    ),
+  );
+  drupal_add_html_head($data, 'grecaptcha');
+  */
+  return $element;
+}
+
+function grecaptcha_element_validate($element, $form_state) {
+  module_load_include('php', 'grecaptcha', 'recaptcha-php/src/autoload');
+  module_load_include('php', 'grecaptcha', 'src/ReCaptcha/RequestMethod/Drupal7');
+
+  //TODO: check how error classes set
+  $element_key = implode('][', $element['#parents']);
+  //TODO: better message
+  $recaptcha_secret_key = variable_get('grecaptcha_secret_key', '');
+
+  if (empty($_POST['g-recaptcha-response'])) {
+    form_set_error($element_key, t('CAPTCHA is required.'));
+    return;
+  }
+  if (empty($recaptcha_secret_key)) {
+    form_set_error($element_key, t('CAPTCHA failed validation.'));
+    return;
+  }
+
+  // Use drupal_http_request() to circumvent all issues with the Google library.
+  $recaptcha = new \ReCaptcha\ReCaptcha($recaptcha_secret_key, new \ReCaptcha\RequestMethod\Drupal7());
+
+  $resp = $recaptcha->verify(
+    $_POST['g-recaptcha-response'],
+    ip_address()
+  );
+
+  if (!$resp->isSuccess()) {
+    form_set_error($element_key, t('CAPTCHA failed validation, please try again.'));
+    // Error code reference, https://developers.google.com/recaptcha/docs/verify
+    $error_codes = array(
+      'missing-input-secret' => t('The secret parameter is missing.'),
+      'invalid-input-secret' => t('The secret parameter is invalid or malformed.'),
+      'missing-input-response' => t('The response parameter is missing.'),
+      'invalid-input-response' => t('The response parameter is invalid or malformed.'),
+      'invalid-json' => t('The json response is invalid or malformed.'),
+      'unknown' => t('Unknown error.'),
+    );
+    foreach ($resp->getErrorCodes() as $code) {
+      if (!isset($error_codes[$code])) {
+        $code = 'unknown';
+      }
+      watchdog('reCAPTCHA web service', '@error', array('@error' => $error_codes[$code]), WATCHDOG_ERROR);
+    }
+  }
+}

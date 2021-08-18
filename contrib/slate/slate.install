@@ -1,0 +1,15 @@
+<?php
+/**
+ * @file
+ */
+
+
+/**
+ * Variable 'slate_debug' is now called 'slate_debug_enabled'.
+ */
+function slate_update_7001() {
+  $debug_enabled = variable_get('slate_debug', FALSE);
+  variable_del('slate_debug');
+
+  variable_set('slate_debug_enabled', $debug_enabled);
+}

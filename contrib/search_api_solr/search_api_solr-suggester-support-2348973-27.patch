@@ -1,0 +1,515 @@
+diff --git a/includes/SearchApiSolrAutocompleteServerSuggester.php b/includes/SearchApiSolrAutocompleteServerSuggester.php
+new file mode 100644
+index 0000000..ad7daf0
+--- /dev/null
++++ b/includes/SearchApiSolrAutocompleteServerSuggester.php
+@@ -0,0 +1,154 @@
++<?php
++/**
++ * @file
++ * Contains SearchApiSolrAutocompleteServerSuggester.
++ */
++
++/**
++ * Provides a suggester plugin that retrieves suggestions from the Solr
++ * SuggesterComponent.
++ *
++ * The server needs to be a Solr 5.0+ server for this to work properly.
++ */
++class SearchApiSolrAutocompleteServerSuggester extends SearchApiAutocompleteServerSuggester {
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function supportsIndex(SearchApiIndex $index) {
++    static $supports_index = array();
++    if(!isset($supports_index[$index->id])) {
++      try {
++        $server = $index->server();
++        $service_info = search_api_get_service_info($server->class);
++        $solr = $server->getSolrConnection();
++        //TODO: check if suggesters have been enabled? where?
++        //getSolrVersion() potentially rather expensive, advice user to set version manually?
++        $supports_index[$index->id] =
++          (
++            $service_info['class'] === 'SearchApiSolrService' ||
++            is_subclass_of($service_info['class'], 'SearchApiSolrService')
++          ) &&
++          $server->getSolrConnection()->getSolrVersion() >= 5;
++      }
++      catch (SearchApiException $e) {
++        return FALSE;
++      }
++    }
++    return $supports_index[$index->id];
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function defaultConfiguration() {
++    $index = $this->getSearch()->index();
++    return parent::defaultConfiguration() + array(
++      'solr_server' => array(
++        'suggester_dictionaries' => '',
++      ),
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function buildConfigurationForm(array $form, array &$form_state) {
++    $form = parent::buildConfigurationForm($form, $form_state);
++    $form['solr_server'] = array(
++      '#type' => 'fieldset',
++      '#title' => t('Solr server'),
++      '#desciption' => t('Solr server suggester settings'),
++      '#collapsible' => TRUE,
++      '#collapsed' => FALSE,
++      '#tree' => TRUE,
++    );
++    $form['solr_server']['suggester_dictionaries'] = array(
++      '#title' => t('Suggester dictionaries'),
++      '#type' => 'textarea',
++      '#description' => t('One dictionary per line, in order of precedence.'),
++      '#default_value' => implode("\n", $this->configuration['solr_server']['suggester_dictionaries']),
++    );
++    return $form;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  /*
++  public function validateConfigurationForm(array $form, array &$form_state) {
++    parent::validateConfigurationForm($form, $form_state);
++  }
++  */
++
++  private function solrAutocompletParseDictionaries($value) {
++    return array_map(
++      'trim',
++      explode(
++        "\n",
++        $value
++      )
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function submitConfigurationForm(array $form, array &$form_state) {
++
++    $form_state['values']['solr_server']['suggester_dictionaries'] =
++      $this->solrAutocompletParseDictionaries($form_state['values']['solr_server']['suggester_dictionaries']);
++
++    $server = $this->search->server();
++    $service_class_info = search_api_get_service_info($server->class);
++    $autocomplete_servlet = constant($service_class_info['class'] . '::AUTOCOMPLETE_SERVLET');
++    $solr = $server->getSolrConnection();
++
++    // First check if autocomplete servlet is enabled/configured
++    // and warn if problems are detected
++    try {
++      $solr->makeServletRequest($autocomplete_servlet, array());
++      // If autocomplete servlet is set up and seems to be
++      // working probe each dictionary in turn
++      foreach($form_state['values']['solr_server']['suggester_dictionaries'] as $dictionary) {
++        try {
++          $solr->makeServletRequest($autocomplete_servlet, array('suggest.dictionary' => $dictionary));
++        }
++        catch (Exception $e) {
++          $message = t(
++            'A problem occured requesting autocomplete suggester dictionary "@dictionary": @message.',
++            array(
++              '@dictionary' => $dictionary,
++              '@message' => $e->getMessage(),
++            )
++          );
++          drupal_set_message($message, 'warning');
++        }
++      }
++    }
++    catch (Exception $e) {
++      $message = t(
++        'A problem occured requesting autocomplete suggester servlet: @message',
++        array(
++          '@message' => $e->getMessage(),
++        )
++      );
++      drupal_set_message($message, 'warning');
++    }
++
++    parent::submitConfigurationForm($form, $form_state);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getAutocompleteSuggestions(SearchApiQueryInterface $query, $incomplete_key, $user_input) {
++    return $query
++      ->getIndex()
++      ->server()
++      ->getSolrSuggestionCompomentAutocompleteSuggestions(
++          $user_input,
++          $this->configuration['solr_server']
++        );
++  }
++}
+diff --git a/includes/service.inc b/includes/service.inc
+index 1991f04..b634cfa 100644
+--- a/includes/service.inc
++++ b/includes/service.inc
+@@ -11,6 +11,11 @@ class SearchApiSolrService extends SearchApiAbstractService {
+   const SOLR_DATE_FORMAT = 'Y-m-d\TH:i:s\Z';
+ 
+   /**
++   * Path to the autocomplete servlet.
++   */
++  const AUTOCOMPLETE_SERVLET = 'autocomplete';
++
++  /**
+    * The connection class used by this service.
+    *
+    * Must implement SearchApiSolrConnectionInterface.
+@@ -599,6 +604,61 @@ class SearchApiSolrService extends SearchApiAbstractService {
+       }
+     }
+ 
++    if (module_exists('search_api_autocomplete')) {
++      $index_id = $index->machine_name;
++      $autocomplete_searches = search_api_autocomplete_search_load_multiple(
++        FALSE,
++        array(
++          'index_id' => $index->machine_name,
++          'suggester_id' => 'solr_server',
++        )
++      );
++      if(!empty($autocomplete_searches)) {
++        $autocomplete_search = reset($autocomplete_searches);
++        $suggester = $autocomplete_search->getSuggester();
++        $suggester_config = $suggester->getConfiguration();
++
++        $fields = !empty($suggester_config['fields']) ? $suggester_config['fields'] : $index->getFulltextFields();
++
++        //Get solr field names
++        $solr_field_names = $this->getFieldNames($index);
++        $autocomplete_solr_fields = array();
++        foreach($fields as $field) {
++          $autocomplete_solr_field_names[] = $solr_field_names[$field];
++        }
++
++        foreach ($documents as $delta => $document) {
++          // Get the current document language.
++          $document_language_field = $document->getField('ss_search_api_language');
++          $document_language = $document_language_field['value'];
++          $autocomplete_fields = array_intersect($autocomplete_solr_field_names, $document->getFieldNames());
++          foreach ($autocomplete_fields as $solr_field_name) {
++            if (strpos($solr_field_name, '_') !== FALSE) {
++              list($solr_prefix, $field_name) = explode('_', $solr_field_name, 2);
++              $old_solr_field = $document->getField($solr_field_name);
++              // Replace whatever solr prefix with simple string
++              // this seems a bit hackish, but should work
++              // and avoids unnecessary processing by solr
++              // since autocomplete fields are just sources for copyField
++              // directive and not used for anything else
++
++              // TODO: Include option to include search_api_solr_site_hash()
++              //in autocomplete fields names
++
++              $solr_prefix = str_replace('t', 's', $solr_prefix);
++              $multilingual_autocomplete_solr_field_name =
++                implode('_', array($solr_prefix, 'autocomplete', $index_id, $document_language, $field_name));
++              $document->setField(
++                $multilingual_autocomplete_solr_field_name,
++                $old_solr_field['value'],
++                $old_solr_field['boost']
++              );
++            }
++          }
++        }
++      }
++    }
++
+     // Let other modules alter documents before sending them to solr.
+     drupal_alter('search_api_solr_documents', $documents, $index, $items);
+     $this->alterSolrDocuments($documents, $index, $items);
+@@ -1824,6 +1884,48 @@ class SearchApiSolrService extends SearchApiAbstractService {
+   // Autocompletion feature
+   //
+ 
++  public function getSolrSuggestionCompomentAutocompleteSuggestions($user_input, $suggester_configuration = NULL) {
++    $suggestions = array();
++
++    $suggester_dictionaries = !empty($suggester_configuration['suggester_dictionaries']) ?
++      $suggester_configuration['suggester_dictionaries'] : array('default_fuzzy', 'default_infix');
++
++    //TODO: highlight search terms for suggesters
++    // that does not return highlighted results
++    // (fuzzy for example)
++    $params = array(
++      'suggest.q' => $user_input,
++      'suggest.dictionary' => $suggester_dictionaries,
++    );
++
++    $this->connect();
++    $response = $this->solr->makeServletRequest(
++      self::AUTOCOMPLETE_SERVLET,
++      $params
++    );
++
++    //TODO: Shorten very long suggestions to max length
++    // (and provide setting for this) since most suggesters
++    // return whole field (which can be very long)
++    //
++    //TODO: Setting for maximum number of suggestions!
++    foreach($suggester_dictionaries as $dictionary) {
++      if(isset($response->suggest->{$dictionary}->{$user_input})) {
++        $dictionary_suggestions = $response->suggest->{$dictionary}->{$user_input};
++        if(!empty($dictionary_suggestions->suggestions)) {
++          foreach($dictionary_suggestions->suggestions as $suggestion) {
++            $suggestions[] = array(
++              'keys' => strip_tags($suggestion->term),
++              'render' => $suggestion->term,
++            );
++          }
++        }
++      }
++    }
++    drupal_alter('search_api_solr_autocomplete_suggestions', $suggestions, $alter_data);
++    return $suggestions;
++  }
++
+   /**
+    * Implements SearchApiAutocompleteInterface::getAutocompleteSuggestions().
+    */
+diff --git a/search_api_solr.info b/search_api_solr.info
+index a7c272a..5be9838 100644
+--- a/search_api_solr.info
++++ b/search_api_solr.info
+@@ -10,3 +10,4 @@ files[] = includes/solr_connection.inc
+ files[] = includes/solr_connection.interface.inc
+ files[] = includes/solr_field.inc
+ files[] = includes/spellcheck.inc
++files[] = includes/SearchApiSolrAutocompleteServerSuggester.php
+diff --git a/search_api_solr.module b/search_api_solr.module
+index f3d943f..22b5793 100644
+--- a/search_api_solr.module
++++ b/search_api_solr.module
+@@ -4,6 +4,36 @@
+  * @file
+  * Provides a Solr-based service class for the Search API.
+  */
++function search_api_solr_search_api_autocomplete_search_presave(SearchApiAutocompleteSearch $search) {
++  $suggester = $search->getSuggester();
++  if(!empty($suggester) && $suggester instanceof SearchApiSolrAutocompleteServerSuggester) {
++    $original_suggester_conf = array(
++      'fields' => array(),
++    );
++    list($id, , ) = entity_extract_ids('search_api_autocomplete_search', $search);
++    if($id) {
++      $entities = entity_load('search_api_autocomplete_search', array($id));
++      if(isset($entities[$id])) {
++        $original_search = $entities[$id];
++        $original_suggester = $original_search->getSuggester();
++        if(!empty($original_suggester) && $original_suggester instanceof SearchApiSolrAutocompleteServerSuggester) {
++          $original_suggester_conf = array();
++          $original_suggester_conf = $original_suggester->getConfiguration();
++        }
++      }
++    }
++
++    $suggester_conf = $suggester->getConfiguration();
++    //Sort since array equal comparison requires both keys and values
++    //being equal
++    sort($suggester_conf['fields']);
++    sort($original_suggester_conf['fields']);
++    if($suggester_conf['fields'] !== $original_suggester_conf['fields']) {
++      //Must reindex since autocomplete fields have been removed and/or added
++      $search->index()->reindex();
++    }
++  }
++}
+ 
+ /**
+  * Implements hook_menu().
+@@ -47,6 +77,18 @@ function search_api_solr_search_api_service_info() {
+ }
+ 
+ /**
++ * Implements hook_search_api_autocomplete_suggester_info()
++ */
++function search_api_solr_search_api_autocomplete_suggester_info() {
++  $suggesters['solr_server'] = array(
++    'label' => t('Retrieve from Solr server suggester compoment'),
++    'description' => t('For a Solr server, ask the server for autocomplete suggestions using the suggester component.'),
++    'class' => 'SearchApiSolrAutocompleteServerSuggester',
++  );
++  return $suggesters;
++}
++
++/**
+  * Implements hook_help().
+  */
+ function search_api_solr_help($path, array $arg = array()) {
+diff --git a/solr-conf/5.x/schema.xml b/solr-conf/5.x/schema.xml
+index ffbc80d..efdabd8 100644
+--- a/solr-conf/5.x/schema.xml
++++ b/solr-conf/5.x/schema.xml
+@@ -322,6 +322,31 @@
+       </analyzer>
+     </fieldType>
+ 
++    <!--  Field type for autocompletion suggester compoments  -->
++    <fieldType name="text_autocomplete" class="solr.TextField" positionIncrementGap="100">
++      <analyzer type="index">
++        <!-- <tokenizer class="solr.StandardTokenizerFactory" /> -->
++        <!-- aao iso mapping shit? -->
++        <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
++        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^a-zA-Z0-9]" replacement=" " />
++        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
++        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
++        <filter class="solr.LengthFilterFactory" min="3" max="30" />
++        <filter class="solr.LowerCaseFilterFactory" />
++        <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
++        <!-- <filter class="solr.ShingleFilterFactory" minShingleSize="2"
++             maxShingleSize="5" outputUnigrams="false"/> -->
++      </analyzer>
++      <analyzer type="query">
++        <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
++        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^a-zA-Z0-9]" replacement=" " />
++        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
++        <filter class="solr.LowerCaseFilterFactory" />
++        <filter class="solr.LengthFilterFactory" min="3" max="30" />
++      </analyzer>
++    </fieldType>
++
++
+     <!-- This is an example of using the KeywordTokenizer along
+          With various TokenFilterFactories to produce a sortable field
+          that does not include some properties of the source text
+@@ -460,7 +485,8 @@
+        when adding a document.
+    -->
+   <fields>
+-
++    <!-- weight dummy field for SuggestComponent -->
++    <field name="weight_dummy" type="float" indexed="true" stored="true" />
+     <!-- The document id is usually derived from a site-spcific key (hash) and the
+       entity type and ID like:
+       Search Api :
+@@ -523,6 +549,10 @@
+     <!-- This field is used to build the spellchecker index -->
+     <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true"/>
+ 
++    <!-- This field is used to build the index for the default autocomplete
++         suggester  -->
++    <field name="autocomplete" type="string" indexed="true" stored="true" multiValued="true" termVectors="false"/>
++
+     <!-- copyField commands copy one field to another at the time a document
+          is added to the index.  It's used either to index the same field differently,
+          or to add multiple fields to the same field for easier/faster searching.  -->
+@@ -532,6 +562,9 @@
+     <copyField source="ts_*" dest="spell"/>
+     <copyField source="tm_*" dest="spell"/>
+ 
++    <copyField source="ss_autocomplete_*" dest="autocomplete"/>
++    <copyField source="sm_autocomplete_*" dest="autocomplete"/>
++
+     <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
+          will be used if the name matches any of the patterns.
+          RESTRICTION: the glob-like pattern in the name attribute must have
+diff --git a/solr-conf/5.x/solrconfig.xml b/solr-conf/5.x/solrconfig.xml
+index c378343..bbf7014 100644
+--- a/solr-conf/5.x/solrconfig.xml
++++ b/solr-conf/5.x/solrconfig.xml
+@@ -1039,6 +1039,13 @@
+     -->
+   <!--<requestHandler name="/update" class="solr.UpdateRequestHandler">
+   </requestHandler>-->
++
++  <initParams path="/update/**">
++    <lst name="defaults">
++      <str name="update.chain">autocomplete_truncate</str>
++    </lst>
++  </initParams>
++
+   <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/browse">
+     <lst name="defaults">
+       <str name="df">text</str>
+@@ -1339,26 +1346,41 @@
+ 
+        To use this suggester, set the "solr.suggester.enabled=true" system property
+     -->
+-  <searchComponent name="suggest" class="solr.SuggestComponent"
+-                   enable="${solr.suggester.enabled:false}"     >
++ <searchComponent name="suggester" class="solr.SuggestComponent"
++    startup="lazy" enable="${solr.suggester.enabled:false}">
++    <lst name="suggester">
++      <str name="name">default_infix</str>
++      <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
++      <str name="indexPath">suggester_infix_data</str>
++      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
++      <str name="field">autocomplete</str>
++      <str name="weightField">weight_dummy</str>
++      <str name="suggestAnalyzerFieldType">text_autocomplete</str>
++      <str name="buildOnStartup">true</str>
++      <str name="buildOnCommit">true</str>
++    </lst>
+     <lst name="suggester">
+-      <str name="name">mySuggester</str>
++      <str name="name">default_fuzzy</str>
+       <str name="lookupImpl">FuzzyLookupFactory</str>
++      <str name="storeDir">suggester_fuzzy_data</str>
+       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+-      <str name="field">cat</str>
+-      <str name="weightField">price</str>
+-      <str name="suggestAnalyzerFieldType">string</str>
++      <str name="field">autocomplete</str>
++      <str name="weightField">weight_dummy</str>
++      <str name="suggestAnalyzerFieldType">text_autocomplete</str>
++      <str name="buildOnStartup">true</str>
++      <str name="buildOnCommit">true</str>
+     </lst>
+   </searchComponent>
+-
+-  <requestHandler name="/suggest" class="solr.SearchHandler"
+-                  startup="lazy" enable="${solr.suggester.enabled:false}" >
++  <requestHandler name="/autocomplete" class="solr.SearchHandler"
++    startup="lazy" enable="${solr.suggester.enabled:false}">
+     <lst name="defaults">
+       <str name="suggest">true</str>
+       <str name="suggest.count">10</str>
++      <str name="suggest.dictionary">default_infix</str>
++      <str name="suggest.dictionary">default_fuzzy</str>
+     </lst>
+     <arr name="components">
+-      <str>suggest</str>
++      <str>suggester</str>
+     </arr>
+   </requestHandler>
+ 
+@@ -1692,6 +1714,21 @@
+      </updateRequestProcessorChain>
+     -->
+ 
++  <!-- Autocomplete fields truncation
++      Truncate autocomplete suggester fields to the maximum length of
++      32766 since Solr might otherwise throw an "immense terms"
++      exception:
++      http://developmentsitecore.blogspot.se/2015/08/resolved-solr-exceptions-document.html
++    -->
++     <updateRequestProcessorChain name="autocomplete_truncate">
++       <processor class="solr.TruncateFieldUpdateProcessorFactory">
++         <str name="fieldRegex">^(?:ss)|(?:sm)_autocomplete_.*</str>
++         <int name="maxLength">32766</int>
++       </processor>
++       <processor class="solr.LogUpdateProcessorFactory" />
++       <processor class="solr.RunUpdateProcessorFactory" />
++     </updateRequestProcessorChain>
++
+   <!-- Response Writers
+ 
+        http://wiki.apache.org/solr/QueryResponseWriter

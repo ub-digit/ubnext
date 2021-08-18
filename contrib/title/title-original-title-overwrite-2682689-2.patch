@@ -1,0 +1,30 @@
+diff --git a/title.module b/title.module
+index ee53c42..ae749c4 100644
+--- a/title.module
++++ b/title.module
+@@ -160,10 +160,15 @@ function title_entity_presave($entity, $entity_type) {
+     }
+   }
+ 
++  $sync = &drupal_static('title_entity_sync', array());
++
+   // Perform reverse synchronization to retain any change in the legacy field
+   // values. We must avoid doing this twice as we might overwrite the already
+   // synchronized values, if we are updating an existing entity.
+-  if ($langcode) {
++  list($id, , ) = entity_extract_ids($entity_type, $entity);
++  // Only perform reverse synchronization if legacy field has not
++  // already been synced from original language
++  if ($langcode && empty($sync[$entity_type][$id][$entity_langcode][0])) {
+     title_entity_sync($entity_type, $entity, $langcode, TRUE);
+   }
+ 
+@@ -171,8 +176,6 @@ function title_entity_presave($entity, $entity_type) {
+   // original values into the legacy fields to ensure they are always stored in
+   // the entity table.
+   if ($entity_langcode != $langcode) {
+-    list($id, , ) = entity_extract_ids($entity_type, $entity);
+-    $sync = &drupal_static('title_entity_sync', array());
+     unset($sync[$entity_type][$id]);
+     title_entity_sync($entity_type, $entity, $entity_langcode);
+   }
