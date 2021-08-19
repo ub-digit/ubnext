@@ -1,6 +1,0 @@
-name = Scald Audio
-description = Provides Audio atoms from audio files.
-package = Scald Providers
-core = 7.x
-dependencies[] = scald
-

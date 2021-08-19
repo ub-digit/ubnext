@@ -1,6 +1,0 @@
-name = DnD Library
-package = Scald
-description = Enable a drag and drop media interface.
-core = 7.x
-dependencies[] = scald
-

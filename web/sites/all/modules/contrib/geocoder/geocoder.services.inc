@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * geocoder.services.inc
+ */
+
 /**
  * Implements hook_services_resources().
  */
@@ -7,7 +13,11 @@ function geocoder_services_resources() {
     'geocoder' => array(
       'retrieve' => array(
         'help' => 'Geocode data',
-        'file' => array('type' => 'inc', 'module' => 'geocoder', 'name' => 'geocoder.services'),
+        'file' => array(
+          'type' => 'inc',
+          'module' => 'geocoder',
+          'name' => 'geocoder.services',
+        ),
         'callback' => 'geocoder_services_geocode',
         'access callback' => 'geocoder_services_access',
         'access arguments append' => TRUE,
@@ -37,56 +47,76 @@ function geocoder_services_resources() {
       ),
       'index' => array(
         'help' => 'List Geocoder Capabilities',
-        'file' => array('type' => 'inc', 'module' => 'geocoder', 'name' => 'geocoder.services'),
+        'file' => array(
+          'type' => 'inc',
+          'module' => 'geocoder',
+          'name' => 'geocoder.services',
+        ),
         'callback' => 'geocoder_services_capabilities',
-        'access callback' => 'geocoder_services_capabilities_ac', // Always returns TRUE
+        // Always returns TRUE.
+        'access callback' => 'geocoder_services_capabilities_ac',
       ),
     ),
   );
 }
 
+/**
+ * Callback.
+ */
 function geocoder_services_capabilities_ac() {
   return TRUE;
 }
 
+/**
+ * Callback.
+ */
 function geocoder_services_access($handler, $data, $output) {
-  if ($handler == 'default') {
-    $handler == 'json';
+  if ($handler === 'default') {
+    $handler = 'json';
   }
+
   return geocoder_service_check_perms($handler);
 }
 
 /**
- * Callback for geocoding service
+ * Callback for geocoding service.
  *
  * @param string $handler
  * @param string $data
+ * @param string $format
+ *
+ * @throws \Exception
+ *
  * @return object
  */
 function geocoder_services_geocode($handler, $data, $format = 'default') {
   geophp_load();
   geocoder_service_check_request($handler, $format);
-  
+
   $geom = geocoder($handler, $data);
-  if (!$format || $format == 'default') {
+  if (!$format || $format === 'default') {
     $result = $geom->out('json');
+
     return json_decode($result);
   }
-  else {
-    return $geom->out($format);
-  }
+
+  return $geom->out($format);
 }
 
+/**
+ * Callback.
+ */
 function geocoder_services_capabilities() {
   geophp_load();
-  
+
   $handlers = array();
   foreach (geocoder_handler_info() as $hid => $handler) {
     $handlers[$hid] = $handler['title'] . ' - ' . $handler['description'];
   }
-  
+
   $object = new stdClass();
   $object->handlers = $handlers;
   $object->output = geoPHP::getAdapterMap();
+
   return $object;
 }
