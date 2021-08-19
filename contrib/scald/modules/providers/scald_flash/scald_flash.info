@@ -1,7 +1,0 @@
-name = Scald Flash
-description = Provides Flash atoms from SWF files.
-package = Scald Providers
-core = 7.x
-dependencies[] = scald
-stylesheets[all][] = scald_flash.css
-

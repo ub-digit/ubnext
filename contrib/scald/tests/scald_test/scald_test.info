@@ -1,9 +1,0 @@
-name = Scald Test
-description = Hooks and dependencies for testing Scald
-package = Scald
-core = 7.x
-hidden = TRUE
-
-dependencies[] = i18n
-dependencies[] = i18n_string
-

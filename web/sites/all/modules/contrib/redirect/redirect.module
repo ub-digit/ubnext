@@ -199,7 +199,7 @@ function redirect_get_current_redirect() {
   // attempt to find a redirect matching the current path, query string, and
   // language code.
   if (!isset($redirect)) {
-    $redirect = redirect_load_by_source(current_path(), $GLOBALS['language']->language, drupal_get_query_parameters());
+    $redirect = redirect_load_by_source(current_path(), $GLOBALS['language_url']->language, drupal_get_query_parameters());
   }
 
   // @todo Add an alter hook here?
@@ -225,7 +225,7 @@ function redirect_url_inbound_alter(&$path, $original_path, $path_language) {
   // the path 'foo/redirect', then redirect_init() would normally fail since it
   // would not find a match.
   if ($path != $original_path && $original_path == current_path()) {
-    $current_langcode = !empty($path_language) ? $path_language : $GLOBALS['language']->language;
+    $current_langcode = !empty($path_language) ? $path_language : $GLOBALS['language_url']->language;
     $current_query = drupal_get_query_parameters();
     if ($redirect = redirect_load_by_source($original_path, $current_langcode, $current_query)) {
       redirect_set_current_redirect($redirect);
@@ -1710,18 +1710,20 @@ function redirect_field_extra_fields() {
       // Redirect is explicitly disabled for this entity type.
       continue;
     }
-    foreach (array_keys($entity_info[$entity_type]['bundles']) as $bundle) {
-      if (!isset($entity_info[$entity_type]['bundles'][$bundle]['uri callback']) && !isset($entity_info[$entity_type]['uri callback'])) {
-        // The bundle or base entity must have an URI callback defined otherwise
-        // we cannot use the entity_uri() function to lookup the entity's source
-        // path.
-        continue;
+    if (!empty($entity_info[$entity_type]['bundles'])) {
+      foreach (array_keys($entity_info[$entity_type]['bundles']) as $bundle) {
+        if (!isset($entity_info[$entity_type]['bundles'][$bundle]['uri callback']) && !isset($entity_info[$entity_type]['uri callback'])) {
+          // The bundle or base entity must have an URI callback defined otherwise
+          // we cannot use the entity_uri() function to lookup the entity's source
+          // path.
+          continue;
+        }
+        $info[$entity_type][$bundle]['form']['redirect'] = array(
+          'label' => t('URL redirects'),
+          'description' => t('Redirect module form elements'),
+          'weight' => 30,
+        );
       }
-      $info[$entity_type][$bundle]['form']['redirect'] = array(
-        'label' => t('URL redirects'),
-        'description' => t('Redirect module form elements'),
-        'weight' => 30,
-      );
     }
   }
   return $info;

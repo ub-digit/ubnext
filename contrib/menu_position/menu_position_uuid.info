@@ -1,7 +1,0 @@
-name = Menu position UUID
-description = Provide universally unique identifiers for menu position rule entities.
-
-core = 7.x
-dependencies[] = menu_position
-dependencies[] = entity_menu_links
-dependencies[] = uuid

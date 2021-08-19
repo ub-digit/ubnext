@@ -5,9 +5,8 @@ core = 7.x
 dependencies[] = scald
 files[] = scald_youtube.test
 
-; Information added by Drupal.org packaging script on 2015-07-14
-version = "7.x-1.5"
+; Information added by Drupal.org packaging script on 2021-04-19
+version = "7.x-1.9"
 core = "7.x"
 project = "scald_youtube"
-datestamp = "1436864692"
-
+datestamp = "1618823205"

@@ -1,7 +1,0 @@
-name = Scald Image
-description = Provides Image atoms from image files.
-package = Scald Providers
-core = 7.x
-dependencies[] = scald
-dependencies[] = image
-
