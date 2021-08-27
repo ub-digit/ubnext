@@ -5,13 +5,17 @@
  * Support for migration into Date fields.
  */
 
-if (!class_exists('MigrateFieldHandler')) {
-  return;
+/**
+ * Implements hook_migrate_api().
+ */
+function date_migrate_api() {
+  $api = array(
+    'api' => 2,
+    'field handlers' => array('DateMigrateFieldHandler'),
+  );
+  return $api;
 }
 
-/**
- * Support for migration into Date fields.
- */
 class DateMigrateFieldHandler extends MigrateFieldHandler {
 
   /**
@@ -105,7 +109,7 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
 
       // Legacy support for JSON containing a set of properties - deprecated
       // now that we have subfields.
-      if (!empty($from) && $from[0] == '{') {
+      if (!empty($from) && $from{0} == '{') {
         $properties = drupal_json_decode($from);
         $from = $properties['from'];
         // Properties passed in with the date override any set via arguments.
@@ -120,8 +124,9 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
         }
       }
 
-      // Missing data? Create an empty value and return; Don't try to turn the
-      // empty value into a bogus timestamp for 'now'.
+      // Missing data? Create an empty value and return;
+      // Don't try to turn the empty value into a bogus
+      // timestamp for 'now'.
       if (empty($from)) {
         $return[$language][$delta]['value'] = NULL;
         $return[$language][$delta]['timezone'] = NULL;
@@ -163,6 +168,9 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
             $to = format_date($to, 'custom', 'Y-m-d\TH:i:s', $timezone);
           }
           break;
+
+        default:
+          break;
       }
 
       // Handle repeats, coming in as RRULEs. Many field instances may be
@@ -201,5 +209,4 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
       'to' => t('End date date'),
     );
   }
-
 }
