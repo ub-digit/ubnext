@@ -1524,17 +1524,11 @@ function system_site_information_settings() {
     '#type' => 'fieldset',
     '#title' => t('Front page'),
   );
-  $form['front_page']['default_event_occasions_main'] = array(
-    '#type' => 'select', '#title' => t('Number of event occasions'),
-    '#default_value' => variable_get('default_event_occasions_main', 5),
-    '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The maximum number of event occasions displayed on overview pages such as the front page.')
-  );
-  $form['front_page']['default_stories_main'] = array(
-    '#type' => 'select', '#title' => t('Number of news'),
-    '#default_value' => variable_get('default_stories_main', 5),
-    '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The maximum number of news displayed on overview pages such as the front page.')
+  $form['front_page']['default_nodes_main'] = array(
+    '#type' => 'select', '#title' => t('Number of posts on front page'),
+    '#default_value' => variable_get('default_nodes_main', 10),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.')
   );
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
