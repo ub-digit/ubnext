@@ -11,9 +11,7 @@
 <div markdown="1" class="ubn-call-to-action panel-separator">
 {% if not title is empty %}
   <div class="ubn-call-to-action-heading"><h2>{{ title }}</h2></div>
-  <p markdown="1" class="ubn-call-to-action-content">
-    {{ content|raw }}
-  </p>
+  <p markdown="1" class="ubn-call-to-action-content">{{ content|raw }}</p>
   {% if not link_href is empty and not link_text is empty %}
   {# Wrap in div to prevent markdown from wrapping in p (better fix possible? #}
     <div class="ubn-call-to-action-link">
