@@ -73,7 +73,6 @@ function ubn_startpage_default_page_manager_pages() {
       'navigation' => NULL,
       'messages' => NULL,
       'promoted_secondary' => NULL,
-      'Promoted_third' => NULL,
     ),
     'promoted_top' => array(
       'style' => 'naked',
