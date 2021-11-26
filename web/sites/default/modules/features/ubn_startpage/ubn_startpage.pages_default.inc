@@ -246,6 +246,29 @@ function ubn_startpage_default_page_manager_pages() {
   $display->content['new-f516e664-915e-4b94-ac69-8dec48a1772e'] = $pane;
   $display->panels['promoted_secondary'][1] = 'new-f516e664-915e-4b94-ac69-8dec48a1772e';
   $pane = new stdClass();
+  $pane->pid = 'new-8b742635-7cdd-4f77-b3b8-f2a5c0b9f1da';
+  $pane->panel = 'promoted_secondary';
+  $pane->type = 'front_page_blurbs_secondary';
+  $pane->subtype = 'front_page_blurbs_secondary';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = '8b742635-7cdd-4f77-b3b8-f2a5c0b9f1da';
+  $display->content['new-8b742635-7cdd-4f77-b3b8-f2a5c0b9f1da'] = $pane;
+  $display->panels['promoted_secondary'][2] = 'new-8b742635-7cdd-4f77-b3b8-f2a5c0b9f1da';
+  $pane = new stdClass();
   $pane->pid = 'new-e1e92e85-a8e9-42aa-8d1a-3727c4ee87fa';
   $pane->panel = 'promoted_top';
   $pane->type = 'front_page_blurbs_primary';
