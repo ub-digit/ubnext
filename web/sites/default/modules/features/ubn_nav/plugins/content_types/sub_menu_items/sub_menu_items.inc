@@ -27,7 +27,7 @@ function ubn_nav_sub_menu_items_content_type_settings($form, &$form_state) {
  */
 function ubn_nav_sub_menu_items_content_type_render($subtype, $conf, $panel_args, $context) {
   // Set $path to the internal Drupal path of the parent or
-// to NULL for the current path 
+  // to NULL for the current path
   $path = NULL;
   $parent = menu_link_get_preferred($path);
   $parameters = array(
@@ -46,6 +46,12 @@ function ubn_nav_sub_menu_items_content_type_render($subtype, $conf, $panel_args
   }
 
   $children = menu_build_tree($parent['menu_name'], $parameters);
+  // Filter out items hidden (by i18_menu for example)
+  foreach($children as $key => $item) {
+    if ($item['link']['hidden']) {
+      unset($children[$key]);
+    }
+  }
   $content = slate_render('navigation-landing-theme-links', array('page' => $context->data, 'children' => $children, 'onecol' => $use_one_col_layout));
 
   $block = new stdClass();
