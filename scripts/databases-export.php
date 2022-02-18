@@ -1,5 +1,75 @@
 <?php
 
+$sql = array();
+
+// Taxonomies
+$vocabularies = array(
+  'database_availability', // used by field_access_information (?)
+  'publishers',
+  'media_types',
+  'topics'
+);
+
+function escape($string) {
+  return str_replace("'", "''", $string);
+}
+
+$vocab_term_entities = array();
+foreach($vocabularies as $vocabulary_name) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+        ->entityCondition('bundle', $vocabulary_name);
+  $result = $query->execute();
+  $terms_data = array();
+  if (isset($result['taxonomy_term'])) {
+    $terms = entity_load('taxonomy_term', array_keys($result['taxonomy_term']));
+    foreach($terms as $term) {
+      unset($term->{rdf_mapping});
+      unset($term->{entity_translation_handler_id});
+      unset($term->{translations});
+      unset($term->{path});
+      $terms_data[$term->tid] = $term;
+    }
+  }
+  $vocab_term_entities[$vocabulary_name] = $terms_data;
+}
+
+// topics table
+$topics_vocab = taxonomy_vocabulary_machine_name_load('topics');
+$topics_terms = taxonomy_get_tree($topics_vocab->vid);
+foreach($topics_terms as $term) {
+  $entity = $vocab_term_entities['topics'][$term->tid];
+  if (!$term->parents[0]) {
+    $name_en = escape($entity->name_field['en'][0]['value']);
+    $name_sv = escape($entity->name_field['sv'][0]['value']);
+    $sql[] = "INSERT INTO `topics`(`id`, `name_en`, `name_sv`) VALUES({$term->tid}, '$name_en', '$name_sv');";
+  }
+}
+
+// sub_topics table
+foreach($topics_terms as $term) {
+  $entity = $vocab_term_entities['topics'][$term->tid];
+  if ($term->parents[0]) {
+    $name_en = escape($entity->name_field['en'][0]['value']);
+    $name_sv = escape($entity->name_field['sv'][0]['value']);
+    $sql[] = "INSERT INTO `sub_topics`(`id`, `name_en`, `name_sv`, `topic_id`) VALUES({$term->tid}, '$name_en', '$name_sv', '{$term->parents[0]}');";
+  }
+}
+
+// publishers table
+foreach($vocab_term_entities['publishers'] as $tid => $entity) {
+  $name = escape($entity->name);
+  $sql[] = "INSERT INTO `publishers`(`id`, `name`) VALUES($tid, '$name')";
+}
+
+
+// media_types table
+foreach($vocab_term_entities['media_types'] as $tid => $entity) {
+  $name_en = escape($entity->name_field['en'][0]['value']);
+  $name_sv = escape($entity->name_field['sv'][0]['value']);
+  $sql[] = "INSERT INTO `media_types`(`id`, `name_en`, `name_sv`) VALUES($tid, $name_en', '$name_sv')";
+}
+
 // Databases
 $query = new EntityFieldQuery();
 $query->entityCondition('entity_type', 'node')
@@ -40,6 +110,8 @@ if (isset($result['node'])) {
     'field_recommended_in_subjects', // subjects = topics :/
     'field_access_information',
     'field_topics',
+    'field_topics_depth_0',
+    'field_topics_depth_1',
     'field_publishers',
     'field_media_types',
   );
@@ -49,7 +121,6 @@ if (isset($result['node'])) {
   );
 
   foreach ($database_nodes as $database_node) {
-
     $database_wrapper = entity_metadata_wrapper('node', $database_node);
     $database['database_urls'] = array();
     foreach($database_wrapper->field_database_urls as $url) {
@@ -87,7 +158,8 @@ if (isset($result['node'])) {
       $database[substr($field_name, 6)] = array();
       if (!empty($database_node->{$field_name})) {
         foreach($database_node->{$field_name}['und'] as $item) {
-          $database[substr($field_name, 6)][] = intval($item['tid']);
+          $tid = intval($item['tid']);
+          $database[substr($field_name, 6)][$tid] = $tid;
         }
       }
     }
@@ -95,37 +167,48 @@ if (isset($result['node'])) {
     $database['title'] =  $database_node->title;
     $database['nid'] = $database_node->nid;
 
-    $databases[] = $database;
+    $databases[$database_node->nid] = $database;
   }
   //print json_encode($databases, JSON_PRETTY_PRINT);
 }
+//print json_encode($databases, JSON_PRETTY_PRINT);
+//exit;
 
-// Taxonomies
-$vocabularies = array(
-  'database_availability', // used by field_access_information (?)
-  'topics',
-  'publishers',
-  'media_types'
-);
-
-$vocab_terms_data = array();
-foreach($vocabularies as $vocabulary_name) {
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'taxonomy_term')
-        ->entityCondition('bundle', $vocabulary_name);
-  $result = $query->execute();
-  $terms_data = array();
-  if (isset($result['taxonomy_term'])) {
-    $terms = entity_load('taxonomy_term', array_keys($result['taxonomy_term']));
-    foreach($terms as $term) {
-      unset($term->{rdf_mapping});
-      unset($term->{entity_translation_handler_id});
-      unset($term->{translations});
-      unset($term->{path});
-      $terms_data[] = $term;
-    }
+// database_alternative_titles table
+foreach($databases as $id => $database) {
+  foreach($database['alternate_titles'] as $title) {
+    $title = escape($title);
+    $sql[] = "INSERT INTO `database_alternative_titles`(`database_id`, `title`) VALUES($id, '$title');";
   }
-  $vocab_terms_data[$vocabulary_name] = $terms_data;
 }
+
+// database_urls table
+foreach($databases as $id => $database) {
+  foreach($database['database_urls'] as $url) {
+    $title = escape($url['title']);
+    $url = escape($url['url']);
+    $sql[] = "INSERT INTO `database_urls`(`database_id`, `title`, 'url`) VALUES($id, '$title', '$url');";
+  }
+}
+
+// database_topics
+foreach($databases as $database_id => $database) {
+  foreach($database['topics_depth_0'] as $topic_id) {
+    $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
+    $sql[] = "INSERT INTO `database_topics`(`database_id`, `topic_id`, 'is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+  }
+}
+
+// database_sub_topics
+foreach($databases as $database_id => $database) {
+  foreach($database['topics_depth_1'] as $topic_id) {
+    $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
+    $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, 'is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+  }
+}
+print_r($sql);
+exit;
+
+// database_subtopics
 
 //print json_encode($vocab_terms_data, JSON_PRETTY_PRINT);
