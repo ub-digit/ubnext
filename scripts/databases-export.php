@@ -1,6 +1,23 @@
 <?php
 
 $sql = array();
+$tables = array(
+  'databases',
+  'topics',
+  'sub_topics',
+  'publishers',
+  'media_types',
+  'terms_of_use',
+  'database_terms_of_use',
+  'database_alternative_titles',
+  'database_urls',
+  'database_topics',
+  'database_sub_topics',
+);
+
+foreach($tables as $table) {
+  $sql[] = "TRUNCATE `$table`;";
+}
 
 // Taxonomies
 $vocabularies = array(
@@ -87,11 +104,12 @@ if (isset($result['node'])) {
     'field_public_access',
     'field_tou_article_chapt_desc',
     'field_scholarly_sharing_desc',
-    'field_scholarly_sharin',
+    'field_scholarly_sharing',
     'field_print_article_chapter',
     'field_interlibrary_loan_desc',
     'field_interlibrary_loan',
     'field_gul_course_pack_electronic',
+    'field_gul_course_pack_elect_desc',
     'field_download_article_chapter',
     'field_download_article_chap_desc',
     'field_description',
@@ -132,7 +150,7 @@ if (isset($result['node'])) {
     }
 
     foreach ($value_fields as $field_name) {
-      $database[substr($field_name, 6)] = array();
+      $database[substr($field_name, 6)] = NULL;
       if (!empty($database_node->{$field_name})) {
         $database[substr($field_name, 6)] = $database_node->{$field_name}['und'][0]['value'];
       }
@@ -169,10 +187,76 @@ if (isset($result['node'])) {
 
     $databases[$database_node->nid] = $database;
   }
-  //print json_encode($databases, JSON_PRETTY_PRINT);
 }
-//print json_encode($databases, JSON_PRETTY_PRINT);
-//exit;
+
+$tou_mappings = array(
+  1 => array(
+    'name_en' => 'Print article/chapter',
+    'name_sv' => 'Skriva ut artikel eller kapitel',
+    'fields' => array(
+      'print_article_chapter',
+      'tou_article_chapt_desc'
+    )
+  ),
+  2 => array(
+    'name_en' => 'Download article/chapter',
+    'name_sv' => 'Ladda ner artikel eller kapitel',
+    'fields' => array(
+      'download_article_chapter',
+      'download_article_chap_desc'
+    )
+  ),
+  3 => array(
+    'name_en' => 'Course pack print',
+    'name_sv' => 'Trycka kurskompendium',
+    'fields' => array(
+      'course_pack_print',
+      'course_pack_print_desc'
+    )
+  ),
+  4 => array(
+    'name_en' => 'GUL / Course pack electronic',
+    'name_sv' => 'Ladda upp kurskompendium på lärplattform',
+    'fields' => array(
+      'gul_course_pack_electronic',
+      'gul_course_pack_elect_desc'
+    )
+  ),
+  5 => array(
+    'name_en' => 'Scholarly sharing',
+    'name_sv' => 'Scholarly sharing', //Oversattning saknas???
+    'fields' => array(
+      'scholarly_sharing',
+      'scholarly_sharing_desc'
+    )
+  ),
+  6 => array(
+    'name_en' => 'Interlibrary loan',
+    'name_sv' => 'Fjärrlån',
+    'fields' => array(
+      'interlibrary_loan',
+      'interlibrary_loan_desc'
+    )
+  ),
+);
+
+// terms_of_use table
+foreach($tou_mappings as $id => $info) {
+  // name/name/label??
+  $sql[] = "INSERT INTO `terms_of_use`(`id`, `name_en`, `name_sv`) VALUES($id, '{$info['name_en']}', '{$info['name_sv']}');";
+}
+
+// database_terms_of_use table
+foreach($databases as $id => $database) {
+  foreach($tou_mappings as $tou_id => $info) {
+    list($permitted_field_name, $description_field_name) = $info['fields'];
+    if ($database[$permitted_field_name]) {
+      $desc = escape($database[$description_field_name]);
+      $permitted = $database[$permitted_field_name] == 'Yes' ? 'TRUE' : 'FALSE';
+      $sql[] = "INSERT INTO `database_terms_of_use`(`database_id`, `terms_of_use_id`, `description_en`, `descripition_sv`, `permitted`) VALUES($id, $tou_id, '$desc', '', $permitted);";
+    }
+  }
+}
 
 // database_alternative_titles table
 foreach($databases as $id => $database) {
@@ -206,9 +290,5 @@ foreach($databases as $database_id => $database) {
     $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, 'is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
   }
 }
-print_r($sql);
-exit;
 
-// database_subtopics
-
-//print json_encode($vocab_terms_data, JSON_PRETTY_PRINT);
+print implode("\n", $sql) . "\n";
