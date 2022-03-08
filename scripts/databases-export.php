@@ -271,7 +271,7 @@ foreach($databases as $id => $database) {
   foreach($database['database_urls'] as $url) {
     $title = escape($url['title']);
     $url = escape($url['url']);
-    $sql[] = "INSERT INTO `database_urls`(`database_id`, `title`, 'url`) VALUES($id, '$title', '$url');";
+    $sql[] = "INSERT INTO `database_urls`(`database_id`, `title`, `url`) VALUES($id, '$title', '$url');";
   }
 }
 
@@ -279,7 +279,7 @@ foreach($databases as $id => $database) {
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_0'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
-    $sql[] = "INSERT INTO `database_topics`(`database_id`, `topic_id`, 'is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+    $sql[] = "INSERT INTO `database_topics`(`database_id`, `topic_id`, `is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
   }
 }
 
@@ -287,7 +287,7 @@ foreach($databases as $database_id => $database) {
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_1'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
-    $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, 'is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+    $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, `is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
   }
 }
 
