@@ -275,7 +275,7 @@ foreach($databases as $id => $database) {
   }
 }
 
-// database_topics
+// database_topics table
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_0'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
@@ -283,11 +283,18 @@ foreach($databases as $database_id => $database) {
   }
 }
 
-// database_sub_topics
+// database_sub_topics table
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_1'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
     $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, `is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+  }
+}
+
+// database_publishers table
+foreach($databases as $database_id => $database) {
+  foreach($database['publishers'] as $publisher_id) {
+    $sql[] = "INSERT INTO database_publishers(database_id, publisher_id) VALUES($database_id, $publisher_id);";
   }
 }
 
