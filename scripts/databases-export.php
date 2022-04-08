@@ -7,7 +7,6 @@ $tables = array(
   'sub_topics',
   'publishers',
   'media_types',
-  'terms_of_use',
   'database_terms_of_use',
   'database_alternative_titles',
   'database_urls',
@@ -16,7 +15,7 @@ $tables = array(
 );
 
 foreach($tables as $table) {
-  $sql[] = "TRUNCATE `$table`;";
+  $sql[] = "TRUNCATE $table;";
 }
 
 // Taxonomies
@@ -59,7 +58,7 @@ foreach($topics_terms as $term) {
   if (!$term->parents[0]) {
     $name_en = escape($entity->name_field['en'][0]['value']);
     $name_sv = escape($entity->name_field['sv'][0]['value']);
-    $sql[] = "INSERT INTO `topics`(`id`, `name_en`, `name_sv`) VALUES({$term->tid}, '$name_en', '$name_sv');";
+    $sql[] = "INSERT INTO topics(id, name_en, name_sv) VALUES({$term->tid}, '$name_en', '$name_sv');";
   }
 }
 
@@ -69,14 +68,14 @@ foreach($topics_terms as $term) {
   if ($term->parents[0]) {
     $name_en = escape($entity->name_field['en'][0]['value']);
     $name_sv = escape($entity->name_field['sv'][0]['value']);
-    $sql[] = "INSERT INTO `sub_topics`(`id`, `name_en`, `name_sv`, `topic_id`) VALUES({$term->tid}, '$name_en', '$name_sv', '{$term->parents[0]}');";
+    $sql[] = "INSERT INTO sub_topics(id, name_en, name_sv, topic_id) VALUES({$term->tid}, '$name_en', '$name_sv', '{$term->parents[0]}');";
   }
 }
 
 // publishers table
 foreach($vocab_term_entities['publishers'] as $tid => $entity) {
   $name = escape($entity->name);
-  $sql[] = "INSERT INTO `publishers`(`id`, `name`) VALUES($tid, '$name')";
+  $sql[] = "INSERT INTO publishers(id, name) VALUES($tid, '$name');";
 }
 
 
@@ -84,7 +83,7 @@ foreach($vocab_term_entities['publishers'] as $tid => $entity) {
 foreach($vocab_term_entities['media_types'] as $tid => $entity) {
   $name_en = escape($entity->name_field['en'][0]['value']);
   $name_sv = escape($entity->name_field['sv'][0]['value']);
-  $sql[] = "INSERT INTO `media_types`(`id`, `name_en`, `name_sv`) VALUES($tid, $name_en', '$name_sv')";
+  $sql[] = "INSERT INTO media_types(id, name_en, name_sv) VALUES($tid, '$name_en', '$name_sv');";
 }
 
 // Databases
@@ -143,6 +142,7 @@ if (isset($result['node'])) {
     $database['database_urls'] = array();
     foreach($database_wrapper->field_database_urls as $url) {
       $value = $url->field_url->value();
+      print_r($value);
       $database['database_urls'][] = array(
         'url' => $value['url'],
         'title' => $value['title']
@@ -165,7 +165,7 @@ if (isset($result['node'])) {
       }
     }
 
-    foreach ($taxonomy_fields as $field_name) {
+    foreach ($taxonomy_fields as $field_name) {      
       $database[substr($field_name, 6)] = array();
       if (!empty($database_node->{$field_name})) {
         $database[substr($field_name, 6)] = intval($database_node->{$field_name}['und'][0]['tid']);
@@ -185,9 +185,50 @@ if (isset($result['node'])) {
     $database['title'] =  $database_node->title;
     $database['nid'] = $database_node->nid;
 
+    #$name_sv = escape($entity->name_field['sv'][0]['value']);
     $databases[$database_node->nid] = $database;
+    #print_r($databases);
+    #exit;
+
+    
   }
 }
+
+# database table
+foreach ($databases as $db) {
+  $id = $db['nid'];
+  $title_sv = escape($db['title']) . ' (sv)';
+  $title_en = escape($db['title']) . ' (en)';
+  $description_sv = escape($db['description']) . ' (sv)';
+  $description_en = escape($db['description']) . ' (en)';
+  $is_popular = (boolval($db['promote_to_shortcut']) ? 'TRUE' : 'FALSE');
+  $malfunction_message_active = (boolval($db['malfunction_message_active'] ?: 0) ? 'TRUE' : 'FALSE');
+  $malfunction_message = $db['$malfunction_message'] ?: NULL;
+  $public_access = (boolval($db['public_access']) ? 'TRUE' : 'FALSE');
+  $access_information_code = $db['access_information'];
+
+  switch (array_values($access_information_code)[0]) {
+    case '745':
+        $access_information_code = 'freely_available';
+        break;
+    case '748':
+        $access_information_code = 'available_to_the_university_of_gothenburg';
+        break;
+    case '751':
+        $access_information_code = 'available_to_the_university_of_gothenburg_on_campus_only_available_to_anyone';
+        break;
+    case '752':
+        $access_information_code = 'available_to_the_university_of_gothenburg_available_to_anyone_using_the_libraries_computers';
+        break;
+    default:
+    $access_information_code = '';
+  }
+  
+  
+  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message, malfunction_message_active, public_access, access_information_code) VALUES($id, '$title_sv', '$title_en', '$description_en', '$description_sv', $is_popular, '$malfunction_message', $malfunction_message_active, $public_access, '$access_information_code');";
+  
+}
+
 
 $tou_mappings = array(
   1 => array(
@@ -241,20 +282,58 @@ $tou_mappings = array(
 );
 
 // terms_of_use table
-foreach($tou_mappings as $id => $info) {
+//foreach($tou_mappings as $id => $info) {
   // name/name/label??
-  $sql[] = "INSERT INTO `terms_of_use`(`id`, `name_en`, `name_sv`) VALUES($id, '{$info['name_en']}', '{$info['name_sv']}');";
-}
+  //print_r($id);
+  //print_r(" ");
+  //print_r($info['name_sv']);
+  //print_r($info['name_en']);
+  //print_r("\n");
+  //$sql[] = "INSERT INTO terms_of_use(id, name_en, name_sv) VALUES($id, '{$info['name_en']}', '{$info['name_sv']}');";
+//}
 
 // database_terms_of_use table
+
 foreach($databases as $id => $database) {
   foreach($tou_mappings as $tou_id => $info) {
     list($permitted_field_name, $description_field_name) = $info['fields'];
     if ($database[$permitted_field_name]) {
+     // print_r("\n\n");
+    // print_r($tou_id);
+      switch ($tou_id) {
+        case '1':
+            $tou_code = 'print_article_chapter';
+            break;
+        case '2':
+            $tou_code = 'download_article_chapter';
+            break;
+        case '3':
+          $tou_code = 'course_pack_print';
+            break;
+        case '4':
+          $tou_code = 'gul_course_pack_electronic';
+            break;
+        case '5':
+          $tou_code = 'cholarly_sharing';
+            break;
+        case '6':
+          $tou_code = 'interlibrary_loan';
+            break;    
+        default:
+        $access_information_code = '';
+      }
+      //print_r($tou_code . " \n");
       $desc = escape($database[$description_field_name]);
       $permitted = $database[$permitted_field_name] == 'Yes' ? 'TRUE' : 'FALSE';
-      $sql[] = "INSERT INTO `database_terms_of_use`(`database_id`, `terms_of_use_id`, `description_en`, `descripition_sv`, `permitted`) VALUES($id, $tou_id, '$desc', '', $permitted);";
+      $sql[] = "INSERT INTO database_terms_of_use(database_id, code, description_en, description_sv, permitted) VALUES($id, '$permitted_field_name', '$desc', '', $permitted);";
     }
+  }
+}
+
+// database_media_types table
+foreach($databases as $database_id => $database) {
+  foreach($database['media_types'] as $media_type_id) {
+    $sql[] = "INSERT INTO database_media_types(database_id, media_type_id) VALUES($database_id, $media_type_id);";  
   }
 }
 
@@ -262,7 +341,7 @@ foreach($databases as $id => $database) {
 foreach($databases as $id => $database) {
   foreach($database['alternate_titles'] as $title) {
     $title = escape($title);
-    $sql[] = "INSERT INTO `database_alternative_titles`(`database_id`, `title`) VALUES($id, '$title');";
+    $sql[] = "INSERT INTO database_alternative_titles(database_id, title) VALUES($id, '$title');";
   }
 }
 
@@ -271,7 +350,7 @@ foreach($databases as $id => $database) {
   foreach($database['database_urls'] as $url) {
     $title = escape($url['title']);
     $url = escape($url['url']);
-    $sql[] = "INSERT INTO `database_urls`(`database_id`, `title`, `url`) VALUES($id, '$title', '$url');";
+    $sql[] = "INSERT INTO database_urls(database_id, title, url) VALUES($id, '$title', '$url');";
   }
 }
 
@@ -279,7 +358,7 @@ foreach($databases as $id => $database) {
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_0'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
-    $sql[] = "INSERT INTO `database_topics`(`database_id`, `topic_id`, `is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+    $sql[] = "INSERT INTO database_topics(database_id, topic_id, is_recommended) VALUES($database_id, $topic_id, $is_recommended);";
   }
 }
 
@@ -287,7 +366,7 @@ foreach($databases as $database_id => $database) {
 foreach($databases as $database_id => $database) {
   foreach($database['topics_depth_1'] as $topic_id) {
     $is_recommended = isset($database['recommended_in_subjects'][$topic_id]) ? 'TRUE' : 'FALSE';
-    $sql[] = "INSERT INTO `database_sub_topics`(`database_id`, `sub_topic_id`, `is_recommended`) VALUES($database_id, $topic_id, $is_recommended);";
+    $sql[] = "INSERT INTO database_sub_topics(database_id, sub_topic_id, is_recommended) VALUES($database_id, $topic_id, $is_recommended);";
   }
 }
 
@@ -298,4 +377,4 @@ foreach($databases as $database_id => $database) {
   }
 }
 
-print implode("\n", $sql) . "\n";
+//print implode("\n", $sql) . "\n";
