@@ -142,7 +142,7 @@ if (isset($result['node'])) {
     $database['database_urls'] = array();
     foreach($database_wrapper->field_database_urls as $url) {
       $value = $url->field_url->value();
-      print_r($value);
+      #print_r($value);
       $database['database_urls'][] = array(
         'url' => $value['url'],
         'title' => $value['title']
@@ -225,7 +225,7 @@ foreach ($databases as $db) {
   }
   
   
-  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message, malfunction_message_active, public_access, access_information_code) VALUES($id, '$title_sv', '$title_en', '$description_en', '$description_sv', $is_popular, '$malfunction_message', $malfunction_message_active, $public_access, '$access_information_code');";
+  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message, malfunction_message_active, public_access, access_information_code) VALUES($id, '$title_en', '$title_sv', '$description_en', '$description_sv', $is_popular, '$malfunction_message', $malfunction_message_active, $public_access, '$access_information_code');";
   
 }
 
@@ -377,4 +377,4 @@ foreach($databases as $database_id => $database) {
   }
 }
 
-//print implode("\n", $sql) . "\n";
+print implode("\n", $sql) . "\n";
