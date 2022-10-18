@@ -377,4 +377,10 @@ foreach($databases as $database_id => $database) {
   }
 }
 
+// set sequences 
+$sql[] = "SELECT pg_catalog.setval('public.topics_id_seq', 1000, true);";
+$sql[] = "SELECT pg_catalog.setval('public.sub_topics_id_seq', 1000, true);";
+$sql[] = "SELECT pg_catalog.setval('public.media_types_id_seq', 1000, true);";
+$sql[] = "SELECT pg_catalog.setval('public.publishers_id_seq', 1000, true);";
+
 print implode("\n", $sql) . "\n";
