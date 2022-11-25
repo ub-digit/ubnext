@@ -46,3 +46,4 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
   $_SERVER['SERVER_PORT'] = intval($_SERVER['HTTP_X_FORWARDED_PORT']);
 }
 
+$conf['drupal_http_request_fails'] = FALSE;
