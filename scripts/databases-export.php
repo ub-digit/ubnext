@@ -202,8 +202,10 @@ foreach ($databases as $db) {
   $description_sv = escape($db['description']) . ' (sv)';
   $description_en = escape($db['description']) . ' (en)';
   $is_popular = (boolval($db['promote_to_shortcut']) ? 'TRUE' : 'FALSE');
+  $hide_direct_link_in_search = (boolval($db['field_hide_direct_link_in_search']) ? 'TRUE' : 'FALSE');
   $malfunction_message_active = (boolval($db['malfunction_message_active'] ?: 0) ? 'TRUE' : 'FALSE');
-  $malfunction_message = $db['$malfunction_message'] ?: NULL;
+  $malfunction_message_en = $db['$malfunction_message'] ?: NULL;
+  $malfunction_message_sv = $db['$malfunction_message'] ?: NULL;
   $public_access = (boolval($db['public_access']) ? 'TRUE' : 'FALSE');
   $access_information_code = $db['access_information'];
 
@@ -225,7 +227,7 @@ foreach ($databases as $db) {
   }
   
   
-  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message, malfunction_message_active, public_access, access_information_code) VALUES($id, '$title_en', '$title_sv', '$description_en', '$description_sv', $is_popular, '$malfunction_message', $malfunction_message_active, $public_access, '$access_information_code');";
+  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message_en, malfunction_message_sv, malfunction_message_active, public_access, access_information_code, direct_link_is_hidden) VALUES($id, '$title_en', '$title_sv', '$description_en', '$description_sv', $is_popular, '$malfunction_message_en', '$malfunction_message_sv', $malfunction_message_active, $public_access, '$access_information_code', $hide_direct_link_in_search);";
   
 }
 
@@ -341,7 +343,7 @@ foreach($databases as $database_id => $database) {
 foreach($databases as $id => $database) {
   foreach($database['alternate_titles'] as $title) {
     $title = escape($title);
-    $sql[] = "INSERT INTO database_alternative_titles(database_id, title) VALUES($id, '$title');";
+    $sql[] = "INSERT INTO database_alternative_titles(database_id, title_en, title_sv) VALUES($id, '$title (en)', '$title (sv)');";
   }
 }
 
