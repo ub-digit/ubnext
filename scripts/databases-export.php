@@ -75,7 +75,9 @@ foreach($topics_terms as $term) {
 // publishers table
 foreach($vocab_term_entities['publishers'] as $tid => $entity) {
   $name = escape($entity->name);
-  $sql[] = "INSERT INTO publishers(id, name) VALUES($tid, '$name');";
+  if ($tid != 997){
+    $sql[] = "INSERT INTO publishers(id, name) VALUES($tid, '$name');";
+  }
 }
 
 
@@ -184,6 +186,10 @@ if (isset($result['node'])) {
 
     $database['title'] =  $database_node->title;
     $database['nid'] = $database_node->nid;
+    $database['created'] = $database_node->created;
+    $database['changed'] = $database_node->changed;
+
+
 
     #$name_sv = escape($entity->name_field['sv'][0]['value']);
     $databases[$database_node->nid] = $database;
@@ -208,6 +214,8 @@ foreach ($databases as $db) {
   $malfunction_message_sv = $db['$malfunction_message'] ?: NULL;
   $public_access = (boolval($db['public_access']) ? 'TRUE' : 'FALSE');
   $access_information_code = $db['access_information'];
+  $inserted_at = date('Y-m-d\TH:i:s', $db['created']);
+  $updated_at = date('Y-m-d\TH:i:s', $db['changed']);
 
   switch (array_values($access_information_code)[0]) {
     case '745':
@@ -227,7 +235,7 @@ foreach ($databases as $db) {
   }
   
   
-  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message_en, malfunction_message_sv, malfunction_message_active, public_access, access_information_code, direct_link_is_hidden) VALUES($id, '$title_en', '$title_sv', '$description_en', '$description_sv', $is_popular, '$malfunction_message_en', '$malfunction_message_sv', $malfunction_message_active, $public_access, '$access_information_code', $hide_direct_link_in_search);";
+  $sql[] = "INSERT INTO databases(id, title_en, title_sv, description_en, description_sv, is_popular, malfunction_message_en, malfunction_message_sv, malfunction_message_active, public_access, access_information_code, direct_link_is_hidden, inserted_at, updated_at) VALUES($id, '$title_en', '$title_sv', '$description_en', '$description_sv', $is_popular, '$malfunction_message_en', '$malfunction_message_sv', $malfunction_message_active, $public_access, '$access_information_code', $hide_direct_link_in_search, '$inserted_at', '$updated_at');";
   
 }
 
@@ -375,14 +383,19 @@ foreach($databases as $database_id => $database) {
 // database_publishers table
 foreach($databases as $database_id => $database) {
   foreach($database['publishers'] as $publisher_id) {
+    if ($publisher_id == 997) {
+      $publisher_id = 109;
+    } 
     $sql[] = "INSERT INTO database_publishers(database_id, publisher_id) VALUES($database_id, $publisher_id);";
   }
 }
 
 // set sequences 
-$sql[] = "SELECT pg_catalog.setval('public.topics_id_seq', 1000, true);";
+$sql[] = "SELECT pg_catalog.setval('public.topics_id_seq', 1100, true);";
 $sql[] = "SELECT pg_catalog.setval('public.sub_topics_id_seq', 1000, true);";
-$sql[] = "SELECT pg_catalog.setval('public.media_types_id_seq', 1000, true);";
-$sql[] = "SELECT pg_catalog.setval('public.publishers_id_seq', 1000, true);";
+$sql[] = "SELECT pg_catalog.setval('public.media_types_id_seq', 1050, true);";
+$sql[] = "SELECT pg_catalog.setval('public.publishers_id_seq', 1050, true);";
+$sql[] = "SELECT pg_catalog.setval('public.databases_id_seq', 189295, true);";
+
 
 print implode("\n", $sql) . "\n";
