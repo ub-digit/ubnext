@@ -1537,13 +1537,13 @@ function system_site_information_settings() {
     '#default_value' => variable_get('default_event_occasions_main', 5),
     '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of event occasions displayed on overview pages such as the front page.')
-  );
+    );
   $form['front_page']['default_stories_main'] = array(
     '#type' => 'select', '#title' => t('Number of news'),
     '#default_value' => variable_get('default_stories_main', 5),
     '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of news displayed on overview pages such as the front page.')
-  );
+    );
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
@@ -2391,7 +2391,7 @@ function system_run_cron() {
  * Menu callback: return information about PHP.
  */
 function system_php() {
-  phpinfo();
+  phpinfo(~ (INFO_VARIABLES | INFO_ENVIRONMENT));
   drupal_exit();
 }
 
@@ -2404,6 +2404,7 @@ function system_batch_page() {
 
   if ($output === FALSE) {
     drupal_access_denied();
+    drupal_exit();
   }
   elseif (isset($output)) {
     // Force a page without blocks or messages to
