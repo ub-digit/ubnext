@@ -203,10 +203,10 @@ if (isset($result['node'])) {
 # database table
 foreach ($databases as $db) {
   $id = $db['nid'];
-  $title_sv = escape($db['title']) . ' (sv)';
-  $title_en = escape($db['title']) . ' (en)';
-  $description_sv = escape($db['description']) . ' (sv)';
-  $description_en = escape($db['description']) . ' (en)';
+  $title_sv = escape($db['title']);
+  $title_en = escape($db['title']);
+  $description_sv = escape($db['description']);
+  $description_en = escape($db['description']);
   $is_popular = (boolval($db['promote_to_shortcut']) ? 'TRUE' : 'FALSE');
   $hide_direct_link_in_search = (boolval($db['field_hide_direct_link_in_search']) ? 'TRUE' : 'FALSE');
   $malfunction_message_active = (boolval($db['malfunction_message_active'] ?: 0) ? 'TRUE' : 'FALSE');
@@ -351,7 +351,7 @@ foreach($databases as $database_id => $database) {
 foreach($databases as $id => $database) {
   foreach($database['alternate_titles'] as $title) {
     $title = escape($title);
-    $sql[] = "INSERT INTO database_alternative_titles(database_id, title_en, title_sv) VALUES($id, '$title (en)', '$title (sv)');";
+    $sql[] = "INSERT INTO database_alternative_titles(database_id, title_en, title_sv) VALUES($id, '$title', '$title');";
   }
 }
 
