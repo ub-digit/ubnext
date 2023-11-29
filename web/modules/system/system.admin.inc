@@ -1537,13 +1537,15 @@ function system_site_information_settings() {
     '#default_value' => variable_get('default_event_occasions_main', 5),
     '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of event occasions displayed on overview pages such as the front page.')
-    );
+  );
+  
   $form['front_page']['default_stories_main'] = array(
     '#type' => 'select', '#title' => t('Number of news'),
     '#default_value' => variable_get('default_stories_main', 5),
     '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of news displayed on overview pages such as the front page.')
-    );
+  );
+
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
@@ -2315,7 +2317,7 @@ function system_clean_url_settings($form, &$form_state) {
     $form_state['redirect'] = url('admin/config/search/clean-urls');
     $form['clean_url_description'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.'),
+      '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.') . '</p>',
     );
     // Explain why the user is seeing this page and what to expect after
     // clicking the 'Run the clean URL test' button.
@@ -2391,7 +2393,8 @@ function system_run_cron() {
  * Menu callback: return information about PHP.
  */
 function system_php() {
-  phpinfo(~ (INFO_VARIABLES | INFO_ENVIRONMENT));
+  $phpinfo_flags = variable_get('sa_core_2023_004_phpinfo_flags', ~(INFO_VARIABLES | INFO_ENVIRONMENT));
+  phpinfo($phpinfo_flags);
   drupal_exit();
 }
 
