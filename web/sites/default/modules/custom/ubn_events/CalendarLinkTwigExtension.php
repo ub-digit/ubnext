@@ -67,7 +67,7 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
 
     $raw = $field->raw();
     $from = new \DateObject($raw['value'], $raw['timezone_db']);
-    $to = new \DateObject($raw['value'], $raw['timezone_db']);
+    $to = new \DateObject($raw['value2'], $raw['timezone_db']);
 
     try {
       $link = Link::create($title, $from, $to, ubn_events_is_all_day($from, $to));
