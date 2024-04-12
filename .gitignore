@@ -4,8 +4,7 @@
 /data
 
 # Ignore database dumps
-databases.tar.gz
-databases.tar
+database.sql.gz
 
 # Ignore docker data dir
 docker/data

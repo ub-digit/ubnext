@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  web:
+    image: docker.ub.gu.se/drupal-httpd:v1
+    ports:
+      - ${WEB_HOST_PORT}:8080
+    volumes:
+      - ${DRUPAL_FILES_HOST_DIR}:/usr/local/apache2/htdocs/sites/default/files:z
+    depends_on:
+      - app
+  app:
+    image: docker.ub.gu.se/drupal-php-7.4-fpm:v1
+    environment:
+      - UBN_SLATE_CACHE_ENABLED=${UBN_SLATE_CACHE_ENABLED}
+      - UBN_TERMS_CACHE_ENABLED=${UBN_TERMS_CACHE_ENABLED}
+      - UBN_SUMMON_ACCESS_ID=${UBN_SUMMON_ACCESS_ID}
+      - UBN_SUMMON_ACCESS_KEY=${UBN_SUMMON_ACCESS_KEY}
+      - UBN_DRUPAL_HASH_SALT=${UBN_DRUPAL_HASH_SALT}
+    depends_on:
+      - solr
+      - database
+    volumes:
+      - ${DRUPAL_FILES_HOST_DIR}:/var/www/html/sites/default/files:z
+  solr:
+    image: docker.ub.gu.se/solr-5.5.5:v1
+    ports:
+      - ${SOLR_HOST_PORT}:8983
+    volumes:
+      - ${SOLR_DATA_HOST_DIR}:/opt/solr/server/solr/ubnext/data:Z
+  database:
+    image: mariadb:10.3.8
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: drupal7_ubnext
+      MYSQL_USER: drupal7_ubnext
+      MYSQL_PASSWORD: drupal7_ubnext
+    volumes:
+      - ${PWD}/database.sql.gz:/docker-entrypoint-initdb.d/database.sql.gz:ro
+      - ${DATABASE_DATA_HOST_DIR}:/var/lib/mysql:Z
+    restart: on-failure
