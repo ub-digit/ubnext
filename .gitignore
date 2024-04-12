@@ -3,6 +3,13 @@
 # Ignore drupal-capistrano data dir
 /data
 
+# Ignore database dumps
+databases.tar.gz
+databases.tar
+
+# Ignore docker data dir
+docker/data
+
 # Ignore todo-files
 todo
 
@@ -11,15 +18,13 @@ todo
 *.swp
 *.swo
 
-web/sites/default/themes/ubnext/package-lock.json
 
-web/sites/default/themes/ubnext/supervisord.log
-web/sites/default/themes/ubnext/supervisord.pid
+# Ignore node files
+package-lock.json
+.npm
 
 # Ignore configuration files that may contain sensitive, or site specific
 # information.
-web/sites/*/secret.settings.php
-web/sites/*/site.settings.php
 web/sites/default/themes/ubnext/css/ubnext.css
 
 # Ignore paths that contain user-generated content.
