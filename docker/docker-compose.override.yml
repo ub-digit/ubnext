@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   web:
+    user: $UID
     volumes:
       - ${UBNEXT_REPO}/web:/usr/local/apache2/htdocs
   app:
@@ -10,13 +11,14 @@ services:
     depends_on:
       - grunt-less
   solr:
+    user: $UID
     volumes:
       - ${UBNEXT_REPO}/etc/solr-conf/5.x:/opt/solr/server/solr/ubnext/conf
       - ${UBNEXT_REPO}/etc/solr-conf/core.properties:/opt/solr/server/solr/ubnext/core.properties
   grunt-less:
+    user: $UID
     image: node:8.12-alpine
     command: >
       /bin/sh -c 'cd /root && npm install && ./node_modules/grunt-cli/bin/grunt watch'
     volumes:
       - ${UBNEXT_REPO}/web/sites/default/themes/ubnext:/root
-
