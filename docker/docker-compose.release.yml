@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  web:
+    image: docker.ub.gu.se/ubnext-web:${GIT_REVISION}
+  app:
+    image: docker.ub.gu.se/ubnext-app:${GIT_REVISION}
+  solr:
+    image: docker.ub.gu.se/ubnext-solr:${GIT_REVISION}

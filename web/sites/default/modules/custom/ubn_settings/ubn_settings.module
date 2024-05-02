@@ -1,19 +1,15 @@
 <?php
+// TODO: Remove this? Featurize? Anyway probably not needed anymore
 function ubn_settings_entity_load($entities, $type) {
-  if($type === 'search_api_server') {
-    foreach($entities as $server) {
-      if($server->machine_name === 'solr') {
-        $environment = ubn_settings_environment();
-        $server->options['path'] = variable_get('ubn_settings_solr_path', '/solr/drupal7_ubnext_' . $environment);
+  if ($type === 'search_api_server') {
+    foreach ($entities as $server) {
+      if ($server->machine_name === 'solr') {
+        $server->options['path'] = variable_get('ubn_settings_solr_path', '/solr/drupal7_ubnext');
         $host = variable_get('ubn_settings_solr_host', NULL);
-        if(isset($host)) {
+        if (isset($host)) {
           $server->options['host'] = $host;
         }
       }
     }
   }
-}
-
-function ubn_settings_environment() {
-  return variable_get('ubn_environment', '');
 }

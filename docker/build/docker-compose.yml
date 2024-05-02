@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  web:
+    image: docker.ub.gu.se/ubnext-web:${GIT_REVISION}
+    build:
+      context: ./web
+      args:
+        - GIT_REPO_URL=${GIT_REPO_URL}
+        - GIT_REVISION=${GIT_REVISION}
+  app:
+    image: docker.ub.gu.se/ubnext-app:${GIT_REVISION}
+    build:
+      context: ./app
+      args:
+        - GIT_REPO_URL=${GIT_REPO_URL}
+        - GIT_REVISION=${GIT_REVISION}
+  solr:
+    image: docker.ub.gu.se/ubnext-solr:${GIT_REVISION}
+    build:
+      context: ./solr
+      args:
+        - GIT_REPO_URL=${GIT_REPO_URL}
+        - GIT_REVISION=${GIT_REVISION}
