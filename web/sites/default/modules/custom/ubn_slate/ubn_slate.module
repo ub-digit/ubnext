@@ -154,13 +154,13 @@ function _ubn_slate_number_format($number, $decimals = 2) {
 // "Skip base" option?
 function _ubn_slate_namespace_classes($base, $namespace = '', $suffix = '') {
   $classes = array();
-  if($base) {
+  if ($base) {
     $classes[] = implode('-', array_filter(array($base, $suffix)));
   }
-  if($namespace) {
+  if ($namespace) {
     $classes[] = implode('-', array_filter(array($namespace, $suffix)));
   }
-  return implode(' ', array_unique(array_filter($classes)));
+  return ' ' . implode(' ', array_unique(array_filter($classes)));
 }
 
 /**
