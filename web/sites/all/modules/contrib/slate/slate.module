@@ -98,9 +98,9 @@ function slate_twig_instance() {
 
   $path = libraries_get_path('twig');
 
-  require_once $path . '/lib/Twig/Autoloader.php';
+  require_once $path . '/autoload.php';
 
-  Twig_Autoloader::register();
+  //Twig_Autoloader::register();
 
   //TODO: Composer autoloader?
   $extensions_path = libraries_get_path('twig-extensions');
@@ -131,13 +131,15 @@ function slate_twig_instance() {
 
   drupal_alter('slate_twig_environment', $environment);
 
-  $twig = new Twig_Environment($loader, $environment);
+  $twig = new Twig\Environment($loader, $environment);
+
+  //$twig->addExtension(new Twig\Extension\CoreExtension());
 
   if(module_exists('date')) {
     // User configurable timezones will not play well
     // with cache, so set timezone globally
     // TODO: option for this?
-    $twig->getExtension('core')->setTimezone(date_default_timezone(FALSE));
+    $twig->getExtension('\Twig\Extension\CoreExtension')->setTimezone(date_default_timezone(FALSE));
   }
 
   drupal_alter('slate_twig', $twig);
@@ -169,7 +171,8 @@ function slate_is_cacheable($allow_caching = NULL, $initialize_context = FALSE) 
  * Implements hook_flush_caches().
  */
 function slate_flush_caches() {
-  slate_twig_instance()->clearCacheFiles();
+  //cache location?
+  //slate_twig_instance()->clearCacheFiles();
 
   return array();
 }
@@ -442,7 +445,7 @@ function slate_slate_info() {
  * Implements hook_slate_twig_loaders().
  */
 function slate_slate_twig_loaders() {
-  $loaders['default'] = new Twig_Loader_Filesystem(_slate_template_paths());
+  $loaders['default'] = new Twig\Loader\FilesystemLoader(_slate_template_paths());
 
   return $loaders;
 }
@@ -466,7 +469,7 @@ function slate_slate_twig_environment_alter(&$environment) {
  */
 function slate_slate_twig_alter($twig) {
   if (variable_get('slate_debug_enabled', FALSE)) {
-    $twig->addExtension(new Twig_Extension_Debug());
+    $twig->addExtension(new Twig\Extension\DebugExtension());
   }
 
   // @todo add a setting for this?

@@ -2,8 +2,8 @@
   <div class="blurb-wrapper">
     {% block image %}{% endblock %}
     <div class="blurb-content-wrapper">
-      {% set _event_date = block('event_date')|trim %}
-      {% if not _event_date is empty %}
+      {% if block('event_date') is defined %}
+        {% set _event_date = block('event_date')|trim %}
         <div class="blurb-event-date">
           <div class="blurb-event-date-day">
             {{ format_date(_event_date, 'custom', 'd') }}
