@@ -4,7 +4,7 @@
   "description": "A packaged foo fooer for fooing foos",
   "private": true,
   "devDependencies": {
-    "grunt": "^0.4.0",
+    "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-less": "^0.12.0",
