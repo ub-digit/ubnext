@@ -1,0 +1,20 @@
+---
+- name: Import database
+  hosts: all
+  roles:
+  - role: ub-ansible-deploy
+    vars:
+      skip_deploy: true
+  tasks:
+  - name: Debug
+    ansible.builtin.debug:
+      var:  docker_directory_path
+  - name: Dump database
+    ansible.builtin.shell:
+      chdir: '{{ docker_directory_path }}'
+      cmd: './dump-database.sh > database.sql'
+  - name: Download database
+    ansible.builtin.fetch:
+      flat: true
+      src: "{{ [docker_directory_path, 'database.sql'] | path_join }}"
+      dest: "{{ [playbook_dir, 'data'] | path_join }}/"

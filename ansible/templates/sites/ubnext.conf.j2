@@ -1,0 +1,116 @@
+<VirtualHost *:80>
+  ServerName {{ web_hostname }}
+  Redirect permanent / https://www.{{ web_hostname }}/
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerName www.{{ web_hostname }}
+  Redirect permanent / https://www.{{ web_hostname }}/
+</VirtualHost>
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ web_hostname }}
+  ServerAdmin root@localhost
+ 
+  SSLEngine on
+  SSLCertificateFile /etc/ssl/apache2/certs/ub-gu-se.pem
+  SSLCertificateKeyFile /etc/ssl/apache2/private/ub-gu-se.key
+  SSLCertificateChainFile /etc/ssl/apache2/certs/interim_geant.pem
+
+  ProxyPass        /atlassian-domain-verification.html http://localhost:10465/atlassian-domain-verification.html
+  ProxyPassReverse /atlassian-domain-verification.html http://localhost:10465/atlassian-domain-verification.html
+   
+  Redirect permanent / https://www.{{ web_hostname }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName www.{{ web_hostname }}
+  FallbackResource /index.html
+
+  SSLEngine on
+  SSLCertificateFile /etc/ssl/apache2/certs/ub-gu-se.pem
+  SSLCertificateKeyFile /etc/ssl/apache2/private/ub-gu-se.key
+  SSLCertificateChainFile /etc/ssl/apache2/certs/interim_geant.pem
+
+  ProxyPass /<-en,sv> !
+  ProxyPass /<sv,-en> !
+  ProxyPass /<en,-sv> !
+  ProxyPass /<-sv,en> !
+
+  ProxyPass /%3C-en%2Csv%3E !
+  ProxyPass /%3Csv%2C-en%3E !
+  ProxyPass /%3Cen%2C-sv%3E !
+  ProxyPass /%3C-sv%2Cen%3E !
+
+  ProxyPass /aktuellt/utst !
+  ProxyPass /handskriftsdatabasen !
+  ProxyPass /kontakta/inkop !
+  ProxyPass /kvinn !
+  ProxyPass /polarportalen !
+  ProxyPass /samlingar/digital/kontakta !
+  ProxyPass /samlingar !
+  ProxyPass /sok/dissdatabas !
+  ProxyPass /sok/kvinnsam !
+  ProxyPass /sok/supersok !
+  ProxyPass /studentvb !
+  ProxyPass /systerskap !
+  ProxyPass /tjanster-och-stod/kopa-actapublikationer/best.xml !
+  ProxyPass /utskrift/studentvb !
+  ProxyPass /utskrift/varde !
+  ProxyPass /vardebevis !
+
+
+  Redirect permanent /<-en,sv>  https://www.{{ web_hostname }}/sv
+  Redirect permanent /<sv,-en>  https://www.{{ web_hostname }}/sv
+  Redirect permanent /<en,-sv>  https://www.{{ web_hostname }}/en
+  Redirect permanent /<-sv,en>  https://www.{{ web_hostname }}/en
+
+  Redirect permanent /%3C-en%2Csv%3E https://www.{{ web_hostname }}/sv
+  Redirect permanent /%3Csv%2C-en%3E https://www.{{ web_hostname }}/sv
+  Redirect permanent /%3Cen%2C-sv%3E https://www.{{ web_hostname }}/en
+  Redirect permanent /%3C-sv%2Cen%3E https://www.{{ web_hostname }}/en
+
+  Redirect permanent /aktuellt/utst http://www2.ub.gu.se/pa-biblioteken/utstallningar-pa-universitetsbiblioteket
+  Redirect permanent /handskriftsdatabasen http://www2.ub.gu.se/handskriftsdatabasen
+  Redirect permanent /kontakta/inkop http://www2.ub.gu.se/hitta-material/foresla-inkop-av-nytt-material/foresla-ett-inkop
+  Redirect permanent /kvinn http://www2.ub.gu.se/kvinn
+  Redirect permanent /polarportalen http://www2.ub.gu.se/portaler/polarportalen
+  Redirect permanent /samlingar/digital/kontakta https://www.{{ web_hostname }}/sv/kontakta-oss
+  Redirect permanent /samlingar http://www2.ub.gu.se/samlingar
+  Redirect permanent /sok/dissdatabas https://gupea.ub.gu.se/handle/2077/10556
+  Redirect permanent /sok/kvinnsam http://libris.kb.se/form_extended.jsp?f=kvin
+  Redirect permanent /sok/supersok https://gu-se-primo.hosted.exlibrisgroup.com/primo-explore/search?vid=46GUB_VU1&lang=sv_SE&sortby=rank
+  Redirect permanent /studentvb http://www2.ub.gu.se/studentvb
+  Redirect permanent /systerskap http://www2.ub.gu.se/systerskap
+  Redirect permanent /tjanster-och-stod/kopa-actapublikationer/best.xml http://www2.ub.gu.se/hitta-material/actapublikationer/best.xml
+  Redirect permanent /utskrift/studentvb http://www2.ub.gu.se/utskrift/studentvb
+  Redirect permanent /utskrift/varde http://www2.ub.gu.se/utskrift/varde
+  Redirect permanent /vardebevis http://www2.ub.gu.se/vardebevis
+
+  RewriteEngine on
+
+  RewriteRule "^/sv/databaser" "https://{{ databaser_hostname }}/?lang=sv" [R=301,L]
+  RewriteRule "^/en/databases" "https://{{ databaser_hostname }}/?lang=en" [R=301,L]
+  RewriteRule "^/databaser" "https://{{ databaser_hostname }}/" [R=301,L]
+
+  ProxyPass        /dynamiskt/cgi-bin/nlm2sfx http://localhost:10465/cgi-bin/nlm2sfx
+  ProxyPassReverse /dynamiskt/cgi-bin/nlm2sfx http://localhost:10465/cgi-bin/nlm2sfx
+  ProxyPass        /dynamiskt/cgi-bin/link_resolver http://localhost:10465/cgi-bin/link_resolver
+  ProxyPassReverse /dynamiskt/cgi-bin/link_resolver http://localhost:10465/cgi-bin/link_resolver
+  ProxyPass        /dynamiskt/cgi-bin/autolinux http://localhost:10465/cgi-bin/autolinux
+  ProxyPassReverse /dynamiskt/cgi-bin/autolinux http://localhost:10465/cgi-bin/autolinux
+  ProxyPass        /dynamiskt/offpc http://localhost:10465/offpc
+  ProxyPassReverse /dynamiskt/offpc http://localhost:10465/offpc
+  ProxyPass        /dynamiskt/testoffpctest http://localhost:10465/testoffpctest
+  ProxyPassReverse /dynamiskt/testoffpctest http://localhost:10465/testoffpctest
+
+  RequestHeader set "X-Forwarded-Proto" expr=%{REQUEST_SCHEME}
+  RequestHeader set "X-Forwarded-SSL" expr=%{HTTPS}
+  ProxyPreserveHost On
+  ProxyPass        / http://localhost:{{ web_host_port }}/
+  ProxyPassReverse / http://localhost:{{ web_host_port }}/
+
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
