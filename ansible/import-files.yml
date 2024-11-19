@@ -1,0 +1,22 @@
+---
+- name: Import files
+  hosts: all
+  roles:
+  - role: ub-ansible-deploy
+    vars:
+      skip_deploy: true
+  tasks:
+  - name: Upload files
+    become: yes
+    ansible.posix.synchronize:
+      mode: push
+      src: "{{ [playbook_dir, 'data', 'drupal-files'] | path_join }}/"
+      dest: "{{ ubnext_files_directory }}"
+  - name: Set files ownership
+    become: yes
+    ansible.builtin.file:
+      state: directory
+      path: '{{ ubnext_files_directory }}'
+      owner: www-data
+      group: www-data
+      recurse: true
