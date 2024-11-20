@@ -178,7 +178,7 @@ function ubn_entityform_issue_entityform_edit_form_validate($form, &$form_state)
     );
 
     $response = drupal_http_request(
-      variable_get('ubn_entityform_ttx2easit_endpoint', 'http://ttx2easit.ub.gu.se/easitapi/new'),
+      variable_get('ubn_entityform_ttx2easit_endpoint', NULL),
       array(
         'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
         'method' => 'POST',
