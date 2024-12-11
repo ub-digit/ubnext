@@ -1,0 +1,62 @@
+---
+- name: Deploy
+  hosts: all
+  tasks:
+  - name: Include default environment variables
+    ansible.builtin.include_vars:
+      file: default_env.yml
+      name: env_variables
+      hash_behaviour: merge
+  - name: Include default secret environment variables
+    ansible.builtin.include_vars:
+      file: default_secret_env.yml
+      name: secret_env_variables
+  - name: Ensure data directory
+    become: yes
+    ansible.builtin.file:
+      path: '/data/ubnext'
+      state: directory
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: '755'
+  - name: Ensure db directies
+    become: yes
+    ansible.builtin.file:
+      path: '/data/ubnext/db'
+      state: directory  
+      owner: root
+      group: root
+      mode: '755'
+  - name: Ensure files directory
+    become: yes
+    ansible.builtin.file:
+      path: '{{ ubnext_files_directory }}'
+      state: directory
+      owner: www-data
+      group: www-data
+      mode: '755'
+  - name: Ensure files directory
+    become: yes
+    ansible.builtin.file:
+      path: '/data/ubnext/solr-data'
+      state: directory
+      owner: 8983
+      group: 8983
+      mode: '755'
+  - name: Deploy app
+    include_role:
+      name: ub-ansible-deploy
+  - name: Run updatedb
+    ansible.builtin.shell:
+      chdir: "{{ docker_directory_path }}"
+      cmd: "{{ docker_command }} exec app drush -y updatedb"
+  - name: Ensure cronjobs
+    become: true
+    ansible.builtin.cron:
+      cron_file: ubnext
+      user: "{{ ansible_user }}"
+      name: drupal
+      minute: '*/15'
+      job: "cd {{ docker_directory_path }} && {{ docker_command }} exec app drush -y core-cron  > /dev/null 2>&1"
+
+
