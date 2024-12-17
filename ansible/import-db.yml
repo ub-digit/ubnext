@@ -1,16 +1,9 @@
 ---
-- name: Export database
+- name: Import database
   hosts: all
   roles:
-  - role: ub-ansible-deploy
+  - role: ub-ansible-import-db
     vars:
-      skip_deploy: true
-  tasks: # When condition if local file exists?
-  - name: Upload database
-    ansible.builtin.copy:
-      src: "{{ [playbook_dir, 'data', 'database.sql'] | path_join }}"
-      dest: "{{ [docker_directory_path, 'database.sql'] | path_join }}"
-  - name: Import database
-    ansible.builtin.shell:
-      chdir: '{{ docker_directory_path }}'
-      cmd: './restore-database.sh'
+      db_service: database
+      database_variant: mysql
+      db_dump_filename: database.sql
