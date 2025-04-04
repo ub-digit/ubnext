@@ -6,7 +6,6 @@
  * the entity types.
  */
 
-
 /**
  * Implements hook_schema().
  */
@@ -73,7 +72,7 @@ function entityform_schema() {
     ),
     'primary key' => array('entityform_id'),
     'indexes' => array(
-      'type' => array('type'),
+      'type_index' => array('type'),
       'uid' => array('uid'),
     ),
     'foreign keys' => array(
@@ -123,7 +122,22 @@ function entityform_schema() {
         'serialize' => TRUE,
         'description' => 'A serialized array of additional data related to this entityform type.',
       ),
-    ) + entity_exportable_schema_fields(),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        // Set the default to ENTITY_CUSTOM without using the constant as it is
+        // not safe to use it at this point.
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
     'primary key' => array('id'),
     'unique keys' => array(
       'type' => array('type'),
@@ -132,6 +146,7 @@ function entityform_schema() {
 
   return $schema;
 }
+
 /**
  * Implements hook_update_N().
  * Adds draft column
@@ -143,6 +158,7 @@ function entityform_update_7001(&$sandbox = NULL) {
     drupal_get_schema('entityform', TRUE);
   }
 }
+
 /**
  * Switch emails settings to Rules invoke settings.
  */
@@ -171,8 +187,9 @@ function entityform_update_7002(&$sandbox = NULL) {
   }
   return $ret;
 }
+
 /**
- * Enable entityform_notifications if necessary
+ * Enable entityform_notifications if necessary.
  */
 function entityform_update_7003(&$sandbox = NULL) {
   $ret = array();
@@ -192,11 +209,12 @@ function entityform_update_7003(&$sandbox = NULL) {
   }
   return $ret;
 }
+
 /**
  * Change textarea values to support filters.
  */
 function entityform_update_7004(&$sandbox = NULL) {
-  // Set array of text fields that will use filters
+  // Set array of text fields that will use filters.
   $filter_text_fields = array('draft_save_text', 'submission_text', 'instruction_pre');
   $entityform_types = entityform_get_types();
   foreach ($entityform_types as $entityform_type) {
@@ -211,15 +229,15 @@ function entityform_update_7004(&$sandbox = NULL) {
     $entityform_type->save();
   }
 }
+
 /**
  * Update 7005 is unused.
  */
-function entityform_update_7005(&$sandbox = NULL) { }
+function entityform_update_7005(&$sandbox = NULL) {
+}
 
 /**
  * Delete old Entityform menu links.
- *
- * Implements hook_update_N().
  */
 function entityform_update_7006(&$sandbox) {
   $message = NULL;
@@ -235,4 +253,13 @@ function entityform_update_7006(&$sandbox) {
 
   }
   return $message;
+}
+
+/**
+ * Add and drop unique index to rename to type_index.
+ */
+function entityform_update_7007(&$sandbox) {
+  db_drop_index('entityform_type', 'type');
+  db_add_index('entityform_type', 'type_index', array('type'));
+  return st('Dropping index type name to rename.');
 }
