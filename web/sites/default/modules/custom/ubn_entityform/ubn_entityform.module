@@ -1,15 +1,45 @@
 <?php
 
-
-function ubn_entityform_form_alter(&$form, &$form_state, $form_id) {
-
+function ubn_entityform_filter_info() {
+  return array(
+    'ubn_entityform' => array(
+      'title' => t('UBN Entityform'),
+      'description' => t("Insert UBN Entityform"),
+      'process callback' => '_ubn_entityform_filter_process',
+      //'settings callback' => '_ubn_markdown_settings',
+      //'default settings' => array(),
+      'tips callback' => '_ubn_entityform_filter_tips',
+    ),
+  );
 }
 
+function _ubn_entityform_filter_process($text, $format) {
+  foreach (array_keys(entityform_get_types()) as $machine_name) {
+    $text = preg_replace_callback("/\[ubn_form_(?<entityform_type>$machine_name)\]/", '_ubn_entityform_filter_replace_callback', $text);
+  }
+  return $text;
+}
+
+function _ubn_entityform_filter_replace_callback ($matches) {
+  return _ubn_entityform_form_render($matches['entityform_type']);
+}
+
+function _ubn_entityform_filter_tips($filter, $format, $long = FALSE) {
+  $syntax_help = "Available forms:<pre>";
+  foreach (array_keys(entityform_get_types()) as $machine_name) {
+    $syntax_help .= "[ubn_form_$machine_name]\n";
+  }
+  $syntax_help .= '</pre>';
+
+  return $long ?
+    'Long description todo' :
+    $syntax_help;
+}
 
 function ubn_entityform_forms($form_id, $args) {
   $forms = array();
-  if(strpos($form_id, '_entityform_edit_form') !== FALSE) {
-    $forms[$form_id] = array('callback' => 'entityform_edit_form');
+  if (strpos($form_id, '_entityform_edit_form_') !== FALSE) {
+   $forms[$form_id] = array('callback' => 'entityform_edit_form');
   }
   return $forms;
 }
@@ -166,16 +196,24 @@ function ubn_entityform_issue_entityform_edit_form_validate($form, &$form_state)
     global $language_content;
     $ttx_data = array(
       'cmd' => 'newticket',
-      'grp' => $entityform_wrapper->field_ttx_group->field_value->value(),
-      //'grp' => 'group37',
       'xlibrary' => !empty($entityform_wrapper->field_ttx_library->value()) ? $entityform_wrapper->field_ttx_library->field_value->value() : 'nochoice',
       'lang' => $language_content->language,
-      'subject' => $entityform_wrapper->field_title->value(),
       'problem' => $entityform_wrapper->field_message->value()  . "\r\n \r\nMeddelandet skickat från:\r\n" . $GLOBALS['base_url'] . '/' . request_path(),
       'name' => $entityform_wrapper->field_full_name->value(),
       'email' => $entityform_wrapper->field_email->value(),
       'kid' => time() . '-' . rand(1000000, 9999999),
     );
+
+    if ($entityform_wrapper->field_ttx_group) {
+      $ttx_data['grp'] =  $entityform_wrapper->field_ttx_group->field_value->value();
+    }
+
+    if ($entityform_wrapper->field_title->value()) {
+      $ttx_data['subject'] = $entityform_wrapper->field_title->value();
+    }
+    elseif ($form_state['build_info']['form_id'] === 'acquisition_suggestion_entityform_edit_form') {
+      $ttx_data['subject'] = 'Inköpsförslag';
+    }
 
     $response = drupal_http_request(
       variable_get('ubn_entityform_ttx2easit_endpoint', NULL),
@@ -186,12 +224,6 @@ function ubn_entityform_issue_entityform_edit_form_validate($form, &$form_state)
         'timeout' => 20,
       )
     );
-
-    /*
-    $response = new stdClass();
-    $response->code = 200;
-    $response->error = "Error!";
-    */
 
     if($response->code != 200) {
       _ubn_entityform_form_set_error(t('Something went wrong, please try again later.'), $form['#form_id'], 'ttx2easit');
@@ -222,10 +254,28 @@ function ubn_entityform_issue_entityform_edit_form_validate($form, &$form_state)
 
 function ubn_entityform_entityform_edit_form_submit(&$form, &$form_state) {
   //TODO: add # to url
-  //$form_state['redirect'] = array(current_path(), array('fragement' => 
+  //$form_state['redirect'] = array(current_path(), array('fragement' =>
 }
 
-//TODO: array $hidden_fields?
+
+function _ubn_entityform_form_render($entityform_type = NULL) {
+  module_load_include('inc', 'entityform', 'entityform.admin');
+
+  $entityform = entityform_empty_load($entityform_type);
+
+  $form = drupal_get_form(
+    $entityform->type . '_entityform_edit_form',
+    $entityform,
+    'submit',
+    'embedded'
+  );
+
+  $form['#attributes']['class'][] = 'entityform';
+  $form['#attributes']['class'][] = 'entitytype-' . $entityform->type . '-form';
+  return drupal_render($form);
+}
+
+
 function _ubn_entityform_form_instance_render($field_instance, $entityform_type = NULL) {
   module_load_include('inc', 'entityform', 'entityform.admin');
   global $language_content;
@@ -290,8 +340,6 @@ function _ubn_entityform_form_instance_render($field_instance, $entityform_type 
     }
   }
 
-
-  //$form = entityform_form_wrapper($entityform, 'submit', 'embedded');
   $form = drupal_get_form(
     $entityform->type . '_entityform_edit_form_' . $field_instance->getIdentifier(),
     $entityform,
@@ -312,6 +360,11 @@ function ubn_entityform_slate_twig_alter(&$twig) {
   $function = new Twig_SimpleFunction(
     'ubn_form_instance_render',
     '_ubn_entityform_form_instance_render'
+  );
+  $twig->addFunction($function);
+  $function = new Twig_SimpleFunction(
+    'ubn_form_render',
+    '_ubn_entityform_form_render'
   );
   $twig->addFunction($function);
 }
