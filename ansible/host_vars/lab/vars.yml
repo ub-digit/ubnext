@@ -1,9 +1,8 @@
 ---
-git_revision: ansible-deploy
+git_revision: release-2024.11.001
+docker_git_revision: ansible-deploy
 web_hostname: beta-lab.ub.gu.se
 databaser_hostname: databaser-lab.ub.gu.se
 web_host_port: 30460
-env_variables:
-  GIT_REVISION: release-2024.11.001
-  SOLR_HOST_PORT: 127.0.0.1:30461
+solr_host_port: 30461
 docker_command: ./docker-compose-release.sh
