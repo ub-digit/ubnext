@@ -48,14 +48,14 @@ function _ubn_markdown($text, $format) {
 function _ubn_markdown_tips($filter, $format, $long = FALSE) {
   $syntax_help = <<<EOT
   Call to action block:
-  <ul>
-    <li>!!!</li>
-    <li>## Title text (optional)</li>
-    <li>Body text</li>
-    <li>&nbsp;</li>
-    <li>[link title](link url)</li>
-    <li>!!!</li>
-  </ul>
+  <pre>
+    !!!
+    ## Title text (optional)
+    Body text
+    &nbsp;
+    link title](link url)
+    !!!
+  </pre>
 EOT;
   return $long ?
     'Long description todo' :
