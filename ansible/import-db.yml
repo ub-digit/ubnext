@@ -1,0 +1,9 @@
+---
+- name: Import database
+  hosts: all
+  roles:
+  - role: ub-ansible-import-db
+    vars:
+      db_service: database
+      database_variant: mysql
+      db_dump_filename: database.sql

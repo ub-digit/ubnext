@@ -1,0 +1,13 @@
+---
+- name: Export files
+  hosts: all
+  roles:
+  - role: ub-ansible-deploy
+    vars:
+      skip_deploy: true
+  tasks:
+  - name: Download files
+    ansible.posix.synchronize:
+      mode: pull
+      src: "{{ ubnext_files_directory }}"
+      dest: "{{ [playbook_dir, 'data'] | path_join }}/"

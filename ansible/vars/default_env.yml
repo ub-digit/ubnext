@@ -1,0 +1,9 @@
+---
+GIT_REVISION: "{{ git_revision }}"
+WEB_HOST_PORT: "127.0.0.1:{{ web_host_port }}"
+SOLR_HOST_PORT: "127.0.0.1:{{ solr_host_port }}"
+SOLR_DATA_HOST_DIR: /data/ubnext/solr-data
+DATABASE_DATA_HOST_DIR: /data/ubnext/database-data
+DRUPAL_FILES_HOST_DIR: /data/ubnext/drupal-files
+UBN_SLATE_CACHE_ENABLED: 1
+UBN_TERMS_CACHE_ENABLED: 1
