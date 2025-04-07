@@ -244,7 +244,7 @@ function ubn_content_types_taxonomy_default_vocabularies() {
       'name' => 'Database subjects',
       'machine_name' => 'topics',
       'description' => '',
-      'hierarchy' => 0,
+      'hierarchy' => 1,
       'module' => 'taxonomy',
       'weight' => 0,
       'rdf_mapping' => array(
