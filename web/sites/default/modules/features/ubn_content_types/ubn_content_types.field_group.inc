@@ -9,7 +9,7 @@
  * Implements hook_field_group_info().
  */
 function ubn_content_types_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -37,7 +37,7 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $export['group_contacts|field_collection_item|field_content_sections|form'] = $field_group;
+  $field_groups['group_contacts|field_collection_item|field_content_sections|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -66,7 +66,7 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $export['group_event_series|field_collection_item|field_content_sections|form'] = $field_group;
+  $field_groups['group_event_series|field_collection_item|field_content_sections|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -94,7 +94,7 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $export['group_file_attachments|field_collection_item|field_content_sections|form'] = $field_group;
+  $field_groups['group_file_attachments|field_collection_item|field_content_sections|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -123,7 +123,7 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $export['group_media_settings|field_collection_item|field_content_sections|form'] = $field_group;
+  $field_groups['group_media_settings|field_collection_item|field_content_sections|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -152,7 +152,7 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsible',
     ),
   );
-  $export['group_shortcut_links|node|navigation_landing|form'] = $field_group;
+  $field_groups['group_shortcut_links|node|navigation_landing|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -179,7 +179,7 @@ function ubn_content_types_field_group_info() {
       ),
     ),
   );
-  $export['group_shourtcut_links|node|navigation_landing|default'] = $field_group;
+  $field_groups['group_shourtcut_links|node|navigation_landing|default'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -217,7 +217,7 @@ function ubn_content_types_field_group_info() {
       ),
     ),
   );
-  $export['group_terms_of_use|node|database|form'] = $field_group;
+  $field_groups['group_terms_of_use|node|database|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -246,7 +246,17 @@ function ubn_content_types_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $export['group_term|field_collection_item|field_content_sections|form'] = $field_group;
+  $field_groups['group_term|field_collection_item|field_content_sections|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Contacts');
+  t('Event series');
+  t('File attachments');
+  t('Media settings');
+  t('Referened term');
+  t('Shortcut links');
+  t('terms of use');
+
+  return $field_groups;
 }
