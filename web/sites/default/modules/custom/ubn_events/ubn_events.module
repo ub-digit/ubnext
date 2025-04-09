@@ -141,38 +141,6 @@ function ubn_events_node_update($node) {
   }
 }
 
-function ubn_events_current_events($current_date) {
-  $query = db_select('node', 'node_event')
-    ->fields('node_event', array('nid'));
-
-  // Make distinct, could use sub-queries instead
-  $query->distinct();
-
-  // Joins cannot be chained for some stupid reason
-  $query->join('field_data_field_event', 'fe', 'node_event.nid = fe.field_event_target_id');
-  $query->join('field_data_field_scheduled_time', 'fst', 'fe.entity_id = fst.entity_id');
-
-  $result = $query->condition('node_event.type', 'event')
-    ->condition('node_event.status', NODE_PUBLISHED)
-    ->condition('fe.entity_type', 'node')
-    ->condition('fe.bundle', 'event_occasion')
-    ->condition('fst.entity_type', 'node')
-    ->condition('fst.bundle', 'event_occasion')
-    ->condition('fst.field_scheduled_time_value', $current_date, '>=')
-    ->execute();
-
-  return $result->fetchCol(0);
-}
-
-/*
-function ubn_events_current_non_cancelled_events_occasions($current_date) {
-  $query = db_select('node', 'node_event_occasion')
-    ->fields('node_event_occasion', array('nid'));
-    ->condition('type', 'event_occasion')
-    ->condition('status', NODE_PUBLISHED)
-}
-*/
-
 function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
   $site_tz = new DateTimeZone(date_default_timezone(FALSE));
   $event_occasions_by_year_month = array();
@@ -198,7 +166,6 @@ function ubn_events_event_occasions_by_year_month_rendered($event_occasions) {
   return $event_occasions_by_year_month;
 }
 
-
 function ubn_events_event_series_event_occasions_rendered($event_series_tid, $limit = null) {
   // EFQ do not support releations so have to perform two queries
   // Fetch all event nids for event series term
@@ -217,22 +184,27 @@ function ubn_events_event_series_event_occasions_rendered($event_series_tid, $li
 
   $event_nids = $result->fetchCol(0);
   if (!empty($event_nids)) {
-    $query = ubn_events_current_event_occasions_efq()
-      ->fieldCondition('field_event', 'target_id', $event_nids, 'IN');
+    $query = ubn_events_maybe_current_event_occasions_efq();
+    if ($query) {
+      $query = $query->fieldCondition('field_event', 'target_id', $event_nids, 'IN');
 
-    if (!empty($limit)) {
-      $query->range(0, $limit);
-    }
+      if (!empty($limit)) {
+        $query->range(0, $limit);
+      }
 
-    $results = $query->execute();
-    if (!empty($results['node'])) {
-      $event_occasions = entity_load('node', array_keys($results['node']));
-      $event_series_event_occasions = entity_view('node', $event_occasions, 'teaser');
-      return drupal_render($event_series_event_occasions);
+      $results = $query->execute();
+      if (!empty($results['node'])) {
+        $event_occasions = entity_load('node', array_keys($results['node']));
+        $event_series_event_occasions = entity_view('node', $event_occasions, 'teaser');
+        return drupal_render($event_series_event_occasions);
+      }
+      return '';
     }
   }
   return '';
 }
+
+
 
 
 function ubn_events_event_occasions_efq() {
@@ -244,17 +216,30 @@ function ubn_events_event_occasions_efq() {
     ->fieldOrderBy('field_scheduled_time', 'value', 'ASC');
 }
 
-function ubn_events_current_event_occasions_efq() {
+function ubn_events_maybe_current_event_occasions_efq() {
   // "All day" events are scheduled at midnight in local timezone
-  $site_tz_midnight_in_utc = ubn_events_site_tz_midnight_in_utc()->format('Y-m-d H:i');
-  return ubn_events_event_occasions_efq()
-    ->fieldCondition('field_scheduled_time', 'value', $site_tz_midnight_in_utc, '>=');
-}
+  // TODO: Could fetch timezone from field settings, but why bother
+  $where_condition = <<<WHERE_CONDITION
+    (
+      field_scheduled_time_value >= NOW()
+      OR (
+        field_scheduled_time_value = field_scheduled_time_value2
+        AND TIME(CONVERT_TZ(field_scheduled_time_value, 'SYSTEM', 'Europe/Stockholm')) = '00:00:00'
+        AND CAST(CONVERT_TZ(field_scheduled_time_value, 'SYSTEM', 'Europe/Stockholm') AS DATE) >= CAST(CONVERT_TZ(NOW(), 'SYSTEM', 'Europe/Stockholm') AS DATE)
+      )
+    )
+    AND entity_type = 'node' AND  bundle = 'event_occasion'
+WHERE_CONDITION;
+  $entity_ids = db_select('field_data_field_scheduled_time', 'scheduled_time')
+    ->fields('scheduled_time', array('entity_id'))
+    ->where($where_condition)
+    ->execute()
+    ->fetchCol(0);
 
-function ubn_events_current_non_cancelled_event_occasions($event, $limit = NULL) {
-  return ubn_events_current_event_occasions_efq()
-    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
-    ->fieldCondition('field_canceled', 'value', '0');
+  if (!empty($entity_ids)) {
+    return ubn_events_event_occasions_efq()
+      ->propertyCondition('nid', $entity_ids, 'IN');
+  }
 }
 
 // Load helper
@@ -262,25 +247,31 @@ function _ubn_events_efq_node_load($query, $limit = NULL, $wrapped = FALSE) {
   if (!empty($limit)) {
     $query->range(0, $limit);
   }
+
   $entities = array();
   $results = $query->execute();
   if (!empty($results['node'])) {
     $entities = entity_load('node', array_keys($results['node']));
   }
+
   if ($wrapped) {
     foreach (array_keys($entities) as $id) {
       $entities[$id] = entity_metadata_wrapper('node', $entities[$id]);
     }
   }
-
   return $entities;
 }
 
 function ubn_events_next_or_last_event_occasion($event) {
-  $query = ubn_events_current_event_occasions_efq()
-    ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
-    ->fieldCondition('field_canceled', 'value', '0');
-  $event_occasions = _ubn_events_efq_node_load($query, 1, TRUE);
+  $query = ubn_events_maybe_current_event_occasions_efq();
+  $event_occasions = array();
+  if ($query) {
+    $query = $query
+      ->fieldCondition('field_event', 'target_id', $event->getIdentifier())
+      ->fieldCondition('field_canceled', 'value', '0');
+
+    $event_occasions = _ubn_events_efq_node_load($query, 1, TRUE);
+  }
 
   if (!empty($event_occasions)) {
     return array_pop($event_occasions);
@@ -298,8 +289,6 @@ function ubn_events_next_or_last_event_occasion($event) {
   if (!empty($event_occasions)) {
     return array_pop($event_occasions);
   }
-
-  return NULL;
 }
 
 /**
