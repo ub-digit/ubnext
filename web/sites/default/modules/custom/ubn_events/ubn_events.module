@@ -221,7 +221,7 @@ function ubn_events_maybe_current_event_occasions_efq() {
   // TODO: Could fetch timezone from field settings, but why bother
   $where_condition = <<<WHERE_CONDITION
     (
-      field_scheduled_time_value >= NOW()
+      field_scheduled_time_value2 >= NOW()
       OR (
         field_scheduled_time_value = field_scheduled_time_value2
         AND TIME(CONVERT_TZ(field_scheduled_time_value, 'SYSTEM', 'Europe/Stockholm')) = '00:00:00'
