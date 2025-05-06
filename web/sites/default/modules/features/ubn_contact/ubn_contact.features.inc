@@ -42,7 +42,7 @@ function ubn_contact_default_entityform_type() {
       "form_status" : "ENTITYFORM_OPEN",
       "roles" : { "1" : "1", "2" : "2", "3" : 0, "5" : 0, "6" : 0 },
       "resubmit_action" : "new",
-      "redirect_path" : "",
+      "redirect_path" : "[current-page:url]",
       "instruction_pre" : { "value" : "", "format" : "markdown" }
     },
     "weight" : "0",
