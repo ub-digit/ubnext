@@ -202,7 +202,7 @@ function ubn_contact_field_default_field_instances() {
     ),
     'entity_type' => 'entityform',
     'field_name' => 'field_prefer_ebook',
-    'label' => 'I want the material as ebook if possible',
+    'label' => 'I want the material as ebook, if possible',
     'required' => 0,
     'settings' => array(
       'entity_translation_sync' => FALSE,
@@ -216,7 +216,7 @@ function ubn_contact_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
       'weight' => 3,
@@ -952,7 +952,7 @@ function ubn_contact_field_default_field_instances() {
   t('Expose library selection');
   t('GU card or library card number');
   t('Group');
-  t('I want the material as ebook if possible');
+  t('I want the material as ebook, if possible');
   t('If possible please state:
 <ul>
 <li>Author and title</li>

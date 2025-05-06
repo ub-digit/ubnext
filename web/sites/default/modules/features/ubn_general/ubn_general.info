@@ -1,7 +1,7 @@
 name = UBN General
 core = 7.x
 package = UBNext
-version = 7.x-0.31
+version = 7.x-0.32
 project = ubn_general
 dependencies[] = admin_language
 dependencies[] = admin_menu
@@ -370,6 +370,7 @@ features[variable][] = date_first_day
 features[variable][] = date_format_long
 features[variable][] = date_format_medium
 features[variable][] = date_format_short
+features[variable][] = i18n_string_allowed_formats
 features[variable][] = i18n_string_source_language
 features[variable][] = image_jpeg_quality
 features[variable][] = image_toolkit
