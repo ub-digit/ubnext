@@ -135,7 +135,7 @@ function _ubn_entityform_form_status_messages_pre_render($form) {
   return $form;
 }
 
-function _ubn_entityform_form_set_error($error, $form_id, $type = NULL) {
+function _ubn_entityform_form_set_error($form_id, $error, $type = NULL) {
   form_set_error('ubn_form_' . $form_id . (isset($type) ? '_' . $type : ''), $error);
 }
 
@@ -194,7 +194,7 @@ function _ubn_entityform_form_set_message($form_id, $type = NULL, $message = NUL
 
 function ubn_entityform_edit_form_validate($form, &$form_state) {
   if(form_get_errors()) {
-    _ubn_entityform_form_set_error(t('One or more fields are invalid. Please review errors below.'), $form['#form_id'], 'validation');
+    _ubn_entityform_form_set_error($form['#form_id'] , t('One or more fields are invalid. Please review errors below.'), 'validation');
   }
   else if ($form_state['submitted'] && !$form_state['rebuild']) {
     //TODO: How does entityform get built? Would be nice to know
@@ -215,15 +215,25 @@ function ubn_entityform_edit_form_validate($form, &$form_state) {
       $ttx_data['grp'] =  $entityform_wrapper->field_ttx_group->field_value->value();
     }
     else {
-      $ttx_data['grp'] = 'group25';
-
+      $ttx_data['grp'] = 'group15';
     }
+
+    if (isset($info['field_prefer_ebook'])) {
+      $ttx_data['ebok'] = $entityform_wrapper->field_prefer_ebook->value();
+    }
+
+    if (isset($info['field_gu_or_library_card_number'])) {
+      $ttx_data['kortnummer'] = $entityform_wrapper->field_gu_or_library_card_number->value();
+    }
+
     if (isset($info['field_title'])) {
       $ttx_data['subject'] = $entityform_wrapper->field_title->value();
     }
     elseif ($form_state['build_info']['form_id'] === 'acquisition_suggestion_entityform_edit_form') {
       $ttx_data['subject'] = 'Inköpsförslag';
     }
+
+    //_ubn_entityform_form_set_message_success($form['#form_id'], json_encode($ttx_data));
 
     $response = drupal_http_request(
       variable_get('ubn_entityform_ttx2easit_endpoint', NULL),
@@ -236,7 +246,7 @@ function ubn_entityform_edit_form_validate($form, &$form_state) {
     );
 
     if($response->code != 200) {
-      _ubn_entityform_form_set_error(t('Something went wrong, please try again later.'), $form['#form_id'], 'ttx2easit');
+      _ubn_entityform_form_set_error($form['#form_id'], t('Something went wrong, please try again later.'), 'ttx2easit');
       watchdog(
         'ubn_entityform',
         'Error while submittning @type form (@code: @error).',
