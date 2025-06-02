@@ -198,9 +198,16 @@ function ubn_entityform_edit_form_validate($form, &$form_state) {
   }
   else if ($form_state['submitted'] && !$form_state['rebuild']) {
     //TODO: How does entityform get built? Would be nice to know
-    $entityform_wrapper = entity_metadata_wrapper('entityform', $form_state['entityform']);
-    $info = $entityform_wrapper->getPropertyInfo();
     global $language_content;
+    $entityform_wrapper = entity_metadata_wrapper(
+      'entityform',
+       $form_state['entityform'],
+       array(
+        'langcode' => 'sv', // Make sure libraries are in swedish
+      )
+    );
+
+    $info = $entityform_wrapper->getPropertyInfo();
     $ttx_data = array(
       'cmd' => 'newticket',
       'xlibrary' => !empty($entityform_wrapper->field_ttx_library->value()) ? $entityform_wrapper->field_ttx_library->field_value->value() : 'nochoice',
