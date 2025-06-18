@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_contact.features.field_base.inc
@@ -101,6 +102,29 @@ function ubn_contact_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_gu_or_library_card_number'.
+  $field_bases['field_gu_or_library_card_number'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_id_type' => NULL,
+    'entity_types' => array(),
+    'field_name' => 'field_gu_or_library_card_number',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_issue_form_instance'.
   $field_bases['field_issue_form_instance'] = array(
     'active' => 1,
@@ -144,8 +168,35 @@ function ubn_contact_field_default_field_bases() {
     'settings' => array(
       'entity_translation_sync' => FALSE,
     ),
-    'translatable' => 1,
+    'translatable' => 0,
     'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_prefer_ebook'.
+  $field_bases['field_prefer_ebook'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_id_type' => NULL,
+    'entity_types' => array(),
+    'field_name' => 'field_prefer_ebook',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => '',
+      ),
+      'allowed_values_function' => '',
+      'entity_translation_sync' => FALSE,
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
   );
 
   // Exported field_base: 'field_ttx_group'.

@@ -1616,8 +1616,14 @@ function ubn_general_update_7267() {
   features_revert_module('ubn_content_types');
 }
 
+
 function ubn_general_update_7268() {
   features_revert_module('ubn_content_types');
+}
+
+function ubn_general_update_7269() {
+  features_revert_module('ubn_contact');
+  features_revert_module('ubn_general');
 }
 
 //TODO: Disable rdf module?

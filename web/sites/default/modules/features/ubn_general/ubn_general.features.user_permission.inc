@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_general.features.user_permission.inc
@@ -519,15 +520,6 @@ function ubn_general_user_default_permissions() {
       'editor' => 'editor',
     ),
     'module' => 'workbench_scheduler',
-  );
-
-  // Exported permission: 'administer xmlsitemap'.
-  $permissions['administer xmlsitemap'] = array(
-    'name' => 'administer xmlsitemap',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'xmlsitemap',
   );
 
   // Exported permission: 'block IP addresses'.

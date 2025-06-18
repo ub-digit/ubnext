@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ubn_general.strongarm.inc
@@ -58,6 +59,18 @@ function ubn_general_strongarm() {
   $strongarm->name = 'date_format_short';
   $strongarm->value = 'd/m/Y - H:i';
   $export['date_format_short'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'i18n_string_allowed_formats';
+  $strongarm->value = array(
+    'markdown' => 'markdown',
+    'filtered_html' => 'filtered_html',
+    'full_html' => 'full_html',
+    'plain_text' => 'plain_text',
+  );
+  $export['i18n_string_allowed_formats'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -166,7 +179,7 @@ function ubn_general_strongarm() {
     'domain' => '',
     'prefix' => 'sv',
     'weight' => '0',
-    'javascript' => 'yDVwE832av55Bzie6L5U43pcgMzHRO9Cet3gL5raUDw',
+    'javascript' => 'Z9e702RFkabp1XrYWJNf2c3BTcbiTWV9_Jd5SsmiKEY',
   );
   $export['language_default'] = $strongarm;
 
