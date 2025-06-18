@@ -5,4 +5,3 @@ web_hostname: beta-lab.ub.gu.se
 databaser_hostname: databaser-lab.ub.gu.se
 web_host_port: 30460
 solr_host_port: 30461
-docker_command: ./docker-compose-release.sh

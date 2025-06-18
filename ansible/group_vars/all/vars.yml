@@ -2,3 +2,4 @@
 docker_git_repo_url: https://github.com/ub-digit/ubnext.git
 docker_directory: './docker' # Default is './docker'
 ubnext_files_directory: '/data/ubnext/drupal-files'
+docker_command: ./docker-compose-release.sh
