@@ -1,5 +1,5 @@
 ---
-git_revision: release-2024.11.001
+git_revision: suggestions-form-v5
 docker_git_revision: ansible-deploy
 web_hostname: beta-lab.ub.gu.se
 databaser_hostname: databaser-lab.ub.gu.se

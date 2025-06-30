@@ -1,18 +1,25 @@
 <VirtualHost *:80>
   ServerName {{ web_hostname }}
+
+{% if inventory_hostname == 'production' %}
   Redirect permanent / https://www.{{ web_hostname }}/
+{% else %}
+  Redirect permanent / https://{{ web_hostname }}/
+{% endif %}
 </VirtualHost>
 
+{% if inventory_hostname == 'production' %}
 <VirtualHost *:80>
   ServerName www.{{ web_hostname }}
   Redirect permanent / https://www.{{ web_hostname }}/
 </VirtualHost>
-</VirtualHost>
+{% endif %}
 
 <VirtualHost *:443>
   ServerName {{ web_hostname }}
   ServerAdmin root@localhost
- 
+
+{% if inventory_hostname == 'production' %}
   SSLEngine on
   SSLCertificateFile /etc/ssl/apache2/certs/ub-gu-se.pem
   SSLCertificateKeyFile /etc/ssl/apache2/private/ub-gu-se.key
@@ -26,6 +33,7 @@
 
 <VirtualHost *:443>
   ServerName www.{{ web_hostname }}
+{% endif %}
   FallbackResource /index.html
 
   SSLEngine on
@@ -61,6 +69,7 @@
   ProxyPass /vardebevis !
 
 
+{% if inventory_hostname == 'production' %}
   Redirect permanent /<-en,sv>  https://www.{{ web_hostname }}/sv
   Redirect permanent /<sv,-en>  https://www.{{ web_hostname }}/sv
   Redirect permanent /<en,-sv>  https://www.{{ web_hostname }}/en
@@ -70,6 +79,7 @@
   Redirect permanent /%3Csv%2C-en%3E https://www.{{ web_hostname }}/sv
   Redirect permanent /%3Cen%2C-sv%3E https://www.{{ web_hostname }}/en
   Redirect permanent /%3C-sv%2Cen%3E https://www.{{ web_hostname }}/en
+{% endif %}
 
   Redirect permanent /aktuellt/utst http://www2.ub.gu.se/pa-biblioteken/utstallningar-pa-universitetsbiblioteket
   Redirect permanent /handskriftsdatabasen http://www2.ub.gu.se/handskriftsdatabasen
