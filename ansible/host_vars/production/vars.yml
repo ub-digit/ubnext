@@ -1,0 +1,7 @@
+---
+git_revision: release-2024.11.001
+docker_git_revision: ansible-deploy
+web_hostname: ub.gu.se
+databaser_hostname: databaser.ub.gu.se
+web_host_port: 10460
+solr_host_port: 20461
