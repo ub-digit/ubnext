@@ -94,7 +94,7 @@ function ubn_contact_field_default_field_instances() {
     'bundle' => 'acquisition_suggestion',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Please state your GU card or library card number',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -106,10 +106,13 @@ function ubn_contact_field_default_field_instances() {
     ),
     'entity_type' => 'entityform',
     'field_name' => 'field_gu_or_library_card_number',
-    'label' => 'GU card or library card number',
+    'label' => 'Your GU card or library card number',
     'required' => 0,
     'settings' => array(
       'entity_translation_sync' => FALSE,
+      'entityform' => array(
+        'entityform_hide_form_field' => 0,
+      ),
       'linkit' => array(
         'button_text' => 'Search',
         'enable' => 0,
@@ -126,7 +129,7 @@ function ubn_contact_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 1,
     ),
   );
 
@@ -176,7 +179,7 @@ function ubn_contact_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 1,
+      'weight' => 0,
     ),
   );
 
@@ -219,6 +222,49 @@ function ubn_contact_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-acquisition_suggestion-field_request_material'.
+  $field_instances['entityform-acquisition_suggestion-field_request_material'] = array(
+    'bundle' => 'acquisition_suggestion',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'entityform',
+    'field_name' => 'field_request_material',
+    'label' => 'I want to request the material',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'entityform' => array(
+        'entityform_hide_form_field' => 0,
+      ),
+      'ubn_property_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
       'weight' => 3,
     ),
   );
@@ -241,10 +287,13 @@ function ubn_contact_field_default_field_instances() {
     ),
     'entity_type' => 'entityform',
     'field_name' => 'field_ttx_library',
-    'label' => 'Library',
+    'label' => 'Choose where you want to pick up the material',
     'required' => 1,
     'settings' => array(
       'entity_translation_sync' => FALSE,
+      'entityform' => array(
+        'entityform_hide_form_field' => 0,
+      ),
       'ubn_property_field' => 0,
       'user_register_form' => FALSE,
     ),
@@ -945,14 +994,15 @@ function ubn_contact_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Anonymous allowed');
+  t('Choose where you want to pick up the material');
   t('Describe your acquisition suggestion');
   t('Describe your question');
   t('Description');
   t('Email');
   t('Expose library selection');
-  t('GU card or library card number');
   t('Group');
   t('I want the material as ebook, if possible');
+  t('I want to request the material');
   t('If possible please state:
 <ul>
 <li>Author and title</li>
@@ -964,11 +1014,11 @@ function ubn_contact_field_default_field_instances() {
   t('Library');
   t('Message');
   t('Name');
-  t('Please state your GU card or library card number');
   t('Show form');
   t('Subject');
   t('TTX value');
   t('Title');
+  t('Your GU card or library card number');
 
   return $field_instances;
 }

@@ -229,6 +229,10 @@ function ubn_entityform_edit_form_validate($form, &$form_state) {
       $ttx_data['ebok'] = $entityform_wrapper->field_prefer_ebook->value();
     }
 
+    if (isset($info['field_request_material'])) {
+      $ttx_data['reservera'] = $entityform_wrapper->field_request_material->value();
+    }
+
     if (isset($info['field_gu_or_library_card_number'])) {
       $ttx_data['kortnummer'] = $entityform_wrapper->field_gu_or_library_card_number->value();
     }
